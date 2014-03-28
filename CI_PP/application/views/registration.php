@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 
 <html>
     <head>
@@ -19,11 +19,11 @@
         <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js' type='text/javascript'></script>
         <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 
-        <!-- Do NOT move to php section because it won't work !!! --> 
+         Do NOT move to php section because it won't work !!!  
         <?php
         echo link_tag('assets/javascript/validate.min.js');
         ?>
-<!--        <script src="../assets/javascript/validate.min.js" type="text/javascript"></script>-->
+        <script src="../assets/javascript/validate.min.js" type="text/javascript"></script>
 
         <script type="text/javascript">
             $(document).ready(function(){
@@ -82,7 +82,7 @@
         </script>
     </head>
     <body>
-        <!--  menu -->
+          menu 
         <div id="menu_wrapper">
 
             <ul class="menu_l">
@@ -131,7 +131,7 @@
                     <?php echo anchor('contact', 'contact', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
             </ul>
-        </div>
+        </div>-->
         <!-- end of menu-->
         <!--red line-->
         <!--        <div class="red_line">
@@ -262,35 +262,35 @@
         </div> 
 
 
-        <!--                 footer -->
+<!--         footer 
         <div id="footer" class="f_active">
             <div class="colmask threecol">
                 <div class="colmid">
                     <div class="colleft">
                         <div class="col1">
-                            <!--Column 1 start--> 
+                            Column 1 start 
                             <div class="text_wrapper_middle_part">
                                 <div class="text_light smaller white">Copyright &copy; 2013 Powporn. All rights reserved.</div>
                             </div>
-                            <!--Column 1 end--> 
+                            Column 1 end 
                         </div>
                         <div class="col2">
-                            <!--Column 2 start--> 
+                            Column 2 start 
                             <ul class="footer_l">
                                 <li><a href="./whatisrealpp.html" class="text_light red_on_hover capitalized" >rules</a></li>
                                 <li><a href="./ucreate.html" class="text_light red_on_hover capitalized">payment</a></li>
                                 <li><a href="./finalproducts.html" class="text_light red_on_hover capitalized">shipping services</a></li>
                                 <li><a href="./finalproducts.html" class="text_light red_on_hover capitalized">CLIENT SERVICES</a></li>
                             </ul>
-                            <!--Column 2 end--> 
+                            Column 2 end 
                         </div>
                         <div class="col3">
-                            <!--Column 3 start--> 
+                            Column 3 start 
                             <div id="footer_switcher_wrapper">
                                 <div id="footer_switcher" class="active"> 
                                 </div>
                             </div>
-                            <!--Column 3 end--> 
+                            Column 3 end 
                         </div>
                     </div>
                 </div>
@@ -372,4 +372,4 @@
         </script>
 
     </body>
-</html>
+</html>-->
