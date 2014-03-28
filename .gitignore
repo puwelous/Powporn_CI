@@ -3,4 +3,4 @@
 */cache/*
 */cache/!index.html
 */cache/!.htaccess
-*application/logs/log-*.php
+*/application/logs/log-*.php
