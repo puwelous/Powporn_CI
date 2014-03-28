@@ -38,13 +38,14 @@
 |
 */
 //$route['finalproducts'] = "finalproducts";
-$route['registration'] = 'c_registration';
-$route['contact'] = 'c_contact';
-$route['finalproducts'] = 'c_finalproducts';
-$route['welcome'] = "c_welcome";
-$route['welcome/index'] = "c_welcome/index";
-$route['default_controller'] = "c_welcome";
-$route['404_override'] = '';
+$route['ucreate']               = 'c_ucreate';
+$route['registration']          = 'c_registration';
+$route['contact']               = 'c_contact';
+$route['finalproducts']         = 'c_finalproducts';
+$route['welcome']               = "c_welcome";
+$route['welcome/index']         = "c_welcome/index";
+$route['default_controller']    = "c_welcome";
+$route['404_override']          = '';
 
 
 /* End of file routes.php */
