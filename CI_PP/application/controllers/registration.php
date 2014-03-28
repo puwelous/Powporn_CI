@@ -8,12 +8,24 @@ class Registration extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->library('form_validation');
+        $this->load->library('parser');
+        $this->load->library('session');
     }
 
     public function index() {
         
         
         $data['title'] = 'Registration';
+        
+        $user_id = $this->session->userdata('user_id');
+        
+        if( is_null($user_id) || !isset($user_id) || $user_id == NULL){
+            // login <li></li> loaded
+            $data['login_or_logout_template'] = $this->parser->parse('templates/login', array(), TRUE);
+        }else{
+            // logout <li></li> loaded
+            $data['login_or_logout_template'] = $this->parser->parse('templates/logout', array(), TRUE);
+        }
         
 	$this->load->view('templates/header', $data);
 	$this->load->view('registration');

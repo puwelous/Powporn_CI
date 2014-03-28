@@ -104,7 +104,9 @@
                 <li id="m_cart">
                     <?php echo anchor('shopping_cart', 'shopping cart', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
-                <li id="m_login">
+                
+                <?php echo $login_or_logout_template ?>
+<!--                <li id="m_login">
                     <?php echo anchor('shopping_cart', 'log in', array('class' => 'text_light smaller  pp_dark_gray red_on_hover upper_cased')); ?>
                     <div id="login_wrapper"><?php echo form_open('user/ajax_check'); ?>
                         <div class="login_wrapper_single_row">
@@ -127,7 +129,7 @@
                         </div>
                         <?php echo form_close(); ?>
                     </div>                    
-                </li>
+                </li>-->
                 <li id="m_contact">
                     <?php echo anchor('contact', 'contact', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
