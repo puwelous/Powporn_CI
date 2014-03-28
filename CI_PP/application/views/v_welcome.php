@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>PowPorn</title>
+        <title>welcomedd</title>
         <?php
         // css
         echo link_tag('assets/css/menu.css');
@@ -87,7 +87,7 @@
         </script>
     </head>
     <body>
-        <!--  menu -->
+          menu 
         <div id="menu_wrapper">
 
             <ul class="menu_l">
@@ -132,7 +132,9 @@
                     <?php echo anchor('contact', 'contact', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
             </ul>
-        </div>
+        </div>END!!!!!!!!!!!!!!!!!-->
+
+
         <!-- end of menu-->
         <!--red line-->
 <!--        <div class="red_line">
@@ -174,34 +176,34 @@
         <!--<div style="clear:both;"></div>-->
 
         <!--                 footer -->
-        <div id="footer" class="f_active">
+<!--        <div id="footer" class="f_active">
             <div class="colmask threecol">
                 <div class="colmid">
                     <div class="colleft">
                         <div class="col1">
-                            <!--Column 1 start--> 
+                            Column 1 start 
                             <div class="text_wrapper_middle_part">
                                 <div class="text_light smaller white">Copyright &copy; 2013 Powporn. All rights reserved.</div>
                             </div>
-                            <!--Column 1 end--> 
+                            Column 1 end 
                         </div>
                         <div class="col2">
-                            <!--Column 2 start--> 
+                            Column 2 start 
                             <ul class="footer_l">
                                 <li><a href="./whatisrealpp.html" class="text_light red_on_hover capitalized" >rules</a></li>
                                 <li><a href="./ucreate.html" class="text_light red_on_hover capitalized">payment</a></li>
                                 <li><a href="./finalproducts.html" class="text_light red_on_hover capitalized">shipping services</a></li>
                                 <li><a href="./finalproducts.html" class="text_light red_on_hover capitalized">CLIENT SERVICES</a></li>
                             </ul>
-                            <!--Column 2 end--> 
+                            Column 2 end 
                         </div>
                         <div class="col3">
-                            <!--Column 3 start--> 
+                            Column 3 start 
                             <div id="footer_switcher_wrapper">
                                 <div id="footer_switcher" class="active"> 
                                 </div>
                             </div>
-                            <!--Column 3 end--> 
+                            Column 3 end 
                         </div>
                     </div>
                 </div>
@@ -213,4 +215,4 @@
         echo link_tag('assets/javascript/jquery.mCustomScrollbar.concat.min.js');
         ?>
     </body>
-</html>
+</html>-->

@@ -3,11 +3,10 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class User extends CI_Controller {
+class C_user extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->library('form_validation');
     }
 
 //    public function index() {
@@ -33,7 +32,16 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('tf_country', 'Country', 'trim|required|max_length[64]|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->index();
+
+            // print out validation errors
+            $template_data = array();
+
+            $this->set_title($template_data, 'Registration');
+            $this->load_log_in_or_out_template($template_data);
+
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('v_registration');
+            $this->load->view('templates/footer');
         } else {
 
             $nick = $this->input->post('tf_nick');
@@ -53,13 +61,24 @@ class User extends CI_Controller {
             $user_instance = new User_model();
             $user_instance->setAll($nick, $firstname, $lastname, $emailAddress, $password, $gender, $address, $deliveryAddress, $city, $zip, $country, $isAdmin);
 
-            log_message('debug', print_r($user_instance, TRUE));
+            log_message('debug', 'Saving user into database as: \n' . print_r($user_instance, TRUE));
 
             $this->user_model->add_user($user_instance);
 
-            log_message('debug', 'probably ok !');
+            log_message('debug', 'After user save. Setting user_data');
+            
+            $loaded_user_info_result = $this->user_model->get_by_email_or_nick_and_password( $emailAddress , $password);
+            
+            $new_session_data = array(
+                'user_id' => $loaded_user_info_result->u_id,
+                'user_nick' => $loaded_user_info_result->u_nick,
+                'user_email' => $loaded_user_info_result->u_email_address,
+                'logged_in' => TRUE,
+            );
 
-            $this->index();
+            $this->session->set_userdata($new_session_data);
+
+            redirect('/c_welcome/index', 'refresh');
         }
     }
 
@@ -75,27 +94,13 @@ class User extends CI_Controller {
         $this->session->unset_userdata($new_session_data);
         $this->session->sess_destroy();
 
-        $this->index();
+        redirect('/c_welcome/index', 'refresh');
     }
 
-    //TODO: finish it
-    public function login() {
-
-//        $login_result = NULL;
-//
-//        $login_nick_or_email = '';
-//        $login_password = '';
-//
-//        $login_result = $this->user_model->get_by_email_or_nick_and_password($login_nick_or_email, $login_password);
-//
-//        $this->session->set_userdata($newdata);
-    }
-
-    
-    function ajax_check() {
+    function login() {
         if ($this->input->post('ajax') == '1') {
 
-            log_message('debug', 'is trying to log in.');
+            log_message('debug', $this->input->post('login_nick_or_email') . ' is trying to log in.');
 
             //validation
             $this->form_validation->set_rules('login_nick_or_email', 'Nick or email', 'trim|required|xss_clean');
@@ -133,5 +138,5 @@ class User extends CI_Controller {
 
 }
 
-/* End of file user.php */
-/* Location: ./application/controllers/user.php */
+/* End of file c_user.php */
+/* Location: ./application/controllers/c_user.php */

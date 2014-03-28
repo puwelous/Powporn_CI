@@ -1,5 +1,5 @@
                 <li id="m_login">
-                    <?php echo anchor('shopping_cart', 'log in', array('class' => 'text_light smaller  pp_dark_gray red_on_hover upper_cased')); ?>
+                    <?php echo anchor('welcome', 'log in', array('class' => 'text_light smaller  pp_dark_gray red_on_hover upper_cased')); ?>
                     <div id="login_wrapper"><?php echo form_open('user/ajax_check'); ?>
                         <div class="login_wrapper_single_row">
                             <span class="text_light smaller bold upper_cased black">name/email</span>

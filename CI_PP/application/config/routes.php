@@ -38,11 +38,12 @@
 |
 */
 //$route['finalproducts'] = "finalproducts";
-$route['registration'] = 'registration';
-$route['registration/ajax_check'] = 'registration/ajax_check';
-$route['welcome'] = "welcome";
-$route['welcome/index'] = "welcome/index";
-$route['default_controller'] = "welcome";
+$route['registration'] = 'c_registration';
+$route['contact'] = 'c_contact';
+$route['finalproducts'] = 'c_finalproducts';
+$route['welcome'] = "c_welcome";
+$route['welcome/index'] = "c_welcome/index";
+$route['default_controller'] = "c_welcome";
 $route['404_override'] = '';
 
 

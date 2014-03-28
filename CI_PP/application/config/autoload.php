@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database', 'session');
+$autoload['libraries'] = array('database', 'session','form_validation','parser');
 
 
 /*
@@ -80,7 +80,7 @@ $autoload['helper'] = array('url','form','html');
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('powporn_config');
 
 
 /*

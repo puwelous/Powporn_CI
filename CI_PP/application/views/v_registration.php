@@ -1,165 +1,19 @@
-<!--<!DOCTYPE html>
-
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Registration</title>
-        <?php
-        // css
-        echo link_tag('assets/css/menu.css');
-        echo link_tag('assets/css/footer.css');
-        echo link_tag('assets/css/finalproducts.css');
-        echo link_tag('assets/css/socialsidebar.css');
-        echo link_tag('assets/css/jquery.mCustomScrollbar.css');
-
-        echo link_tag('assets/css/checkbox.css');
-        //js
-        ?>
-
-        <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js' type='text/javascript'></script>
-        <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
-
-         Do NOT move to php section because it won't work !!!  
-        <?php
-        echo link_tag('assets/javascript/validate.min.js');
-        ?>
-        <script src="../assets/javascript/validate.min.js" type="text/javascript"></script>
-
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-                $('#login_result_message').hide();
-                
-                $("#footer_switcher_wrapper").click( function(){
-                                    
-                    $('#footer').toggleClass( "f_active" );
-                    $('.footer_l').toggleClass("active");
-                    $('#footer').toggleClass( "f_inactive" );
-                    $('.footer_l').toggleClass("inactive");
-                    
-                    $('.text_light.smaller').toggleClass("black");
-                    $('.text_light.smaller').toggleClass("pp_dark_gray");
-                    
-                    $('#footer_switcher').toggleClass("active");
-                    $('#footer_switcher').toggleClass("inactive");
-                });
-                
-                
-                $('#login_wrapper').bind('keypress', function(e) {
-                    if(e.keyCode!=13){
-                        // Enter NOT pressed... ignore
-                        return;
-                    }
-                    
-                    var form_data = {
-                        login_nick_or_email : $('#login_nick_or_email').val(),
-                        login_password : $('#login_password').val(),
-                        ajax : '1'
-                    };
-                    $.ajax({
-                        url: "<?php echo site_url('registration/ajax_check'); ?>",
-                        type: 'POST',
-                        async : false,
-                        data: form_data,
-                        success: function(result) {
-                            
-                            $('#login_result_message').show();
-                            
-                            $('#login_result_message').css("display","block");
-                            
-                            if( result == 0){
-                                $('#login_result_message').html('User not found!');
-                            }else{
-                                $('#login_result_message').html('Login successful.');
-                                window.location.href = "<?php echo site_url('welcome/index'); ?>";
-                            };                            
-                        }
-                    });
-                    return false;
-                });                
-  
-            });
-        </script>
-    </head>
-    <body>
-          menu 
-        <div id="menu_wrapper">
-
-            <ul class="menu_l">
-                <li>
-                    <?php echo anchor('whatisrealpp', ' ', array('class' => 'upper_cased')); ?>
-                </li>
-                <li>
-                    <?php echo anchor('ucreate', 'u create', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
-                </li>
-                <li>
-                    <?php echo anchor('finalproducts', 'final products', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
-                </li>
-            </ul>
-            <ul class="menu_r">
-                <li id="m_language">
-                    <?php echo anchor('shopping_cart', 'en / sk', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
-                </li>
-                <li id="m_cart">
-                    <?php echo anchor('shopping_cart', 'shopping cart', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
-                </li>
-                <li id="m_login">
-                    <?php echo anchor('shopping_cart', 'log in', array('class' => 'text_light smaller  pp_dark_gray red_on_hover upper_cased')); ?>
-                    <div id="login_wrapper"><?php echo form_open('registration/ajax_check'); ?>
-                        <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold upper_cased black">name/email</span>
-                            <input id="login_nick_or_email" name="login_nick_or_email" type="text" placeholder="your nick or email"/>
-                        </div>
-                        <div style="clear:both;"></div>
-                        <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold upper_cased black">password</span>
-                            <input id="login_password" name="login_password" type="text" placeholder="your password"/>
-                        </div>
-                        <div style="clear:both;"></div>
-                        <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold black">forgot your password?</span>
-                            <?php echo anchor('registration', 'new registration', array('class' => 'text_light smaller pp_dark_gray bold pp_red upper_cased right')); ?>
-                        </div>
-                        <div style="clear:both;"></div>
-
-                        <div id="login_result_message">
-                        </div>
-                        <?php echo form_close(); ?>
-                    </div>                    
-                </li>
-                <li id="m_contact">
-                    <?php echo anchor('contact', 'contact', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
-                </li>
-            </ul>
-        </div>-->
-        <!-- end of menu-->
-        <!--red line-->
-        <!--        <div class="red_line">
-                </div>-->
-        <!--end of red line-->
-
-
-
         <!-- content -->
         <div id="content">
 
             <div class="content_wrapper">
 
                 <div class="container">
-                    <!-- Title -->
                     <div class="title upper_cased black">
                         Registration
                     </div>
                     <div id="error_output_section" class="text_medium capitalized_first_only pp_red">
                     </div>
 
-                    <?php echo validation_errors('<p class="error">'); ?>                    
-                    <!--<form name="pp_form_name" action="#" method="POST">-->
-                    <!--                    $attributes = array('class' => 'email', 'id' => 'myform');
-                    echo form_open('email/send', $attributes);-->
+                    <?php echo validation_errors('<p class="error" style="display:inline">'); ?>
                     <?php
                     $attributes = array('name' => 'pp_form_name');
-                    echo form_open("registration/register", $attributes);
+                    echo form_open("c_user/register", $attributes);
                     ?>
                     <div class="text_fields_wrapper">
 
@@ -261,44 +115,7 @@
             </div>
         </div> 
 
-
-<!--         footer 
-        <div id="footer" class="f_active">
-            <div class="colmask threecol">
-                <div class="colmid">
-                    <div class="colleft">
-                        <div class="col1">
-                            Column 1 start 
-                            <div class="text_wrapper_middle_part">
-                                <div class="text_light smaller white">Copyright &copy; 2013 Powporn. All rights reserved.</div>
-                            </div>
-                            Column 1 end 
-                        </div>
-                        <div class="col2">
-                            Column 2 start 
-                            <ul class="footer_l">
-                                <li><a href="./whatisrealpp.html" class="text_light red_on_hover capitalized" >rules</a></li>
-                                <li><a href="./ucreate.html" class="text_light red_on_hover capitalized">payment</a></li>
-                                <li><a href="./finalproducts.html" class="text_light red_on_hover capitalized">shipping services</a></li>
-                                <li><a href="./finalproducts.html" class="text_light red_on_hover capitalized">CLIENT SERVICES</a></li>
-                            </ul>
-                            Column 2 end 
-                        </div>
-                        <div class="col3">
-                            Column 3 start 
-                            <div id="footer_switcher_wrapper">
-                                <div id="footer_switcher" class="active"> 
-                                </div>
-                            </div>
-                            Column 3 end 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <script type="text/javascript">
+<!--        <script type="text/javascript">
             //TODO: do a callback to check if such a nick or email adress already exists for example
             var validator = new FormValidator('pp_form_name', [{
                     name: 'tf_nick',
@@ -369,7 +186,4 @@
         }
     });
             
-        </script>
-
-    </body>
-</html>-->
+        </script>-->

@@ -75,8 +75,8 @@ class User_model extends MY_Model {
 
         $query = $this->db->get($this->_table);
 
-        $str = $this->db->last_query();
-        log_message('debug', print_r($str, TRUE));
+        //$str = $this->db->last_query();
+        //log_message('debug', print_r($str, TRUE));
 
         if ($query->num_rows() > 0) {
             $row = $query->row();

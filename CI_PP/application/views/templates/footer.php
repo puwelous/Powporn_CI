@@ -35,47 +35,50 @@
 
 
         <script type="text/javascript">
-            //TODO: do a callback to check if such a nick or email adress already exists for example
             var validator = new FormValidator('pp_form_name', [{
                     name: 'tf_nick',
                     display: '\"Nick\"',    
-                    rules: 'required'
+                    rules: 'required|min_length[4]|max_length[32]'
                 }, {
                     name: 'tf_first_name',
                     display: '\"First Name\"',    
-                    rules: 'required'
+                    rules: 'required|min_length[4]|max_length[32]'
                 }, {
                     name: 'tf_last_name',
                     display: '\"Last Name\"',    
-                    rules: 'required'
+                    rules: 'required|min_length[4]|max_length[32]'
                 }, {
                     name: 'tf_email_address',
                     display: '\"Email Address\"',
-                    rules: 'valid_email'
+                    rules: 'valid_email||max_length[64]'
                 }, {
                 name: 'tf_password_base',
                 display: '\"Password\"',
-                rules: 'required'
+                rules: 'required|min_length[4]|max_length[32]'
             }, {
             name: 'tf_password_confirm',
             display: '\"Confirm Password\"',
             rules: 'required|matches[tf_password_base]'
         }, {
+            name: 'tf_delivery_addres',
+            display: '\"Delivery Address\"',
+            rules: 'max_length[256]'
+        }, {
             name: 'tf_address',
             display: '\"Address\"',
-            rules: 'required'
+            rules: 'required|max_length[256]'
         }, {
             name: 'tf_city',
             display: '\"City\"',
-            rules: 'required'
+            rules: 'required|max_length[64]'
         },{
             name: 'tf_zip',
             display: '\"ZIP\"',
-            rules: 'required'
+            rules: 'required|max_length[16]'
         },{
             name: 'tf_country',
             display: '\"Country\"',
-            rules: 'required'
+            rules: 'required|max_length[64]'
         }], function(errors, event) {
                 
         if (errors.length > 0) {

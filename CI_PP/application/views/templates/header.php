@@ -11,7 +11,6 @@
         echo link_tag('assets/css/finalproducts.css');
         echo link_tag('assets/css/socialsidebar.css');
         echo link_tag('assets/css/jquery.mCustomScrollbar.css');
-
         echo link_tag('assets/css/checkbox.css');
         //js
         ?>
@@ -19,11 +18,7 @@
         <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js' type='text/javascript'></script>
         <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 
-        <!-- Do NOT move to php section because it won't work !!! --> 
-        <?php
-        echo link_tag('assets/javascript/validate.min.js');
-        ?>
-<!--    <script src="../assets/javascript/validate.min.js" type="text/javascript"></script>-->
+        <script src="<?php echo base_url();?>assets/javascript/validate.min.js" text='text/javascript'></script>
 
         <script type="text/javascript">
             $(document).ready(function(){
@@ -58,7 +53,7 @@
                         ajax : '1'
                     };
                     $.ajax({
-                        url: "<?php echo site_url('user/ajax_check'); ?>",
+                        url: "<?php echo site_url('user/login'); ?>",
                         type: 'POST',
                         async : false,
                         data: form_data,
@@ -105,31 +100,11 @@
                     <?php echo anchor('shopping_cart', 'shopping cart', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
                 
-                <?php echo $login_or_logout_template ?>
-<!--                <li id="m_login">
-                    <?php echo anchor('shopping_cart', 'log in', array('class' => 'text_light smaller  pp_dark_gray red_on_hover upper_cased')); ?>
-                    <div id="login_wrapper"><?php echo form_open('user/ajax_check'); ?>
-                        <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold upper_cased black">name/email</span>
-                            <input id="login_nick_or_email" name="login_nick_or_email" type="text" placeholder="your nick or email"/>
-                        </div>
-                        <div style="clear:both;"></div>
-                        <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold upper_cased black">password</span>
-                            <input id="login_password" name="login_password" type="text" placeholder="your password"/>
-                        </div>
-                        <div style="clear:both;"></div>
-                        <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold black">forgot your password?</span>
-                            <?php echo anchor('registration', 'new registration', array('class' => 'text_light smaller pp_dark_gray bold pp_red upper_cased right')); ?>
-                        </div>
-                        <div style="clear:both;"></div>
-
-                        <div id="login_result_message">
-                        </div>
-                        <?php echo form_close(); ?>
-                    </div>                    
-                </li>-->
+                <?php 
+                /* dynamicaly added <LI> element either to log in or log out according to the status of user */
+                echo $login_or_logout_template 
+                ?>
+                
                 <li id="m_contact">
                     <?php echo anchor('contact', 'contact', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
