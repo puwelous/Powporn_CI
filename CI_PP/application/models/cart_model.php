@@ -4,35 +4,40 @@ class Cart_model extends MY_Model {
 
     public $_table = 'pp_cart';
     public $primary_key = 'c_id';
-
+    
     public $sum;
     public $status;
     public $order;
     public $ordering_person;
-
-
-    public $protected_attributes = array( 'c_id' );
     
+    public $protected_attributes = array('c_id');
+
+    
+    /* basic constructor */
     public function __construct() {
         parent::__construct();
     }
 
-    public function setAll($sum, $status, $order, $ordering_person ) {
+    /* instance "constructor" */
 
-        $this->sum              = $sum;
-        $this->status           = $status;
-        $this->order            = $order;
-        $this->ordering_person  = $ordering_person;
+    public function instantiate($sum, $status, $order, $ordering_person) {
+
+        $this->sum = $sum;
+        $this->status = $status;
+        $this->order = $order;
+        $this->ordering_person = $ordering_person;
     }
 
-    public function add_cart(Cart_model $cart) {
+    /*     * * database operations ** */
+    
+    public function insert_cart(Cart_model $cart_instance) {
 
         $this->cart_model->insert(
                 array(
-                    'c_sum'                 => $cart->sum,
-                    'c_status'              => $cart->status,
-                    'o_id'                  => $cart->order,
-                    'u_ordering_person_id'  => $cart->ordering_person
+                    'c_sum' => $cart_instance->sum,
+                    'c_status' => $cart_instance->status,
+                    'o_id' => $cart_instance->order,
+                    'u_ordering_person_id' => $cart_instance->ordering_person
         ));
     }
 
@@ -62,6 +67,43 @@ class Cart_model extends MY_Model {
 //        
 //        return $row;
 //    }
+
+
+    /*     * ********* setters *********** */
+
+    public function setSum($newSum) {
+        $this->sum = $newSum;
+    }
+
+    public function setStatus($newStatus) {
+        $this->status = $newStatus;
+    }
+
+    public function setOrder($newOrder) {
+        $this->order = $newOrder;
+    }
+
+    public function setOrderingPerson($newOrderingPerson) {
+        $this->ordering_person = $newOrderingPerson;
+    }
+
+    /*     * ********* getters *********** */
+
+    public function getSum() {
+        return $this->sum;
+    }
+
+    public function getStatus() {
+        return $this->status;
+    }
+
+    public function getOrder() {
+        return $this->order;
+    }
+
+    public function getOrderingPerson() {
+        return $this->ordering_person;
+    }
 
 }
 
