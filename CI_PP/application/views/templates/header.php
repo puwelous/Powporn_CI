@@ -177,6 +177,7 @@
                             
                             if( result == 0){
                                 $('#login_result_message').html('User not found!');
+                                $('#loading_gif').hide();
                             }else{
                                 $('#login_result_message').html('Login successful.');
                                 window.location.href = "<?php echo site_url('welcome/index'); ?>";
