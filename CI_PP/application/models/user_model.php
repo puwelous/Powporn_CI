@@ -17,6 +17,8 @@ class User_model extends MY_Model {
     public $country;
     public $isAdmin;
 
+    public $protected_attributes = array( 'u_id' );
+    
     public function __construct() {
         parent::__construct();
     }
@@ -85,6 +87,12 @@ class User_model extends MY_Model {
         } else {
             return NULL;
         }
+    }
+    
+    public function is_present_by( $column, $value){
+        $row = $this->user_model->get_by( $column, $value );
+        
+        return $row;
     }
 
 }

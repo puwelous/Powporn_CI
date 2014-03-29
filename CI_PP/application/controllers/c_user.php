@@ -19,10 +19,10 @@ class C_user extends MY_Controller {
     public function register() {
 
         // field name, error message, validation rules
-        $this->form_validation->set_rules('tf_nick', 'User Name', 'trim|required|min_length[4]|max_length[32]|xss_clean');
+        $this->form_validation->set_rules('tf_nick', 'User Name', 'trim|required|min_length[4]|max_length[32]|xss_clean|callback_nick_check');
         $this->form_validation->set_rules('tf_first_name', 'First name', 'trim|required|min_length[4]|max_length[32]|xss_clean');
         $this->form_validation->set_rules('tf_last_name', 'Last name', 'trim|required|min_length[4]|max_length[32]|xss_clean');
-        $this->form_validation->set_rules('tf_email_address', 'Your Email', 'trim|required|valid_email|max_length[64]|');
+        $this->form_validation->set_rules('tf_email_address', 'Your Email', 'trim|required|valid_email|max_length[64]|callback_email_check');
         $this->form_validation->set_rules('tf_password_base', 'Password', 'trim|required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('tf_password_confirm', 'Password Confirmation', 'trim|required|matches[tf_password_base]|max_length[32]');
         $this->form_validation->set_rules('tf_delivery_addres', 'Delivery address', 'trim|max_length[256]|xss_clean');
@@ -57,7 +57,6 @@ class C_user extends MY_Controller {
             $country = $this->input->post('tf_country');
             $isAdmin = FALSE;
 
-
             $user_instance = new User_model();
             $user_instance->setAll($nick, $firstname, $lastname, $emailAddress, $password, $gender, $address, $deliveryAddress, $city, $zip, $country, $isAdmin);
 
@@ -66,9 +65,9 @@ class C_user extends MY_Controller {
             $this->user_model->add_user($user_instance);
 
             log_message('debug', 'After user save. Setting user_data');
-            
-            $loaded_user_info_result = $this->user_model->get_by_email_or_nick_and_password( $emailAddress , $password);
-            
+
+            $loaded_user_info_result = $this->user_model->get_by_email_or_nick_and_password($emailAddress, $password);
+
             $new_session_data = array(
                 'user_id' => $loaded_user_info_result->u_id,
                 'user_nick' => $loaded_user_info_result->u_nick,
@@ -133,6 +132,75 @@ class C_user extends MY_Controller {
 
                 echo '1';
             }
+        }
+    }
+
+    function is_user_present() {
+        if ($this->input->post('ajax') == '2') {
+
+            log_message('debug', 'Nick: ' . $this->input->post('login_nick') . ' checked for DB presence.');
+
+            $user_presence_result = $this->user_model->is_present_by(
+                    'u_nick', $this->input->post('login_nick')
+            );
+
+            log_message('debug', print_r($user_presence_result, TRUE));
+
+            if ( is_null($user_presence_result) || empty($user_presence_result) ) {
+                echo '0';
+            } else {
+                echo '1';
+            }
+        } else if ($this->input->post('ajax') == '3') {
+
+            log_message('debug', 'Email: ' . $this->input->post('login_email') . ' checked for DB presence.');
+
+            $user_presence_result = $this->user_model->is_present_by(
+                    'u_email_address', $this->input->post('login_email')
+            );
+
+            log_message('debug', print_r($user_presence_result, TRUE));
+
+            if ( is_null($user_presence_result) || empty($user_presence_result) ) {
+                echo '0';
+            } else {
+                echo '1';
+            }
+        }
+    }
+
+    public function nick_check($nick) {
+
+        $user_presence_result = $this->user_model->is_present_by(
+                'u_nick', $nick
+        );
+
+        log_message('debug', 'nick_check:' . print_r($user_presence_result, TRUE));
+
+        //  such a user not found
+        if ( is_null($user_presence_result) || empty($user_presence_result)) {
+            return TRUE;
+        } else {
+        // such a user found
+            $this->form_validation->set_message('nick_check', 'User \"' . $nick . '\" already exists!');
+            return FALSE;            
+        }
+    }
+
+    public function email_check($email) {
+
+        $user_presence_result = $this->user_model->is_present_by(
+                'u_email_address', $email
+        );
+
+        log_message('debug', 'email_check:' . print_r($user_presence_result, TRUE));
+        
+        //  such a user not found
+        if ( is_null($user_presence_result) || empty($user_presence_result) ) {
+            return TRUE;
+        } else {
+            $this->form_validation->set_message('email_check', 'Email \"' . $email . '\" already exists!');
+            return FALSE;
         }
     }
 

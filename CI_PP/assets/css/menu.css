@@ -17,6 +17,15 @@ body {
     /*padding-bottom:50px;*/
 }
 
+#loading_gif {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    z-index: 1000;
+}
+
 
 /** menu section **/
 #menu_wrapper {
@@ -71,7 +80,7 @@ body {
 
     clear: both;
     top: 40%;
-    
+
     text-decoration: none;
 }
 
@@ -108,7 +117,7 @@ body {
 }
 
 #login_wrapper .login_wrapper_single_row *:first-child{
-  float: left;
+    float: left;
 }
 
 #login_wrapper .login_wrapper_single_row *:nth-child(2){
@@ -121,7 +130,7 @@ body {
     clear: none;
 }
 
-#login_wrapper .login_wrapper_single_row input[type=text]{
+#login_wrapper .login_wrapper_single_row input[type=text], #login_wrapper .login_wrapper_single_row input[type=password]{
     border: 0px;
     border-bottom: 2px solid #ef4623;
     /*font-family: "compro_medium";*/
@@ -402,7 +411,7 @@ button[id="add_to_cart_button"]{
 
 .content_wrapper .text_fields_wrapper ul li input[type='radio'] {
     /*TODO: removed because of bad positioning in Registration screen.
-	if affects anything else, maybe need to rewrite.
+        if affects anything else, maybe need to rewrite.
 float: right;*/
 }
 
@@ -689,6 +698,10 @@ h5{
 
 .pp_red{
     color: #ef4623;
+}
+
+.pp_green{
+    color: #33ff00;
 }
 
 

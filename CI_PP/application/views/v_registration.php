@@ -7,7 +7,7 @@
                     <div class="title upper_cased black">
                         Registration
                     </div>
-                    <div id="error_output_section" class="text_medium capitalized_first_only pp_red">
+                    <div id="error_output_section" class="text_medium capitalized_first_only">
                     </div>
 
                     <?php echo validation_errors('<p class="error" style="display:inline">'); ?>
