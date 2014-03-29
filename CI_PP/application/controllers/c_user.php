@@ -68,6 +68,7 @@ class C_user extends MY_Controller {
 
             $loaded_user_info_result = $this->user_model->get_by_email_or_nick_and_password($emailAddress, $password);
 
+            // setting session user data to cookies
             $new_session_data = array(
                 'user_id' => $loaded_user_info_result->u_id,
                 'user_nick' => $loaded_user_info_result->u_nick,
@@ -76,6 +77,21 @@ class C_user extends MY_Controller {
             );
 
             $this->session->set_userdata($new_session_data);
+
+            // sending registration email
+            $this->email->subject(  $this->config->item('powporn_sending_email_reg_subject')    );
+            $this->email->from(     $this->config->item('powporn_sending_email_sender')    );
+            $this->email->to(       $loaded_user_info_result->u_email_address               );
+            
+            // generate message body according to the user info
+            $this->email->message(
+                    create_registration_email_body_accor_user($user_instance)
+                    );
+
+            // send it!
+            $this->email->send();
+
+            log_message('debug', $this->email->print_debugger());
 
             redirect('/c_welcome/index', 'refresh');
         }
@@ -146,7 +162,7 @@ class C_user extends MY_Controller {
 
             log_message('debug', print_r($user_presence_result, TRUE));
 
-            if ( is_null($user_presence_result) || empty($user_presence_result) ) {
+            if (is_null($user_presence_result) || empty($user_presence_result)) {
                 echo '0';
             } else {
                 echo '1';
@@ -161,7 +177,7 @@ class C_user extends MY_Controller {
 
             log_message('debug', print_r($user_presence_result, TRUE));
 
-            if ( is_null($user_presence_result) || empty($user_presence_result) ) {
+            if (is_null($user_presence_result) || empty($user_presence_result)) {
                 echo '0';
             } else {
                 echo '1';
@@ -178,12 +194,12 @@ class C_user extends MY_Controller {
         log_message('debug', 'nick_check:' . print_r($user_presence_result, TRUE));
 
         //  such a user not found
-        if ( is_null($user_presence_result) || empty($user_presence_result)) {
+        if (is_null($user_presence_result) || empty($user_presence_result)) {
             return TRUE;
         } else {
-        // such a user found
+            // such a user found
             $this->form_validation->set_message('nick_check', 'User \"' . $nick . '\" already exists!');
-            return FALSE;            
+            return FALSE;
         }
     }
 
@@ -194,9 +210,9 @@ class C_user extends MY_Controller {
         );
 
         log_message('debug', 'email_check:' . print_r($user_presence_result, TRUE));
-        
+
         //  such a user not found
-        if ( is_null($user_presence_result) || empty($user_presence_result) ) {
+        if (is_null($user_presence_result) || empty($user_presence_result)) {
             return TRUE;
         } else {
             $this->form_validation->set_message('email_check', 'Email \"' . $email . '\" already exists!');
