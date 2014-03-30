@@ -37,5 +37,24 @@ if ( !function_exists('create_registration_email_body_accor_user') ) {
     }
 
 }
+
+if ( !function_exists('create_password_reset_email_body') ) {
+
+    function create_password_reset_email_body( $user, $password) {
+        
+        $message_body  = 'Dear ' . $user->u_nick . '!' . "\r\n";
+        $message_body .= 'You have asked for a password reset!' . "\r\n";
+        $message_body .= '-----------------------------------' . "\r\n";
+        $message_body .= 'Here is your new password:'. $password . "\r\n";
+        $message_body .= '-----------------------------------' . "\r\n";
+
+        $message_body .= "\r\n" . 'If you forget your password again You can regenerate it anytime.' . "\r\n";
+        
+        $message_body .= "\r\n" . 'Regards,' . "\r\n" . 'Your PowPorn team';
+        
+        return $message_body;
+    }
+
+}
 /* End of file email_former_helper.php */
 /* Location: ./application/helpers/email_former_helper.php */

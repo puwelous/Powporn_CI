@@ -12,7 +12,8 @@
                         </div>
                         <div style="clear:both;"></div>
                         <div class="login_wrapper_single_row">
-                            <span class="text_light smaller bold black">forgot your password?</span>
+                            <!--<span class="text_light smaller bold black">forgot your password?</span>-->
+                            <?php echo anchor('user/password_reset', 'forgot your password?', array('class' => 'text_light smaller bold black')); ?>
                             <?php echo anchor('registration', 'new registration', array('class' => 'text_light smaller pp_dark_gray bold pp_red upper_cased right')); ?>
                         </div>
                         <div style="clear:both;"></div>
