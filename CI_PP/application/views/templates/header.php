@@ -126,8 +126,7 @@
                             }                        
                         }
                     });                    
-                }                 
-                
+                }
                 
                 $('#login_result_message').hide();
                 $('#loading_gif').hide();
@@ -224,5 +223,12 @@
                 <li id="m_contact">
                     <?php echo anchor('contact', 'contact', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
+                
+                <?php
+                /* dynamicaly added <LI> element for admin only */
+                if( isset($admin_template ) ) {
+                    echo $admin_template;
+                }
+                ?>                
             </ul>
         </div>

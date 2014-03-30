@@ -91,6 +91,12 @@ class User_model extends MY_Model {
         
         return $row;
     }
+    
+    public function get_user_by( $column, $value){
+        $row = $this->user_model->as_object()->get_by( $column, $value );
+        
+        return $row;
+    }    
 
 }
 

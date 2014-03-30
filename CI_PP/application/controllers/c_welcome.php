@@ -10,7 +10,7 @@ class C_welcome extends MY_Controller {
         $template_data = array();
         
         $this->set_title( $template_data, 'Welcome');
-        $this->load_log_in_or_out_template( $template_data );
+        $this->load_header_templates( $template_data );
 
         $this->load->view('templates/header', $template_data);
         $this->load->view('v_welcome');

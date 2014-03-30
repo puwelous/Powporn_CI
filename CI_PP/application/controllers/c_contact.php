@@ -14,7 +14,7 @@ class C_contact extends MY_Controller {
         //login or logout in menu
         $template_data = array();
         $this->set_title( $template_data, 'Contact');
-        $this->load_log_in_or_out_template( $template_data );
+        $this->load_header_templates( $template_data );
 
         
         //loading company info
