@@ -70,19 +70,16 @@ class User_model extends MY_Model {
 
     public function get_by_email_or_nick_and_password($email_or_nick, $password) {
 
-        $this->db->where("u_email_address", $email_or_nick);
-        $this->db->or_where('u_nick', $email_or_nick);
-        $this->db->where("u_password", md5($password));
+        $where = "(u_email_address=".$this->db->escape($email_or_nick)." OR u_nick=". $this->db->escape($email_or_nick) .") AND u_password=".$this->db->escape(md5($password))."";
+        $this->db->where($where);
         $this->db->limit(1);
 
         $query = $this->db->get($this->_table);
 
-        //$str = $this->db->last_query();
-        //log_message('debug', print_r($str, TRUE));
+        log_message('debug', print_r($this->db->last_query(), TRUE));
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
-
             return $row;
         } else {
             return NULL;
@@ -90,7 +87,7 @@ class User_model extends MY_Model {
     }
     
     public function is_present_by( $column, $value){
-        $row = $this->user_model->get_by( $column, $value );
+        $row = $this->user_model->as_object()->get_by( $column, $value );
         
         return $row;
     }
