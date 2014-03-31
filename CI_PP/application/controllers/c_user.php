@@ -103,7 +103,8 @@ class C_user extends MY_Controller {
             'user_id' => '',
             'user_nick' => '',
             'user_email' => '',
-            'logged_in' => FALSE,
+            'user_is_admin' => 0,
+            'logged_in' => 0,
         );
 
         $this->session->unset_userdata($new_session_data);
@@ -136,12 +137,14 @@ class C_user extends MY_Controller {
                     echo '0';
                     return;
                 };
-
+// log_message('debug', 'XX' . print_r($loaded_user_info_result->u_is_admin, TRUE));
+// log_message('debug', 'XX' . ($loaded_user_info_result->u_is_admin) );
                 $new_session_data = array(
                     'user_id' => $loaded_user_info_result->u_id,
                     'user_nick' => $loaded_user_info_result->u_nick,
                     'user_email' => $loaded_user_info_result->u_email_address,
-                    'logged_in' => TRUE,
+                    'user_is_admin' => $loaded_user_info_result->u_is_admin,
+                    'logged_in' => 1,
                 );
 
                 $this->session->set_userdata($new_session_data);

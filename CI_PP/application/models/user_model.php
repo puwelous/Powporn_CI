@@ -80,6 +80,7 @@ class User_model extends MY_Model {
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
+            log_message('debug', print_r($row, TRUE));
             return $row;
         } else {
             return NULL;

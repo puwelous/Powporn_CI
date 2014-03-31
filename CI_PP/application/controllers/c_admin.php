@@ -11,6 +11,11 @@ class C_admin extends MY_Controller {
 
     public function index() {
 
+        if( !$this->authentify_admin()){
+            $this->redirectToHomePage();
+            return;
+        }        
+        
         //login or logout in menu
         $template_data = array();
         $this->set_title($template_data, 'Admin interface');
@@ -22,6 +27,11 @@ class C_admin extends MY_Controller {
     }
 
     public function products() {
+        
+        if( !$this->authentify_admin()){
+            $this->redirectToHomePage();
+            return;
+        }              
 
         //login or logout in menu
         $template_data = array();
@@ -34,6 +44,11 @@ class C_admin extends MY_Controller {
     }
 
     public function about_us() {
+        
+        if( !$this->authentify_admin()){
+            $this->redirectToHomePage();
+            return;
+        }      
 
         //login or logout in menu
         $template_data = array();
@@ -102,6 +117,11 @@ class C_admin extends MY_Controller {
     }
 
     public function rules() {
+        
+        if( !$this->authentify_admin()){
+            $this->redirectToHomePage();
+            return;
+        }      
 
         //login or logout in menu
         $template_data = array();
