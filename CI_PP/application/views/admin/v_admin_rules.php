@@ -12,9 +12,11 @@
             </div>                    
             <div class="half_container">
                 <section id="editable" contenteditable="true"><?php echo $company_rules ?></section>
+                
+                
                 <br />
                 <div>
-                    <input type="button" id="save" onclick="saveChanges()" value="Save changes" />
+                    <input type="button" id="save" onclick="saveChanges()" class="pp_button_active" value="Save changes" />
                 </div>
                 <script>
                     var editable = document.getElementById('editable');
@@ -41,7 +43,7 @@
                                 if( success == -1){
                                     alert('Cannot find company in DB.');
                                 } else if( success == 0){
-                                    alert('Saving new rules unsuccesful!');
+                                    alert('Rules to be changed are the same as current rules.');
                                 }else if (success == 1){
                                     alert('New rules saved succesfully!');
                                     window.location.href = "<?php echo site_url('c_admin/rules'); ?>";
