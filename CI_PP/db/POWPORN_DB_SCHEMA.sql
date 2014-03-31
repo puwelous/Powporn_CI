@@ -22,6 +22,32 @@ CREATE DATABASE IF NOT EXISTS powporn;
 USE powporn;
 
 --
+-- Definition of table `ci_sessions`
+--
+
+DROP TABLE IF EXISTS `ci_sessions`;
+CREATE TABLE `ci_sessions` (
+  `session_id` varchar(40) NOT NULL default '0',
+  `ip_address` varchar(45) NOT NULL default '0',
+  `user_agent` varchar(120) NOT NULL default '',
+  `last_activity` int(10) unsigned NOT NULL default '0',
+  `user_data` text NOT NULL,
+  PRIMARY KEY  (`session_id`),
+  KEY `last_activity_idx` (`last_activity`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ci_sessions`
+--
+
+/*!40000 ALTER TABLE `ci_sessions` DISABLE KEYS */;
+INSERT INTO `ci_sessions` (`session_id`,`ip_address`,`user_agent`,`last_activity`,`user_data`) VALUES 
+ ('2732c6c40c8f707b2aa2d8e2dca465b6','127.0.0.1','Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36',1396284180,''),
+ ('f4265ff4336394b49f69b144c0e5e5a2','127.0.0.1','Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36',1396283933,'a:6:{s:9:\"user_data\";s:0:\"\";s:7:\"user_id\";s:1:\"1\";s:9:\"user_nick\";s:5:\"puwel\";s:10:\"user_email\";s:20:\"pavol.dano@gmail.com\";s:13:\"user_is_admin\";s:1:\"1\";s:9:\"logged_in\";i:1;}');
+/*!40000 ALTER TABLE `ci_sessions` ENABLE KEYS */;
+
+
+--
 -- Definition of table `pp_cart`
 --
 
@@ -31,10 +57,12 @@ CREATE TABLE `pp_cart` (
   `c_sum` decimal(5,2) NOT NULL default '0.00',
   `c_status` varchar(16) NOT NULL default '',
   `o_id` int(10) NOT NULL default '0',
-  `u_ordering_person` int(10) NOT NULL default '0',
+  `u_ordering_person_id` int(10) NOT NULL default '0',
   PRIMARY KEY  (`c_id`),
-  KEY `FK_Reference_6` (`o_id`),
-  CONSTRAINT `FK_Reference_6` FOREIGN KEY (`o_id`) REFERENCES `pp_order` (`o_id`)
+  KEY `FK_pp_cart_order` (`o_id`),
+  KEY `FK_pp_cart_ordering_person` (`u_ordering_person_id`),
+  CONSTRAINT `FK_pp_cart_ordering_person` FOREIGN KEY (`u_ordering_person_id`) REFERENCES `pp_user` (`u_id`),
+  CONSTRAINT `FK_pp_cart_order` FOREIGN KEY (`o_id`) REFERENCES `pp_order` (`o_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -70,7 +98,7 @@ CREATE TABLE `pp_company` (
 
 /*!40000 ALTER TABLE `pp_company` DISABLE KEYS */;
 INSERT INTO `pp_company` (`cmpn_id`,`cmpn_provider_firstname`,`cmpn_provider_lastname`,`cmpn_provider_street`,`cmpn_provider_street_number`,`cmpn_provider_city`,`cmpn_provider_country`,`cmpn_provider_email`,`cmpn_provider_phone_number`,`cmpn_rules`) VALUES 
- (1,'roman','juhas','sladkovica hajtkovica','23','075 01 SECOVCE','slovakia','INFO@436.SK','+432 984 500 500','Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco labo- ris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui ofcia deserunt mollit anim id est laborum.');
+ (1,'roman','juhas','sladkovica hajtkovica','23','075 01 SECOVCE','slovakia','INFO@436.SK','+432 984 500 500','Loreme ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco labo- ris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui ofcia deserunt mollit anim id est laborum.');
 /*!40000 ALTER TABLE `pp_company` ENABLE KEYS */;
 
 
@@ -100,22 +128,19 @@ CREATE TABLE `pp_contact_video` (
 DROP TABLE IF EXISTS `pp_order`;
 CREATE TABLE `pp_order` (
   `o_id` int(10) NOT NULL auto_increment,
-  `c_id` int(10) default NULL,
-  `sm_id` int(10) NOT NULL default '0',
-  `pm_id` int(10) default NULL,
+  `o_cart` int(10) NOT NULL default '0',
+  `o_shipping_method` int(10) NOT NULL default '0',
+  `o_payment_method` int(10) NOT NULL default '0',
   `o_is_shipping_address_registration_addres` tinyint(4) NOT NULL default '0',
   `o_status` varchar(32) NOT NULL default '',
-  `o_payment_method` int(10) NOT NULL default '0',
-  `o_shipping_method` int(10) NOT NULL default '0',
   `o_final_sum` decimal(5,2) NOT NULL default '0.00',
-  `u_ordering_person` int(10) NOT NULL default '0',
   PRIMARY KEY  (`o_id`),
-  KEY `FK_Reference_7` (`c_id`),
-  KEY `FK_Reference_8` (`sm_id`),
-  KEY `FK_Reference_9` (`pm_id`),
-  CONSTRAINT `FK_Reference_7` FOREIGN KEY (`c_id`) REFERENCES `pp_cart` (`c_id`),
-  CONSTRAINT `FK_Reference_8` FOREIGN KEY (`sm_id`) REFERENCES `pp_shipping_method` (`sm_id`),
-  CONSTRAINT `FK_Reference_9` FOREIGN KEY (`pm_id`) REFERENCES `pp_payment_method` (`pm_id`)
+  KEY `FK_Reference_7` USING BTREE (`o_cart`),
+  KEY `FK_Reference_8` USING BTREE (`o_shipping_method`),
+  KEY `FK_Reference_9` USING BTREE (`o_payment_method`),
+  CONSTRAINT `FK_Reference_9` FOREIGN KEY (`o_payment_method`) REFERENCES `pp_payment_method` (`pm_id`),
+  CONSTRAINT `FK_Reference_7` FOREIGN KEY (`o_cart`) REFERENCES `pp_cart` (`c_id`),
+  CONSTRAINT `FK_Reference_8` FOREIGN KEY (`o_shipping_method`) REFERENCES `pp_shipping_method` (`sm_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -176,26 +201,26 @@ CREATE TABLE `pp_payment_method` (
 
 
 --
--- Definition of table `pp_possible_sizes_for_product`
+-- Definition of table `pp_possible_size_for_product`
 --
 
-DROP TABLE IF EXISTS `pp_possible_sizes_for_product`;
-CREATE TABLE `pp_possible_sizes_for_product` (
+DROP TABLE IF EXISTS `pp_possible_size_for_product`;
+CREATE TABLE `pp_possible_size_for_product` (
   `psfp_id` int(10) NOT NULL auto_increment,
+  `pd_id` int(10) NOT NULL default '0',
   `psfp_name` varchar(16) NOT NULL default '',
   `psfp_amount` int(8) NOT NULL default '0',
-  `pd_id` int(10) NOT NULL default '0',
   PRIMARY KEY  (`psfp_id`),
-  KEY `FK_Reference_1` (`pd_id`),
+  KEY `FK_Reference_1` USING BTREE (`pd_id`),
   CONSTRAINT `FK_Reference_1` FOREIGN KEY (`pd_id`) REFERENCES `pp_product_definition` (`pd_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `pp_possible_sizes_for_product`
+-- Dumping data for table `pp_possible_size_for_product`
 --
 
-/*!40000 ALTER TABLE `pp_possible_sizes_for_product` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pp_possible_sizes_for_product` ENABLE KEYS */;
+/*!40000 ALTER TABLE `pp_possible_size_for_product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pp_possible_size_for_product` ENABLE KEYS */;
 
 
 --
@@ -205,7 +230,6 @@ CREATE TABLE `pp_possible_sizes_for_product` (
 DROP TABLE IF EXISTS `pp_product_definition`;
 CREATE TABLE `pp_product_definition` (
   `pd_id` int(10) NOT NULL auto_increment,
-  `u_id` int(10) default NULL,
   `pd_product_name` varchar(32) NOT NULL default '',
   `pd_photo_url` varchar(128) NOT NULL default '',
   `pd_product_creator` int(10) NOT NULL default '0',
@@ -213,8 +237,8 @@ CREATE TABLE `pp_product_definition` (
   `pd_price` decimal(5,2) NOT NULL default '0.00',
   `pd_sex` varchar(8) NOT NULL default '',
   PRIMARY KEY  (`pd_id`),
-  KEY `FK_Reference_2` (`u_id`),
-  CONSTRAINT `FK_Reference_2` FOREIGN KEY (`u_id`) REFERENCES `pp_user` (`u_id`)
+  KEY `FK_pp_product_definition_creator` (`pd_product_creator`),
+  CONSTRAINT `FK_pp_product_definition_creator` FOREIGN KEY (`pd_product_creator`) REFERENCES `pp_user` (`u_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -274,6 +298,10 @@ CREATE TABLE `pp_user` (
 --
 
 /*!40000 ALTER TABLE `pp_user` DISABLE KEYS */;
+INSERT INTO `pp_user` (`u_id`,`u_firstname`,`u_lastname`,`u_email_address`,`u_password`,`u_gender`,`u_delivery_address`,`u_address`,`u_city`,`u_zip`,`u_country`,`u_is_admin`,`u_nick`) VALUES 
+ (1,'Pavol','Daňo','pavol.dano@gmail.com','c88a03a140ce09099860821c3546baf4',0,'','gen. svobodu 130/17','Medzilaborce','06801','slovakia',1,'puwel'),
+ (2,'Pali','Dano','pavol.dano@student.tuke.sk','c88a03a140ce09099860821c3546baf4',0,'jedlikova 9, kosice','jedlikova 9, kosice','Kosice','04001','Slovakia',0,'palko'),
+ (3,'Lobo','Gito','lobogito@azet.sk','0412f8641c8a84bc6addf4fa55afbd5d',0,'gen.Svobodu 130/17','gen. svobodu 130/17','Medzilaborce','06801','Slovakia',0,'lobogito');
 /*!40000 ALTER TABLE `pp_user` ENABLE KEYS */;
 
 
