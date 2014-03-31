@@ -704,7 +704,9 @@ h5{
     color: #33ff00;
 }
 
-
+[contenteditable]:hover:not(:focus) {
+    outline: 1px dotted #ccc;
+}
 
 
 
