@@ -18,7 +18,7 @@ class Possible_size_for_product_model extends MY_Model {
 
     /* instance "constructor" */
 
-    public function instantiate(Product_definition_model $product_definition, $name, $amount) {
+    public function instantiate($product_definition, $name, $amount) {
 
         $this->product_definition   = $product_definition;
         $this->name                 = $name;
@@ -27,14 +27,16 @@ class Possible_size_for_product_model extends MY_Model {
 
     /*     * * database operations ** */
     
-    public function insert_possible_size_for_product(Possible_size_for_product_model $possible_size_for_product_instance) {
+    public function insert_possible_size_for_product() {
 
-        $this->possible_size_for_product_model->insert(
+        $id_of_psfp = $this->possible_size_for_product_model->insert(
                 array(
-                    'pd_id'         => $possible_size_for_product_instance->product_definition,
-                    'psfp_name'     => $possible_size_for_product_instance->name,
-                    'psfp_amount'   => $possible_size_for_product_instance->amount
+                    'pd_id'         => $this->product_definition,
+                    'psfp_name'     => $this->name,
+                    'psfp_amount'   => $this->amount
         ));
+        
+        return $id_of_psfp;
     }
 
     /*     * ********* setters *********** */

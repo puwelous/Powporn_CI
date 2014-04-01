@@ -16,6 +16,35 @@ class MY_Controller extends CI_Controller {
     protected function redirectToHomePage() {
         redirect('c_welcome/index', 'refresh');
     }
+    
+    protected function get_session_data(){
+        $session_data = $this->session->all_userdata();
+        if ( is_null($session_data) || empty($session_data)  )
+            return NULL;
+        else return $session_data;
+    }
+    
+    protected function get_user_nick(){
+        $session_data = $this->get_session_data();
+        
+        if( is_null($session_data) ){
+            return NULL;
+        }
+        else {
+            return $session_data['user_nick'];
+        }
+    }
+    
+    protected function get_user_id(){
+        $session_data = $this->get_session_data();
+        
+        if( is_null($session_data) ){
+            return NULL;
+        }
+        else {
+            return $session_data['user_id'];
+        }
+    }    
 
     protected function authentify() {
         // this is from c_user login():

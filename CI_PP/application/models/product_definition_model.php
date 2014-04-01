@@ -34,17 +34,18 @@ class Product_definition_model extends MY_Model {
 
     /*     * * database operations ** */
     
-    public function insert_product_definition(Product_definition_model $product_definition_instance) {
+    public function insert_product_definition() {
 
-        $this->product_definition_model->insert(
+        $id_of_inserted_prod_def = $this->product_definition_model->insert(
                 array(
-                    'pd_product_name' => $product_definition_instance->product_name,
-                    'pd_photo_url' => $product_definition_instance->photo_url,
-                    'pd_product_creator' => $product_definition_instance->product_creator,
-                    'pd_type' => $product_definition_instance->type,
-                    'pd_price' => $product_definition_instance->price,
-                    'pd_sex' => $product_definition_instance->sex
+                    'pd_product_name' => $this->product_name,
+                    'pd_photo_url' => $this->photo_url,
+                    'pd_product_creator' => $this->product_creator,
+                    'pd_type' => $this->type,
+                    'pd_price' => $this->price,
+                    'pd_sex' => $this->sex
         ));
+        return $id_of_inserted_prod_def;
     }
 
     /*     * ********* setters *********** */

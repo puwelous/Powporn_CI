@@ -64,7 +64,7 @@ $autoload['libraries'] = array('database', 'session','form_validation','parser',
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url','form','html', 'email_former_helper.php');
+$autoload['helper'] = array('url','form','html', 'email_former_helper', 'products_uploader_helper');//add .php?
 
 
 /*
@@ -80,7 +80,7 @@ $autoload['helper'] = array('url','form','html', 'email_former_helper.php');
 |
 */
 
-$autoload['config'] = array('pp_company_config','pp_email_config');
+$autoload['config'] = array('pp_company_config','pp_email_config', 'pp_products_upload_config');
 
 
 /*
