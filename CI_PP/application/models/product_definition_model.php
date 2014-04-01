@@ -34,6 +34,9 @@ class Product_definition_model extends MY_Model {
 
     /*     * * database operations ** */
     
+    /*
+     * create
+     */
     public function insert_product_definition() {
 
         $id_of_inserted_prod_def = $this->product_definition_model->insert(
@@ -48,6 +51,19 @@ class Product_definition_model extends MY_Model {
         return $id_of_inserted_prod_def;
     }
 
+    /*
+     * read
+     */
+    public function get_all_product_definitions(){
+        $all_prod_definitions = $this->product_definition_model->get_all();
+        
+        if( !isset($all_prod_definitions) || is_null($all_prod_definitions) ){
+            return NULL;
+        }else{
+            return $all_prod_definitions;
+        };
+         
+    }
     /*     * ********* setters *********** */
 
     public function setProductName($newProductName) {
