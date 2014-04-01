@@ -60,9 +60,9 @@
                 $count_per_row = ( count($products_list) / 2);
             } else {
                 //odd
-                $count_per_row = ( count($products_list) / 2);
+                $count_per_row = ( count($products_list) / 2) + 1;
             }
-            for ($i = 0; $i < $count_per_row; ++$i):
+            for ($i = $count_per_row; $i < count($products_list); ++$i):
                 ?>
                 <div class="gallery_item">
                     <a href="images/klematis_big.htm">
