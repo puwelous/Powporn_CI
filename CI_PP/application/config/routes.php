@@ -43,6 +43,7 @@ $route['registration']                  = 'c_registration';
 $route['user/password_reset']           = 'c_user/password_reset';
 $route['contact']                       = 'c_contact';
 $route['finalproducts']                 = 'c_finalproducts';
+$route['preview/show/(:any)']                  = 'c_preview/show';
 $route['welcome']                       = "c_welcome";
 $route['welcome/index']                 = "c_welcome/index";
 $route['default_controller']            = "c_welcome";

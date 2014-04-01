@@ -6,7 +6,7 @@
             <!-- Title -->
             <h1>
                 about us administration
-                <?php echo anchor('c_admin/index', '<-go back', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>                 
+                <?php echo anchor('c_admin/index', '<-go back', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
             </h1>
             <div class="red_line">
             </div>                    

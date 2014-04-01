@@ -85,6 +85,10 @@ div.gallery_item a:hover img {
     display: inline-block;
 }
 
+.gallery_item_desc:hover a{
+    display: inline-block;
+}
+
 .gallery_gradient_wrapper{
     position: absolute;
     width:100%;

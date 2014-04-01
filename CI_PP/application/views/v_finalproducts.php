@@ -45,9 +45,10 @@
                     </a>
                     <div class="gallery_item_desc">
                         <div class="gallery_item_name text_light bold upper_cased"><?php echo $products_list[$i]->pd_product_name; ?></div>
-                        <span class="gallery_item_option_items text_light smaller upper_cased pp_red">edit</span>
-                        <span class="gallery_item_option_items text_light smaller upper_cased pp_red">preview</span>
-                        <span class="gallery_item_option_items text_light smaller upper_cased pp_red">order</span>                            
+                        <!--<span class="gallery_item_option_items text_light smaller upper_cased pp_red">edit</span>-->
+                        <?php echo anchor('preview/show/' . $products_list[$i]->pd_id, 'preview', array('class' => 'gallery_item_option_items text_light smaller upper_cased pp_red')); ?>
+                        <!--<span class="gallery_item_option_items text_light smaller upper_cased pp_red">preview</span>-->
+                        <!--<span class="gallery_item_option_items text_light smaller upper_cased pp_red">order</span>-->                           
                     </div>
                 </div>
 
@@ -76,9 +77,10 @@
                     </a>
                     <div class="gallery_item_desc">
                         <div class="gallery_item_name text_light bold upper_cased"><?php echo $products_list[$i]->pd_product_name; ?></div>
-                        <span class="gallery_item_option_items text_light smaller upper_cased pp_red">edit</span>
-                        <span class="gallery_item_option_items text_light smaller upper_cased pp_red">preview</span>
-                        <span class="gallery_item_option_items text_light smaller upper_cased pp_red">order</span>                            
+                        <!--<span class="gallery_item_option_items text_light smaller upper_cased pp_red">edit</span>-->
+                        <?php echo anchor('c_preview/preview/' . $products_list[$i]->pd_id, 'preview', array('class' => 'gallery_item_option_items text_light smaller upper_cased pp_red')); ?>
+                        <!--<span class="gallery_item_option_items text_light smaller upper_cased pp_red">preview</span>-->
+                        <!--<span class="gallery_item_option_items text_light smaller upper_cased pp_red">order</span>-->                            
                     </div>
                 </div>
 
