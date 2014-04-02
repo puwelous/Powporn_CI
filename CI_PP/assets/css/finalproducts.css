@@ -11,6 +11,7 @@
     position: relative;
     height: 420px;
     width: 300%;
+    margin-left:0%;
     /*margin-left: -50%;*/
     /*margin: auto;*/
     text-align: center;
@@ -99,7 +100,7 @@ div.gallery_item a:hover img {
 .gallery_gradient{
     
     position: absolute;
-    width: 17%;
+    width: 13%;
     height: 100%;
     z-index: 1000;
     /*border: solid black 1px;*/
@@ -128,4 +129,5 @@ div.gallery_item a:hover img {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=1 );
 
 }
+
 

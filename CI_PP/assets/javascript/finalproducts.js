@@ -27,10 +27,11 @@
                     
                     // check actual position of a row wrapper, in case of attempt to move left
                     // further than gallery_wrapper' most left position, move it to the beginning
-                    if( $(".gallery_row_wrapper").offset().left + delta > 0 ){
+                    if( $(".gallery_row_wrapper").offset().left + delta > 150 ){
                         //alert( $(".gallery_row_wrapper").offset().left + ' ' + delta);
                         //return false;
-                        delta = -$(".gallery_row_wrapper").offset().left ;
+                        //delta = -$(".gallery_row_wrapper").offset().left ;
+                        delta = 0 ;
                     }else if( $(".gallery_row_wrapper").width() + $(".gallery_row_wrapper").offset().left + delta + 2 <  $( window ).width() ){
                         //delta = - 1 * ($(".gallery_row_wrapper").width() + $(".gallery_row_wrapper").offset().left - $( window ).width()) ;
                         //alert( $(".gallery_row_wrapper").width() + ", " + $(".gallery_row_wrapper").offset().left);
