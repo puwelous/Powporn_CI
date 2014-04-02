@@ -12,6 +12,8 @@
         echo link_tag('assets/css/socialsidebar.css');
         echo link_tag('assets/css/jquery.mCustomScrollbar.css');
         echo link_tag('assets/css/checkbox.css');
+        echo link_tag('assets/css/preview.css');
+        echo link_tag('assets/css/jquery.jqzoom.css');
         //js
         ?>
 
@@ -20,6 +22,7 @@
 
         <script src="<?php echo base_url(); ?>assets/javascript/validate.min.js" text='text/javascript'></script>
 
+        
         <script type="text/javascript">
             $(document).ready(function(){
                 
