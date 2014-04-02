@@ -4,3 +4,4 @@
 */cache/!index.html
 */cache/!.htaccess
 CI_PP/application/logs/log-*.php
+CI_PP/assets/images/products/*
