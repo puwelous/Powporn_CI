@@ -38,7 +38,7 @@ class MY_Controller extends CI_Controller {
     protected function get_user_id(){
         $session_data = $this->get_session_data();
         
-        if( is_null($session_data) ){
+        if( is_null($session_data['user_id']) || empty($session_data['user_id']) ){
             return NULL;
         }
         else {

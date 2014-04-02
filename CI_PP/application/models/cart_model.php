@@ -30,14 +30,17 @@ class Cart_model extends MY_Model {
 
     /*     * * database operations ** */
     
-    public function insert_cart(Cart_model $cart_instance) {
+    /*
+     * create
+     */
+    public function insert_cart() {
 
-        $this->cart_model->insert(
+        return $this->cart_model->insert(
                 array(
-                    'c_sum' => $cart_instance->sum,
-                    'c_status' => $cart_instance->status,
-                    'o_id' => $cart_instance->order,
-                    'u_ordering_person_id' => $cart_instance->ordering_person
+                    'c_sum' => $this->sum,
+                    'c_status' => $this->status,
+                    'o_id' => $this->order,
+                    'u_ordering_person_id' => $this->ordering_person
         ));
     }
 
@@ -62,11 +65,20 @@ class Cart_model extends MY_Model {
 //        }
 //    }
 //    
-//    public function is_present_by( $column, $value){
-//        $row = $this->user_model->get_by( $column, $value );
-//        
-//        return $row;
-//    }
+    
+    public function is_present_by( $column, $value, $asObject = TRUE){
+        if( $asObject ){
+            $row = $this->cart_model->as_object()->get_by( $column, $value );
+        } else{
+            $row = $this->cart_model->as_array()->get_by( $column, $value );
+        }
+           
+        return $row;
+    }
+    
+    public function get_cart_by_owner_id( $owner_id, $asObject = TRUE){
+        return $this->is_present_by('u_ordering_person_id', $owner_id, $asObject);
+    }
 
 
     /*     * ********* setters *********** */

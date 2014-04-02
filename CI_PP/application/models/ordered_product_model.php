@@ -32,15 +32,15 @@ class Ordered_product_model extends MY_Model {
 
     /*     * * database operations ** */
     
-    public function insert_ordered_product(Ordered_product_model $ordered_product_model) {
+    public function insert_ordered_product() {
 
-        $this->ordered_product_model->insert(
+        return $this->ordered_product_model->insert(
                 array(
-                    'pd_id' => $ordered_product_model->ordered_product_model->product_definition,
-                    'op_amount' => $ordered_product_model->amount,
-                    'psfp_name' => $ordered_product_model->size_name,
-                    'c_id' => $ordered_product_model->cart,
-                    'u_id' => $ordered_product_model->orderer
+                    'pd_id' => $this->product_definition,
+                    'op_amount' => $this->amount,
+                    'psfp_name' => $this->size_name,
+                    'c_id' => $this->cart,
+                    'u_id' => $this->orderer
         ));
     }
 

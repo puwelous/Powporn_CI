@@ -76,7 +76,12 @@
 
         <div class="line pp_red"></div>
 
-        <!--<div id="pr_l_title" class="text_medium upper_cased black">snowbitch xxx</div>-->
+        <?php
+        $attributes = array('name' => 'pp_add_product_to_cart_form');
+        echo form_open("c_preview/add_to_cart/" . $previewed_product->pd_id, $attributes);
+        echo form_hidden('product_id', $previewed_product->pd_id);
+        ?>
+        
         <h2><?php echo $previewed_product->pd_product_name; ?></h2>
         <div class="line pp_dark_gray"></div>
 
@@ -100,7 +105,9 @@
         <div class="line"></div>
 
         <h1><?php echo $previewed_product->pd_price; ?>&nbsp;&euro;</h1>
-        <button id="add_to_cart_button">ADD</button>
+        
+        <button id="add_to_cart_button" type="submit">ADD TO CART</button>
+        <?php echo form_close(); ?>
     </div>
 
     <div class="preview_center">
