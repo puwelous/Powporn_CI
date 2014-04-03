@@ -38,7 +38,7 @@ class MY_Controller extends CI_Controller {
     protected function get_user_id(){
         $session_data = $this->get_session_data();
         
-        if( is_null($session_data['user_id']) || empty($session_data['user_id']) ){
+        if( !isset($session_data['user_id']) || is_null($session_data['user_id']) || empty($session_data['user_id']) ){
             return NULL;
         }
         else {
@@ -98,7 +98,7 @@ class MY_Controller extends CI_Controller {
 
         $user_id = $this->session->userdata('user_id');
 
-        if (is_null($user_id) || !isset($user_id) || $user_id == NULL) {
+        if ( !isset($user_id) || is_null($user_id) || $user_id == NULL) {
             // login <li></li> loaded
             $template_data['login_or_logout_template'] = $this->parser->parse(constant('MY_Controller::' . 'LOGIN_TEMPLATE_PATH'), array(), TRUE);
         } else {
