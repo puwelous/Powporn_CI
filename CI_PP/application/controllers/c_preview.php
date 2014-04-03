@@ -76,7 +76,7 @@ class C_preview extends MY_Controller {
 
 
         // load user's cart
-        $users_cart = $this->cart_model->get_cart_by_owner_id($actual_user_id, TRUE);
+        $users_cart = $this->cart_model->get_open_cart_by_owner_id($actual_user_id, TRUE);
 
         // create user cart if necessary
         if (is_null($users_cart) || $users_cart == NULL || empty($users_cart)) {

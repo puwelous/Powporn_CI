@@ -4,16 +4,15 @@ class Cart_model extends MY_Model {
 
     public $_table = 'pp_cart';
     public $primary_key = 'c_id';
-    
     public $sum;
     public $status;
     public $order;
     public $ordering_person;
-    
     public $protected_attributes = array('c_id');
+    public $has_many = array('ordered_product' => array('model' => 'ordered_product', 'primary_key' => 'c_id'));
 
-    
     /* basic constructor */
+
     public function __construct() {
         parent::__construct();
     }
@@ -29,19 +28,20 @@ class Cart_model extends MY_Model {
     }
 
     /*     * * database operations ** */
-    
+
     /*
      * create
      */
+
     public function insert_cart() {
 
         return $this->cart_model->insert(
-                array(
-                    'c_sum' => $this->sum,
-                    'c_status' => $this->status,
-                    'o_id' => $this->order,
-                    'u_ordering_person_id' => $this->ordering_person
-        ));
+                        array(
+                            'c_sum' => $this->sum,
+                            'c_status' => $this->status,
+                            'o_id' => $this->order,
+                            'u_ordering_person_id' => $this->ordering_person
+                ));
     }
 
 //    public function get_by_email_or_nick_and_password($email_or_nick, $password) {
@@ -65,21 +65,39 @@ class Cart_model extends MY_Model {
 //        }
 //    }
 //    
-    
-    public function is_present_by( $column, $value, $asObject = TRUE){
-        if( $asObject ){
-            $row = $this->cart_model->as_object()->get_by( $column, $value );
-        } else{
-            $row = $this->cart_model->as_array()->get_by( $column, $value );
+
+    public function is_present_by($column, $value, $asObject = TRUE) {
+        if ($asObject) {
+            $row = $this->cart_model->as_object()->get_by($column, $value);
+        } else {
+            $row = $this->cart_model->as_array()->get_by($column, $value);
         }
-           
+
         return $row;
     }
-    
-    public function get_cart_by_owner_id( $owner_id, $asObject = TRUE){
+
+    public function get_cart_by_owner_id($owner_id, $asObject = TRUE) {
         return $this->is_present_by('u_ordering_person_id', $owner_id, $asObject);
     }
 
+    public function get_open_cart_by_owner_id($owner_id, $asObject = TRUE) {
+        if ($asObject) {
+            $row = $this->cart_model->as_object()->get_by(array('u_ordering_person_id' => $owner_id, 'c_status' => 'OPEN'));
+        } else {
+            $row = $this->cart_model->as_array()->get_by(array('u_ordering_person_id' => $owner_id, 'c_status' => 'OPEN'));
+        }
+        return $row;
+    }
+
+//    public function get_open_cart_including_ordered_prods_by_owner_id($owner_id, $asObject = TRUE) {
+//        if ($asObject) {
+//            $row = $this->cart_model->as_object()->with('ordered_product')->get_by(array('u_ordering_person_id' => $owner_id, 'c_status' => 'OPEN'));
+//        } else {
+//            $row = $this->cart_model->as_array()->with('ordered_product')->get_by(array('u_ordering_person_id' => $owner_id, 'c_status' => 'OPEN'));
+//        }
+//
+//        return $row;
+//    }
 
     /*     * ********* setters *********** */
 
