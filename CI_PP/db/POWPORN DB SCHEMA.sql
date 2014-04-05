@@ -42,8 +42,7 @@ CREATE TABLE `ci_sessions` (
 
 /*!40000 ALTER TABLE `ci_sessions` DISABLE KEYS */;
 INSERT INTO `ci_sessions` (`session_id`,`ip_address`,`user_agent`,`last_activity`,`user_data`) VALUES 
- ('131dd0c50e360b4168b51171b300de84','127.0.0.1','Mozilla/5.0 (Windows NT 6.0; rv:26.0) Gecko/20100101 Firefox/26.0',1396385154,''),
- ('b6be7245e66516c4886256669e80ef86','127.0.0.1','Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36',1396392628,'a:5:{s:7:\"user_id\";s:1:\"1\";s:9:\"user_nick\";s:5:\"puwel\";s:10:\"user_email\";s:20:\"pavol.dano@gmail.com\";s:13:\"user_is_admin\";s:1:\"1\";s:9:\"logged_in\";i:1;}');
+ ('3577375d21befd7cd3a160bebc22c4d7','127.0.0.1','Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.154 Safari/537.36',1396531770,'');
 /*!40000 ALTER TABLE `ci_sessions` ENABLE KEYS */;
 
 
@@ -56,13 +55,13 @@ CREATE TABLE `pp_cart` (
   `c_id` int(10) NOT NULL default '0',
   `c_sum` decimal(5,2) NOT NULL default '0.00',
   `c_status` varchar(16) NOT NULL default '',
-  `o_id` int(10) NOT NULL default '0',
+  `o_id` int(10) default '0',
   `u_ordering_person_id` int(10) NOT NULL default '0',
   PRIMARY KEY  (`c_id`),
   KEY `FK_pp_cart_order` (`o_id`),
   KEY `FK_pp_cart_ordering_person` (`u_ordering_person_id`),
-  CONSTRAINT `FK_pp_cart_ordering_person` FOREIGN KEY (`u_ordering_person_id`) REFERENCES `pp_user` (`u_id`),
-  CONSTRAINT `FK_pp_cart_order` FOREIGN KEY (`o_id`) REFERENCES `pp_order` (`o_id`)
+  CONSTRAINT `FK_pp_cart_order` FOREIGN KEY (`o_id`) REFERENCES `pp_order` (`o_id`),
+  CONSTRAINT `FK_pp_cart_ordering_person` FOREIGN KEY (`u_ordering_person_id`) REFERENCES `pp_user` (`u_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -70,6 +69,8 @@ CREATE TABLE `pp_cart` (
 --
 
 /*!40000 ALTER TABLE `pp_cart` DISABLE KEYS */;
+INSERT INTO `pp_cart` (`c_id`,`c_sum`,`c_status`,`o_id`,`u_ordering_person_id`) VALUES 
+ (0,'370.35','OPEN',NULL,1);
 /*!40000 ALTER TABLE `pp_cart` ENABLE KEYS */;
 
 
@@ -138,9 +139,9 @@ CREATE TABLE `pp_order` (
   KEY `FK_Reference_7` USING BTREE (`o_cart`),
   KEY `FK_Reference_8` USING BTREE (`o_shipping_method`),
   KEY `FK_Reference_9` USING BTREE (`o_payment_method`),
-  CONSTRAINT `FK_Reference_9` FOREIGN KEY (`o_payment_method`) REFERENCES `pp_payment_method` (`pm_id`),
   CONSTRAINT `FK_Reference_7` FOREIGN KEY (`o_cart`) REFERENCES `pp_cart` (`c_id`),
-  CONSTRAINT `FK_Reference_8` FOREIGN KEY (`o_shipping_method`) REFERENCES `pp_shipping_method` (`sm_id`)
+  CONSTRAINT `FK_Reference_8` FOREIGN KEY (`o_shipping_method`) REFERENCES `pp_shipping_method` (`sm_id`),
+  CONSTRAINT `FK_Reference_9` FOREIGN KEY (`o_payment_method`) REFERENCES `pp_payment_method` (`pm_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -177,6 +178,10 @@ CREATE TABLE `pp_ordered_product` (
 --
 
 /*!40000 ALTER TABLE `pp_ordered_product` DISABLE KEYS */;
+INSERT INTO `pp_ordered_product` (`op_id`,`pd_id`,`op_amount`,`psfp_name`,`c_id`,`u_id`) VALUES 
+ (1,30,1,'small',0,1),
+ (2,30,1,'medium',0,1),
+ (3,30,1,'medium',0,1);
 /*!40000 ALTER TABLE `pp_ordered_product` ENABLE KEYS */;
 
 
@@ -187,7 +192,7 @@ CREATE TABLE `pp_ordered_product` (
 DROP TABLE IF EXISTS `pp_payment_method`;
 CREATE TABLE `pp_payment_method` (
   `pm_id` int(10) NOT NULL auto_increment,
-  `pm_name` varchar(10) NOT NULL default '',
+  `pm_name` varchar(32) NOT NULL default '',
   `pm_cost` decimal(5,2) NOT NULL default '0.00',
   PRIMARY KEY  (`pm_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -197,6 +202,9 @@ CREATE TABLE `pp_payment_method` (
 --
 
 /*!40000 ALTER TABLE `pp_payment_method` DISABLE KEYS */;
+INSERT INTO `pp_payment_method` (`pm_id`,`pm_name`,`pm_cost`) VALUES 
+ (5,'IBANKING','0.00'),
+ (6,'CREDIT CARD','1.00');
 /*!40000 ALTER TABLE `pp_payment_method` ENABLE KEYS */;
 
 
@@ -220,6 +228,9 @@ CREATE TABLE `pp_possible_size_for_product` (
 --
 
 /*!40000 ALTER TABLE `pp_possible_size_for_product` DISABLE KEYS */;
+INSERT INTO `pp_possible_size_for_product` (`psfp_id`,`pd_id`,`psfp_name`,`psfp_amount`) VALUES 
+ (25,30,'small',1),
+ (26,30,'medium',1);
 /*!40000 ALTER TABLE `pp_possible_size_for_product` ENABLE KEYS */;
 
 
@@ -246,6 +257,8 @@ CREATE TABLE `pp_product_definition` (
 --
 
 /*!40000 ALTER TABLE `pp_product_definition` DISABLE KEYS */;
+INSERT INTO `pp_product_definition` (`pd_id`,`pd_product_name`,`pd_photo_url`,`pd_product_creator`,`pd_type`,`pd_price`,`pd_sex`) VALUES 
+ (30,'PP K2 Bambi','./assets/images/products/finals/puwel_PP_K2_Bambi_1.jpg',1,'Unbelievably water-proof hoodie made of high-quality material.','123.45','male');
 /*!40000 ALTER TABLE `pp_product_definition` ENABLE KEYS */;
 
 
@@ -266,6 +279,10 @@ CREATE TABLE `pp_shipping_method` (
 --
 
 /*!40000 ALTER TABLE `pp_shipping_method` DISABLE KEYS */;
+INSERT INTO `pp_shipping_method` (`sm_id`,`sm_name`,`sm_price`) VALUES 
+ (1,'Standard mail delivery','3.00'),
+ (2,'UPC','5.00'),
+ (3,'Personal pick up','0.00');
 /*!40000 ALTER TABLE `pp_shipping_method` ENABLE KEYS */;
 
 

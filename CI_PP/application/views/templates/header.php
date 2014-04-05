@@ -17,8 +17,8 @@
         //js
         ?>
 
-        <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js' type='text/javascript'></script>
-        <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js' type='text/javascript'></script>
+        <script src="https://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 
         <script src="<?php echo base_url(); ?>assets/javascript/validate.min.js" text='text/javascript'></script>
 
