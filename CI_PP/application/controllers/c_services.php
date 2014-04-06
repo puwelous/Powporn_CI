@@ -35,8 +35,20 @@ class C_services extends MY_Controller {
         $oembedParams = array(COEmbedImpl::ACCEPTED_URL_SCHEME_KEY_VALUE => self::ALLOWED_URL_SCHEMA);
         $this->load->library('Pinterest/CPinterestImpl', $oembedParams);
 
+        $input_format = $this->input->get('format');
+        if ( !isset($input_format) ){
+            // set explicitly
+            $content_type = 'application/json';
+        }else if( $input_format == 'json' ){
+            $content_type = 'application/json';
+        }else{
+            //TODO: XML not supported yet!
+            //$content_type = 'application/json';
+            $content_type = 'text/xml';
+        }
+        
         // setting content type
-        $this->output->set_content_type('application/json');
+        $this->output->set_content_type($content_type);
 
         // parsing URL scheme from GET parameters
         $input_url = $this->input->get('url');
