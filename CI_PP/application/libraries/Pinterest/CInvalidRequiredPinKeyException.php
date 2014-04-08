@@ -1,16 +1,15 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once('CPinterestException.php');
 
 /**
- * Description of OEmbedException
+ * An exception specifying status when checked key value does not belong to
+ * the set of required key values according to the Pinterest API specification.
  *
- * @author PC
+ * @author Pavol Daňo
+ * @version 1.0 
+ * @file
  */
-
 class CInvalidRequiredPinKeyException extends CPinterestException {
 
 }

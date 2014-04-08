@@ -1,26 +1,49 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once('OEmbed/enumhelper/CAbstractEnum.php');
+require_once('ICPinRequiredResponseKeyConstants.php');
 
 /**
- * Description of COEmbedBasicKeys
- *
- * @author PC
+ * Abstract class representinng enumeration of all Pinterest required keys.
+ * 
+ * Provided because we need to find a way to check all required keys which belong
+ * to required ones. Due to inheritance from CAbstractEnum class we have
+ * got a simle but yet strong tool for asking if value (actually it is a JSON or XML key/element)
+ * is allowed or not.
+ * 
+ * \code
+ * // example of usage:
+ * if ( !CPinRequiredKeys::isValidValue('CPinRequiredKeys',$key) ) {
+ *      throw new CInvalidRequiredPinKeyException("Key is not among the required ones!");
+ * }
+ * \endcode
+ * 
+ * @see CPinOptionalKeys
+ * 
+ * @author Pavol Daňo
+ * @version 1.0
+ * @file
  */
-require_once('OEmbed/enumhelper/CAbstractEnum.php');
-
-require_once('ICPinRequiredResponseConstants.php');
-
-
-abstract class CPinRequiredKeys extends CAbstractEnum implements ICPinRequiredResponseConstants {
+abstract class CPinRequiredKeys extends CAbstractEnum implements ICPinRequiredResponseKeyConstants {
     
-    const PIN_TYPE_URL = ICPinRequiredResponseConstants::PRC_URL;
-    const PIN_TYPE_TITLE = ICPinRequiredResponseConstants::PRC_TITLE;
-    const PIN_TYPE_PRICE = ICPinRequiredResponseConstants::PRC_PRICE;
-    const PIN_TYPE_CURRENCY_CODE = ICPinRequiredResponseConstants::PRC_CURRENCY_CODE;
+    /**
+     * Enumeration item for an URL response parameter.
+     */     
+    const PIN_TYPE_URL = ICPinRequiredResponseKeyConstants::PRRKC_URL;
+    
+    /**
+     * Enumeration item for a title response parameter.
+     */     
+    const PIN_TYPE_TITLE = ICPinRequiredResponseKeyConstants::PRRKC_TITLE;
+    
+    /**
+     * Enumeration item for a price response parameter.
+     */     
+    const PIN_TYPE_PRICE = ICPinRequiredResponseKeyConstants::PRRKC_PRICE;
+    
+    /**
+     * Enumeration item for a currency code response parameter.
+     */     
+    const PIN_TYPE_CURRENCY_CODE = ICPinRequiredResponseKeyConstants::PRRKC_CURRENCY_CODE;
 }
-
 ?>

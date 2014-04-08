@@ -1,17 +1,13 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of OEmbedException
+ * An exception specifying status when checked key value does not belong to
+ * the set of optional key values according to the Pinterest API specification.
  *
- * @author PC
+ * @author Pavol Daňo
+ * @version 1.0 
+ * @file
  */
-
-
 class CInvalidOptionalPinKeyException extends CPinterestException {
 
 }

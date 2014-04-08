@@ -1,25 +1,43 @@
 <?php
 
-/*
- * Gender property of this product can only be:
- * 'male', 'female' or 'unisex'.
- */
-
 /**
+ * Interface holding 3 constants as alternative values 
+ * for a response gender of a product owner type.
+ * Might be:
+ * - male
+ * - female
+ * - unisex
+ * 
+ * See also:
+ * <a href="https://developers.pinterest.com/rich_pins/">Pinterest Rich Pins documentation</a>  
  *
- * @author PC
+ * 
+ * @author Pavol Daňo
+ * @version 1.0 
+ * @file
  */
 interface ICPinGenderValueConstants {
 
-    //male
+    /**
+     * Male.
+     * 
+     * Marks product as a product for a person of the male gender.
+     */    
     const PGVC_MALE = 'male';  
     
-    //female
+    /**
+     * Female.
+     * 
+     * Marks product as a product for a person of the female gender.
+     */  
     const PGVC_FEMALE = 'female';  
     
-    //unisex
-    const PGVC_UNISEX = 'unisex';     
-
+    /**
+     * Unisex.
+     * 
+     * Marks product as a product for a person of any gender.
+     */  
+    const PGVC_UNISEX = 'unisex';
 }
 
 ?>
