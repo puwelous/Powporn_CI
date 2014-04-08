@@ -1,18 +1,20 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once('COEmbedException.php');
 
 /**
- * Description of OEmbedException
- *
- * @author PC
+ * Exception thrown in a case that object extending ICOembed 
+ * is not initialized properly before usage of certain methods 
+ * where accepted URL is necessary to be defined.
+ * 
+ * @see COEmbedImpl::check_url_from_get
+ * @see COEmbedImpl::remove_expected_part
+ * 
+ * @author Pavol Daňo
+ * @file
  */
-require_once('COEmbedException.php');
 class CAcceptedUrlNotInitializedException extends COEmbedException {
-
+    
 }
 
 ?>

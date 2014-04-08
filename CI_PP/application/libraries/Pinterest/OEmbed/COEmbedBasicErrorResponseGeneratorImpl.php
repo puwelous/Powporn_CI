@@ -25,10 +25,10 @@ class COEmbedBasicErrorResponseGeneratorImpl implements ICOEmbedBasicErrorRespon
     //  }    
     public function generate_404_not_found($url) {
         return array(
-            ICOEmbedErrorConstants::OEEC_KEY_URL => $url,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_CODE => ICOEmbedErrorConstants::OEEC_404_ERROR_CODE,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_MESSAGE => ICOEmbedErrorConstants::OEEC_404_ERROR_MESSAGE,
-            ICOEmbedErrorConstants::OEEC_KEY_TYPE => ICOEmbedErrorConstants::OEEC_VALUE_OF_ERROR_TYPE
+            ICOEmbedErrorKeyConstants::OEEKC_URL => $url,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_CODE => ICOEmbedErrorValueConstants::OEEVC_ERROR_CODE_404,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_MESSAGE => ICOEmbedErrorValueConstants::OEEVC_ERROR_MESSAGE_404,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_TYPE => ICOEmbedErrorValueConstants::OEEC_ERROR_TYPE_VALUE
         );
     }
 
@@ -46,10 +46,10 @@ class COEmbedBasicErrorResponseGeneratorImpl implements ICOEmbedBasicErrorRespon
     //  }    
     public function generate_501_not_implemented($url) {
         return array(
-            ICOEmbedErrorConstants::OEEC_KEY_URL => $url,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_CODE => ICOEmbedErrorConstants::OEEC_501_ERROR_CODE,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_MESSAGE => ICOEmbedErrorConstants::OEEC_501_ERROR_MESSAGE,
-            ICOEmbedErrorConstants::OEEC_KEY_TYPE => ICOEmbedErrorConstants::OEEC_VALUE_OF_ERROR_TYPE
+            ICOEmbedErrorKeyConstants::OEEKC_URL => $url,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_CODE => ICOEmbedErrorValueConstants::OEEVC_ERROR_CODE_501,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_MESSAGE =>  ICOEmbedErrorValueConstants::OEEVC_ERROR_MESSAGE_501,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_TYPE =>  ICOEmbedErrorValueConstants::OEEC_ERROR_TYPE_VALUE
         );
     }
 
@@ -67,10 +67,10 @@ class COEmbedBasicErrorResponseGeneratorImpl implements ICOEmbedBasicErrorRespon
     //  }    
     public function generate_401_unauthorized($url) {
         return array(
-            ICOEmbedErrorConstants::OEEC_KEY_URL => $url,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_CODE => ICOEmbedErrorConstants::OEEC_401_ERROR_CODE,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_MESSAGE => ICOEmbedErrorConstants::OEEC_401_ERROR_MESSAGE,
-            ICOEmbedErrorConstants::OEEC_KEY_TYPE => ICOEmbedErrorConstants::OEEC_VALUE_OF_ERROR_TYPE
+            ICOEmbedErrorKeyConstants::OEEKC_URL => $url,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_CODE => ICOEmbedErrorValueConstants::OEEVC_ERROR_CODE_401,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_MESSAGE => ICOEmbedErrorValueConstants::OEEVC_ERROR_MESSAGE_404,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_TYPE => ICOEmbedErrorValueConstants::OEEC_ERROR_TYPE_VALUE
         );
     }
 
@@ -85,10 +85,10 @@ class COEmbedBasicErrorResponseGeneratorImpl implements ICOEmbedBasicErrorRespon
     //  }      
     public function generate_500_server_issues($url) {
         return array(
-            ICOEmbedErrorConstants::OEEC_KEY_URL => $url,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_CODE => ICOEmbedErrorConstants::OEEC_500_ERROR_CODE,
-            ICOEmbedErrorConstants::OEEC_KEY_ERROR_MESSAGE => ICOEmbedErrorConstants::OEEC_500_ERROR_MESSAGE,
-            ICOEmbedErrorConstants::OEEC_KEY_TYPE => ICOEmbedErrorConstants::OEEC_VALUE_OF_ERROR_TYPE
+            ICOEmbedErrorKeyConstants::OEEKC_URL => $url,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_CODE => ICOEmbedErrorValueConstants::OEEVC_ERROR_CODE_500,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_MESSAGE => ICOEmbedErrorValueConstants::OEEVC_ERROR_MESSAGE_500,
+            ICOEmbedErrorKeyConstants::OEEKC_ERROR_TYPE => ICOEmbedErrorValueConstants::OEEC_ERROR_TYPE_VALUE
         );
     }
 

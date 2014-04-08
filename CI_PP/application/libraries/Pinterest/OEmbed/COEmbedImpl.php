@@ -6,7 +6,9 @@
  * @author Pavol Daňo
  */
 require_once('ICOEmbed.php');
-require_once('ICOEmbedErrorConstants.php');
+
+require_once('ICOEmbedErrorKeyConstants.php');
+require_once('ICOEmbedErrorValueConstants.php');
 
 require_once('ICOEmbedVersionValueConstants.php');
 require_once('ICOEmbedTypeValueConstants.php');
@@ -19,10 +21,11 @@ require_once('COEmbedOptionalKeys.php');
 require_once('CNotObligatoryOEmbedKeyException.php');
 require_once('CNotOptionalOEmbedKeyException.php');
 
-class COEmbedImpl extends COEmbedBasicErrorResponseGeneratorImpl implements ICOEmbed, ICOEmbedErrorConstants {
+class COEmbedImpl extends COEmbedBasicErrorResponseGeneratorImpl implements ICOEmbed, ICOEmbedErrorKeyConstants, ICOEmbedErrorValueConstants {
 
+    
     const ACCEPTED_URL_SCHEME_KEY_VALUE = 'accepted_url_scheme';
-
+    
     private $_acceptedUrlScheme = '';
 
     public function __construct($params) {
@@ -30,6 +33,10 @@ class COEmbedImpl extends COEmbedBasicErrorResponseGeneratorImpl implements ICOE
         $this->_acceptedUrlScheme = $params[self::ACCEPTED_URL_SCHEME_KEY_VALUE];
     }
 
+    /**
+     * 
+     * @param type $acceptedURLScheme
+     */
     public function set_accepted_url_scheme($acceptedURLScheme) {
         $this->_acceptedUrlScheme = $acceptedURLScheme;
     }
