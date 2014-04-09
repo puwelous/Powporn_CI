@@ -72,11 +72,11 @@
         });   
         
         $("label[for=address_other]").click( function(){
-            $("li.hidable").css('visibility', 'hidden');
+            $("li.hidable").css('visibility', 'visible');
         });
         
         $("label[for=address_same]").click( function(){
-            $("li.hidable").css('visibility', 'visible');
+            $("li.hidable").css('visibility', 'hidden');
         });
         
         $("label[for^=payment_method_]").click( function(){
