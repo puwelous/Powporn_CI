@@ -1,23 +1,25 @@
 <?php
 
-/*
- * Case-insensitive string, possible values: "in stock", "preorder", "backorder" 
- * (will be back in stock soon), 
- * “out of stock” (may be back in stock some time), 
- * “discontinued.” 
- * Discontinued items won’t be part of a daily scrape 
- * and marking them will decrease the load on your servers.
- */
-
 /**
+ * Interface holding 1 constant value for a response version.
+ * Allowed value so far is "1.0".
+ * 
+ * See also:
+ * <a href="http://oembed.com/#section2">oEmbed documentation</a>  
  *
- * @author PC
+ * 
+ * @see ICOEmbedRequiredResponseKeyConstants
+ * @author Pavol Daňo
+ * @version 1.0 
+ * @file
  */
 interface ICOEmbedVersionValueConstants {
 
-    //in stock
-    const COEVVC_FIRST = '1.0';  
-
+    /**
+     * The oEmbed version number. 
+     * This must be 1.0
+     */
+    const COEVVC_VERSION = '1.0';
 }
 
 ?>
