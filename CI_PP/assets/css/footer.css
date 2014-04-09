@@ -12,7 +12,8 @@
 
 #footer.f_inactive {
 
-    background-color: #ffffff;
+/*    background-color: #ffffff;*/
+background-color: transparent;
     /*border: solid blue 1px;*/
 }
 
