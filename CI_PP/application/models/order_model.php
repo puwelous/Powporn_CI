@@ -11,6 +11,7 @@ class Order_model extends MY_Model {
     public $is_shipping_address_regist_address;
     public $status;
     public $final_sum;
+    public $order_address;
     
     public $protected_attributes = array('o_id');
 
@@ -21,7 +22,7 @@ class Order_model extends MY_Model {
 
     /* instance "constructor" */
 
-    public function instantiate($cart, $shipping_method,$payment_method, $is_shipping_address_regist_address, $status, $final_sum) {
+    public function instantiate($cart, $shipping_method,$payment_method, $is_shipping_address_regist_address, $status, $final_sum, $order_address) {
 
     $this->cart = $cart;
     $this->shipping_method = $shipping_method;
@@ -29,20 +30,22 @@ class Order_model extends MY_Model {
     $this->is_shipping_address_regist_address = $is_shipping_address_regist_address;
     $this->status = $status;
     $this->final_sum = $final_sum;
+    $this->order_address = $order_address;
     }
 
     /*     * * database operations ** */
     
-    public function insert_order(Order_model $order) {
+    public function insert_order() {
 
-        $this->order_model->insert(
+        return $this->order_model->insert(
                 array(
-                    'o_cart' => $order->cart,
-                    'o_shipping_method' => $order->shipping_method,
-                    'o_payment_method' => $order->payment_method,
-                    'o_is_shipping_address_registration_addres' => $order->is_shipping_address_regist_address,
-                    'o_status' => $order->status,
-                    'o_final_sum' => $order->final_sum
+                    'o_cart' => $this->cart,
+                    'o_shipping_method' => $this->shipping_method,
+                    'o_payment_method' => $this->payment_method,
+                    'o_is_shipping_address_registration_addres' => $this->is_shipping_address_regist_address,
+                    'o_status' => $this->status,
+                    'o_final_sum' => $this->final_sum,
+                    'o_order_address' => $this->order_address
         ));
     }
 
@@ -71,6 +74,10 @@ class Order_model extends MY_Model {
     public function setFinalSum($newFinalSum) {
         $this->final_sum = $newFinalSum;
     }    
+    
+    public function setOrderAddress($newOrderAddress) {
+        $this->order_address = $newOrderAddress;
+    }     
 
     /*     * ********* getters *********** */
 
@@ -97,6 +104,10 @@ class Order_model extends MY_Model {
     public function getFinalSum() {
         return $this->final_sum;
     }      
+    
+    public function getOrderAddress() {
+        return $this->order_address;
+    }    
 
 }
 

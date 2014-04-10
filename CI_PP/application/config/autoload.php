@@ -119,7 +119,8 @@ $autoload['model'] = array(
     'possible_size_for_product_model',
     'ordered_product_model',
     'payment_method_model',
-    'order_model'
+    'order_model',
+    'order_address_model'
     );
 
 
