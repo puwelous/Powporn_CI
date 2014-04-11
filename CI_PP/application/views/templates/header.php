@@ -214,10 +214,15 @@
                 <li id="m_language">
                     <?php echo anchor('shopping_cart', 'en / sk', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
                 </li>
-                <li id="m_cart">
-                    <?php echo anchor('shopping_cart', 'shopping cart', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
-                </li>
+<!--                <li id="m_cart">
+                    <?php //echo anchor('shopping_cart', 'shopping cart', array('class' => 'text_light smaller pp_dark_gray red_on_hover upper_cased')); ?>
+                </li>-->
 
+                <?php
+                /* dynamicaly added <LI> element either to log in or log out according to the status of user */
+                echo $shopping_cart_template
+                ?>                
+                
                 <?php
                 /* dynamicaly added <LI> element either to log in or log out according to the status of user */
                 echo $login_or_logout_template
