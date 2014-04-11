@@ -120,7 +120,9 @@ $autoload['model'] = array(
     'ordered_product_model',
     'payment_method_model',
     'order_model',
-    'order_address_model'
+    'order_address_model',
+    'paypal_shipping_data_model',
+    'paypal_transaction_data_model'
     );
 
 

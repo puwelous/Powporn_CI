@@ -120,7 +120,7 @@
         <?php echo validation_errors('<p class="error" style="display:inline">'); ?>
         <?php
         $attributes = array('name' => 'pp_form_name', 'style' => 'height:100%;');
-        echo form_open("c_shopping_cart/prepare_order", $attributes);
+        echo form_open("c_shopping_cart/show_order_preview", $attributes);
 
         $dataCartId = array(
             'type' => 'hidden',
@@ -128,9 +128,8 @@
             'value' => $shopping_cart_id
         );
         echo form_input($dataCartId);
-
         ?>
-        
+
         <div class="container">
 
             <!-- Title -->
@@ -354,7 +353,7 @@
                     <ul id="shipping_list_section" class="shipping_list">
 
                         <?php for ($i = 0; $i < count($payment_methods); ++$i): ?><li>
-                                <span class="text_light upper_cased"><?php echo $payment_methods[$i]->pm_name; ?></span>
+                            <span class="text_light upper_cased"><?php echo $payment_methods[$i]->pm_name; ?>&nbsp;(<?php echo $payment_methods[$i]->pm_cost; ?>&euro;)</span>
                                 <input type = "radio"
                                        class="css-checkbox"
                                        name = "payment_method"
@@ -393,7 +392,6 @@
                 </div>
                 <div style="clear:both;"></div>
             </div>
-            <!--</form>-->
         </div> 
         </form>
 

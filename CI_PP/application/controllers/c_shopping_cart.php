@@ -66,11 +66,11 @@ class C_shopping_cart extends MY_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function prepare_order() {
+    public function show_order_preview() {
 
         $template_data = array();
 
-        $this->set_title($template_data, 'Order');
+        $this->set_title($template_data, 'Order preview');
         $this->load_header_templates($template_data);
 
         $actual_user_id = $this->get_user_id();
@@ -157,7 +157,7 @@ class C_shopping_cart extends MY_Controller {
             // set flag
             $this->session->set_userdata( array( 'is_order_address_set' => false) );  
             
-            //$this->session->set_userdata($order_address);             
+            $this->session->set_userdata($order_address);             
         }
         
         /*         * * start TRANSACTION ** */
@@ -182,32 +182,7 @@ class C_shopping_cart extends MY_Controller {
                 log_message('debug', 'Rolling the transaction back!');
                 $this->db->trans_rollback();
                 redirect('/c_shopping_cart/index', 'refresh');
-            }
-
-//            // create order
-//            $newOrder = new Order_model();
-//            $newOrder->instantiate($cart_id, $shipping_method, $payment_method, $is_shipping_address_regist_address, $status, $final_sum);
-//            log_message('debug', 'New order: ' . print_r($newOrder, true));
-//            
-//            $new_order_id = $newOrder->insert_order();
-//            log_message('debug', '$new_order_id :' . print_r($new_order_id, TRUE));
-//
-//            if (is_null($new_order_id) || $new_order_id == NULL || empty($new_order_id)) {
-//                log_message('debug', 'Creation of order failed!. Redirect!');
-//                log_message('debug', 'Rolling the transaction back!');
-//                $this->db->trans_rollback();
-//                redirect('/c_shopping_cart/index', 'refresh');
-//            }
-//
-//            // get db cart
-//            $updated_cart_result = $this->cart_model->update(  $cart_id , array('o_id' => $new_order_id ) );
-//
-//            if ($updated_cart_result < 0) {
-//                log_message('debug', 'Update of cart failed!. Redirect!');
-//                log_message('debug', 'Rolling the transaction back!');
-//                $this->db->trans_rollback();
-//                redirect('/c_shopping_cart/index', 'refresh');
-//            }            
+            }          
         }
 
         if ($this->db->trans_status() === FALSE) {
@@ -218,25 +193,34 @@ class C_shopping_cart extends MY_Controller {
             $this->db->trans_commit();
         }
 
-        
 
         
         $db_odered_products_full_info = $this->ordered_product_model->get_ordered_product_full_info_by_cart_id( $cart_id );
         
         $data['shopping_cart_id'] = $cart_id;
         $data['ordered_products'] = $db_odered_products_full_info;
+        $this->session->set_userdata( array( 'ordered_products' => $db_odered_products_full_info) );
+        
         $data['payment_method'] =  $this->payment_method_model->get( $payment_method );
+        $this->session->set_userdata( array( 'payment_method' => $data['payment_method']) );
+        
         $data['shipping_method'] =  $this->shipping_method_model->get( $shipping_method );
+        $this->session->set_userdata( array( 'shipping_method' => $data['shipping_method']) );
+        
         $data['order_address'] = $order_address;
+        $this->session->set_userdata( array( 'order_address' => $order_address) );
         
         $total_final_sum = $cart_final_sum + $data['payment_method']->pm_cost + $data['shipping_method']->sm_price;
         
         $data['total'] = $total_final_sum;
+        $this->session->set_userdata( array( 'total' => $total_final_sum) );
         
         $this->load->view('templates/header', $template_data);
-        $this->load->view('v_order_proposal', $data);
+        $this->load->view('v_order_preview', $data);
         $this->load->view('templates/footer');
  }
+ 
+
 
 
     private function _startsWith($haystack, $needle) {

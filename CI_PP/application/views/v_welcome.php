@@ -46,5 +46,5 @@
 //js
 echo link_tag('assets/javascript/jquery.mCustomScrollbar.concat.min.js');
 ?>
-</body>
+<!--</body>
 </html>-->

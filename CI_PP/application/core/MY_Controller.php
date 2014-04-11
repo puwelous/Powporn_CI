@@ -108,18 +108,7 @@ class MY_Controller extends CI_Controller {
     }
 
     private function load_admin_template(&$template_data) {
-
-//        $user_id = $this->session->userdata('user_id');
-//
-//        if (!is_null($user_id) && isset($user_id) && $user_id != NULL) {
-//
-//            $thisUser = $this->user_model->get_user_by('u_id', $user_id);
-//            if ($thisUser->u_is_admin == 1) {
-//                // load elements to header for admin
-//                $template_data['admin_template'] = $this->parser->parse(constant('MY_Controller::' . 'ADMIN_TEMPLATE_PATH'), array(), TRUE);
-//            }
-//        }
-
+        
         if ($this->authentify_admin()) {
             // load elements to header for admin
             $template_data['admin_template'] = $this->parser->parse(constant('MY_Controller::' . 'ADMIN_TEMPLATE_PATH'), array(), TRUE);
