@@ -71,6 +71,12 @@ class C_order extends MY_Controller {
 //        $this->load->view('templates/footer');
     }
 
+    /**
+     * Creates order object and saves to DB.
+     * Renders HTML page for payment options.
+     * @retval string
+     *  HTML representation of order page.
+     */
     public function create_order() {
 
         $actual_user_id = $this->get_user_id();
@@ -84,7 +90,8 @@ class C_order extends MY_Controller {
 
 
         /*         * * start TRANSACTION ** */
-        $this->db->trans_begin(); {
+        $this->db->trans_begin();
+        {
             // create and store order_address if necessary
             $is_order_address_set = $this->session->userdata('is_order_address_set');
             log_message('debug', 'is_order_address_set = ' . $is_order_address_set);
@@ -154,9 +161,9 @@ class C_order extends MY_Controller {
         // render payment screen for order
         $template_data = array();
         $this->set_title($template_data, 'Payment!');
-        $this->load_header_templates($template_data);        
+        $this->load_header_templates($template_data);
         $this->load->view('templates/header', $template_data);
-        $this->load->view('v_order_payment_screen', $data);
+        $this->load->view('order/v_order_payment', $data);
         $this->load->view('templates/footer');
     }
 
@@ -273,68 +280,7 @@ class C_order extends MY_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function expresscheckout() {
-        // ==================================
-// PayPal Express Checkout Module
-// ==================================
-//'------------------------------------
-//' The paymentAmount is the total value of 
-//' the shopping cart, that was set 
-//' earlier in a session variable 
-//' by the shopping cart page
-//'------------------------------------
-        $_SESSION["Payment_Amount"] = $this->session->userdata('Payment_Amount');
-        $paymentAmount = $_SESSION["Payment_Amount"];
-//$paymentAmount = $this->session->unset_userdata('Payment_Amount');
-//'------------------------------------
-//' The currencyCodeType and paymentType 
-//' are set to the selections made on the Integration Assistant 
-//'------------------------------------
-        $currencyCodeType = "EUR";
-        $paymentType = "Sale";
 
-//'------------------------------------
-//' The returnURL is the location where buyers return to when a
-//' payment has been succesfully authorized.
-//'
-//' This is set to the value entered on the Integration Assistant 
-//'------------------------------------
-        // $returnURL = "http://puwel.sk/powporn/index.php/c_paypal/ret";
-        $returnURL = "http://localhost:8888/CI_PP/index.php/c_paypal/returnToBilling";
-
-//'------------------------------------
-//' The cancelURL is the location buyers are sent to when they hit the
-//' cancel button during authorization of payment during the PayPal flow
-//'
-//' This is set to the value entered on the Integration Assistant 
-//'------------------------------------
-        //$cancelURL = "http://puwel.sk/powporn/index.php/c_paypal/canc";
-        $cancelURL = "http://localhost:8888/CI_PP/index.php/c_paypal/canc";
-
-//'------------------------------------
-//' Calls the SetExpressCheckout API call
-//'
-//' The CallShortcutExpressCheckout function is defined in the file PayPalFunctions.php,
-//' it is included at the top of this file.
-//'-------------------------------------------------
-        $resArray = CallShortcutExpressCheckout($paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL);
-        $ack = strtoupper($resArray["ACK"]);
-        if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
-            RedirectToPayPal($resArray["TOKEN"]);
-        } else {
-            //Display a user friendly Error on the page using any of the following error information returned by PayPal
-            $ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
-            $ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
-            $ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
-            $ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
-
-            echo "SetExpressCheckout API call failed. ";
-            echo "Detailed Error Message: " . $ErrorLongMsg;
-            echo "Short Error Message: " . $ErrorShortMsg;
-            echo "Error Code: " . $ErrorCode;
-            echo "Error Severity Code: " . $ErrorSeverityCode;
-        }
-    }
 
 }
 

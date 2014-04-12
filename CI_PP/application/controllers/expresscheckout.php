@@ -1,5 +1,5 @@
 <?php
-
+/*
 require_once ("paypalfunctions.php");
 // ==================================
 // PayPal Express Checkout Module
@@ -63,5 +63,5 @@ else
 	echo "Short Error Message: " . $ErrorShortMsg;
 	echo "Error Code: " . $ErrorCode;
 	echo "Error Severity Code: " . $ErrorSeverityCode;
-}
+}*/
 ?>

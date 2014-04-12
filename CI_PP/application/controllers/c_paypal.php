@@ -7,7 +7,98 @@ require_once ("paypalfunctions.php");
 
 class C_paypal extends MY_Controller {
 
-    public function return_to_billing() {
+    /**
+     * Calls first PayPal API method for authorization.
+     * 
+     * @retval string
+     *  HTML page claiming PayPal failed. If succes, redirection is conducted.
+     * Redirection is not explicitly called, but it is forwarder from PayPal authorization page.
+     */
+    public function express_checkout() {
+
+        // ==================================
+        // PayPal Express Checkout Module
+        // ==================================
+        //'------------------------------------
+        //' The paymentAmount is the total value of 
+        //' the shopping cart, that was set 
+        //' earlier in a session variable 
+        //' by the shopping cart page
+        //'------------------------------------
+        $paymentAmount = $this->session->userdata('Payment_Amount');
+        if (!$_SESSION["Payment_Amount"]) {
+            $_SESSION["Payment_Amount"] = $paymentAmount;
+        }
+
+        //$paymentAmount = $this->session->unset_userdata('Payment_Amount');
+        //'------------------------------------
+        //' The currencyCodeType and paymentType 
+        //' are set to the selections made on the Integration Assistant 
+        //'------------------------------------
+        $currencyCodeType = "EUR";
+        $paymentType = "Sale";
+
+        //'------------------------------------
+        //' The returnURL is the location where buyers return to when a
+        //' payment has been succesfully authorized.
+        //'
+        //' This is set to the value entered on the Integration Assistant 
+        //'------------------------------------
+        $returnURL = "http://localhost:8888/CI_PP/index.php/c_paypal/go_to_billing";
+
+        //'------------------------------------
+        //' The cancelURL is the location buyers are sent to when they hit the
+        //' cancel button during authorization of payment during the PayPal flow
+        //'
+        //' This is set to the value entered on the Integration Assistant 
+        //'------------------------------------
+        //TODO:
+        $cancelURL = "http://localhost:8888/CI_PP/index.php/c_paypal/not_go_to_billing";
+
+        //'------------------------------------
+        //' Calls the SetExpressCheckout API call
+        //'
+        //' The CallShortcutExpressCheckout function is defined in the file PayPalFunctions.php,
+        //' it is included at the top of this file.
+        //'------------------------------------------------
+        $resArray = CallShortcutExpressCheckout($paymentAmount, $currencyCodeType, $paymentType, $returnURL, $cancelURL);
+        $ack = strtoupper($resArray["ACK"]);
+        if ($ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING") {
+            // redirection to PayPal. PayPal forwards result either here if fails or to not_go_to_billing(), see below.
+            RedirectToPayPal($resArray["TOKEN"]);
+        } else {
+            //v_paypal_express_checkout_failed
+            //Display a user friendly Error on the page using any of the following error information returned by PayPal
+            $ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
+            $ErrorShortMsg = urldecode($resArray["L_SHORTMESSAGE0"]);
+            $ErrorLongMsg = urldecode($resArray["L_LONGMESSAGE0"]);
+            $ErrorSeverityCode = urldecode($resArray["L_SEVERITYCODE0"]);
+
+            $error_message = "SetExpressCheckout API call failed. " . "Detailed Error Message: " . $ErrorLongMsg . ". Short Error Message: " . $ErrorShortMsg . ". Error Code: " . $ErrorCode . ". Error Severity Code: " . $ErrorSeverityCode;
+
+            log_message('error', 'c_paypal/express_checkout(): PayPal API CallShortcutExpressCheckout() failed. See message below.');
+            log_message('error', $error_message);
+
+            $data['error_message'] = $error_message;
+
+            $template_data = array();
+            $this->set_title($template_data, 'PayPal authorization failed.');
+            $this->load_header_templates($template_data);
+
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('paypal/v_paypal_express_checkout_failed', $data);
+            $this->load->view('templates/footer');
+        }
+    }
+
+    /**
+     * After PayPal CallShortcutExpressCheckout called from c_order.express_checkout()
+     * is successful, billing page is rendered.
+     * 
+     * @retval string
+     *  HTML billing page.
+     */
+    public function go_to_billing() {
 
         log_message('debug', 'returnToBilling()');
 
@@ -26,12 +117,11 @@ class C_paypal extends MY_Controller {
         $this->load->view('paypal/v_paypal_billing', $data);
         $this->load->view('templates/footer');
     }
-    
-    public function cancel_billing() {
+
+    public function not_go_to_billing() {
 
         echo 'Billing canceled';
     }
-    
 
     public function do_billing() {
         log_message('debug', 'do_billing()');
@@ -39,8 +129,8 @@ class C_paypal extends MY_Controller {
         $this->session->set_userdata(array('paypal_payment_method' => $this->input->post('paypal_or_card_type')));
 
         $PaymentOption = $this->input->post('paypal_or_card_type');
-        
-        if ( $PaymentOption == 'paypal') {
+
+        if ($PaymentOption == 'paypal') {
             // ==================================
             // PayPal Express Checkout Module
             // ==================================
@@ -314,11 +404,11 @@ class C_paypal extends MY_Controller {
         $this->load->view('v_payment_after_billing_return', $data); // review screen
         $this->load->view('templates/footer');
     }
-    
+
     public function cancel_review() {
 
         echo 'Review canceled';
-    }    
+    }
 
     /**
      * Calls paypal API for making transaction real. Confirms payment.

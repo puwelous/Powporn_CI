@@ -113,8 +113,7 @@
     <div class="content_wrapper">
 
         <!-- ******************* shopping cart section ******************* -->
-        <!--<form name="pp_form_name" action="#" method="POST" style="height:100%;">-->
-        <?php echo validation_errors('<p class="error" style="display:inline">'); ?>
+        <?php //echo validation_errors('<p class="error" style="display:inline">'); ?>
         <?php
         $attributes = array('name' => 'pp_shopping_cart_edit_form', 'style' => 'height:100%;');
         echo form_open("c_shopping_cart/show_order_preview", $attributes);

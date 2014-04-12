@@ -5,6 +5,12 @@ if (!defined('BASEPATH'))
 
 class C_shopping_cart extends MY_Controller {
 
+    /**
+     * Renders index page for shopping cart, either empty or with a content.
+     * 
+     * @retval string
+     *  Shopping cart HTML page. 
+     */
     public function index() {
         $template_data = array();
 
