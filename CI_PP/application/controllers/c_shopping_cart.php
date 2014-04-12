@@ -106,9 +106,9 @@ class C_shopping_cart extends MY_Controller {
         }
 
         // clear session first
-        $this->session->unset_userdata($order_address);
-        // set new data
-        $this->session->set_userdata($order_address);
+        $this->session->unset_userdata('order_address');
+        // set new data // later!
+        //$this->session->set_userdata($order_address);
 
         $cart_final_sum = 0.0;
 
@@ -213,7 +213,8 @@ class C_shopping_cart extends MY_Controller {
     private function _parse_order_address_from_post() {
 
         $order_address = array();
-        $order_address['oa_name'] = $this->input->post('tf_name');
+        $order_address['oa_first_name'] = $this->input->post('tf_first_name');
+        $order_address['oa_last_name'] = $this->input->post('tf_last_name');
         $order_address['oa_address'] = $this->input->post('tf_address');
         $order_address['oa_city'] = $this->input->post('tf_city');
         $order_address['oa_zip'] = $this->input->post('tf_zip');
@@ -228,7 +229,8 @@ class C_shopping_cart extends MY_Controller {
         $actual_user_data = $this->user_model->get($actual_user_id);
 
         $order_address = array();
-        $order_address['oa_name'] = $actual_user_data->u_firstname . ' ' . $actual_user_data->u_lastname;
+        $order_address['oa_first_name'] = $actual_user_data->u_firstname;
+        $order_address['oa_last_name'] = $actual_user_data->u_lastname;
         $order_address['oa_address'] = $actual_user_data->u_address;
         $order_address['oa_city'] = $actual_user_data->u_city;
         $order_address['oa_zip'] = $actual_user_data->u_zip;

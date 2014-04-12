@@ -4,11 +4,11 @@
     <div class="content_wrapper">
         <div class="container">
             <div class="title black">
-                Your PayPal Express Checkout seems to failed! Check error message if included below.
+                Your PayPal Payment Confirmation seems to failed! Check error message if included below.
             </div>
             <div class="text_light black">
                 <?php
-                if (isset($error_message)) {
+                if ( isset( $error_message ) ) {
                     echo $error_message;
                 }
                 ?>

@@ -281,10 +281,15 @@
                         </li>
 
                         <li class="hidable">
-                            <label for="tf_name" class="required">name</label>
-                            <input type="text" id="tf_name" name="tf_name" placeholder="Name" />
+                            <label for="tf_first_name" class="required">first name</label>
+                            <input type="text" id="tf_first_name" name="tf_first_name" placeholder="First name" />
                             <div style="clear:both;"></div>
                         </li>
+                        <li class="hidable">
+                            <label for="tf_last_name" class="required">last name</label>
+                            <input type="text" id="tf_last_name" name="tf_last_name" placeholder="Last name" />
+                            <div style="clear:both;"></div>
+                        </li>                        
                         <li class="hidable">
                             <label for="tf_address" class="required">address</label>
                             <input type="text" id="tf_address" name="tf_address" value="" size="32" />
@@ -349,7 +354,7 @@
                     <ul id="shipping_list_section" class="shipping_list">
 
                         <?php for ($i = 0; $i < count($payment_methods); ++$i): ?><li>
-                                <span class="text_light upper_cased"><?php echo $payment_methods[$i]->pm_name; ?>&nbsp;(<?php echo $payment_methods[$i]->pm_cost; ?>&euro;)</span>
+                                <span class="text_light upper_cased"><?php echo $payment_methods[$i]->pm_name; ?>&nbsp;+<?php echo $payment_methods[$i]->pm_cost; ?>&nbsp;&euro;</span>
                                 <input type = "radio"
                                        class="css-checkbox"
                                        name = "payment_method"

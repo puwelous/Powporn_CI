@@ -43,8 +43,11 @@
                     </h2>
                     <div class="address">
                         <div class="text_light upper_cased">
-                            <?php echo $order_address['oa_name']; ?>
+                            <?php echo $order_address['oa_first_name']; ?>
                         </div>
+                        <div class="text_light upper_cased">
+                            <?php echo $order_address['oa_last_name']; ?>
+                        </div>                        
                         <div class="text_light upper_cased">
                             <?php echo $order_address['oa_address']; ?>
                         </div>
@@ -86,6 +89,46 @@
                             $attributes = array('name' => 'pp_checkout_form');
                             echo form_open("c_paypal/express_checkout", $attributes);
                             ?>
+                            <span class="text_light upper_cased">paypal standard payment</span>
+                            <input type = "radio"
+                                   class="css-checkbox"
+                                   name = "selected_payment_type"
+                                   id = "paypal_standard"
+                                   value = "paypal"
+                                   checked = "checked" />
+                            <label for="paypal_standard" class="css-label">&nbsp;</label>
+                            <div style="clear:both;"></div>
+<!--                            section for paypal credit card payments, unsupported now-->
+<!--                            <span class="text_light upper_cased">visa direct payment</span>
+                            <input type = "radio"
+                                   class="css-checkbox"
+                                   name = "selected_payment_type"
+                                   id = "credit_card_visa"
+                                   value = "Visa"/>
+                            <label for="credit_card_visa" class="css-label">&nbsp;</label>
+                            <div style="clear:both;"></div>
+                            <span class="text_light upper_cased">mastercard direct payment</span>
+                            <input type = "radio"
+                                   class="css-checkbox"
+                                   name = "selected_payment_type"
+                                   id = "credit_card_mastercard"
+                                   value = "MasterCard"/>
+                            <label for="credit_card_mastercard" class="css-label">&nbsp;</label>
+                            <div style="clear:both;"></div>
+
+                            credit card data
+                            <label for="pf_card_number" class="required">credit card number</label>
+                            <input type="text" id="pf_card_number" name="pf_card_number" value="" size="32" />
+                            <div style="clear:both;"></div>
+                            
+                            <label for="pf_card_exp_date" class="required">expiry date</label>
+                            <input type="text" id="pf_card_exp_date" name="pf_card_exp_date" value="" size="8" />
+                            <div style="clear:both;"></div> 
+                            
+                            <label for="pf_card_cvv2" class="required">cvv2</label>
+                            <input type="text" id="pf_card_cvv2" name="pf_card_cvv2" value="" size="8" />
+                            <div style="clear:both;"></div>             -->
+
                             <input type='image' name='submit' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif' border='0' align='top' alt='Check out with PayPal'/>
                             <?php form_close(); ?>
                         </div>

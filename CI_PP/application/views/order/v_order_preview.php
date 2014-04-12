@@ -80,8 +80,11 @@
                     </h2>
                     <div class="address">
                         <div class="text_light upper_cased">
-                            <?php echo $order_address['oa_name']; ?>
+                            <?php echo $order_address['oa_first_name']; ?>
                         </div>
+                        <div class="text_light upper_cased">
+                            <?php echo $order_address['oa_last_name']; ?>
+                        </div>                        
                         <div class="text_light upper_cased">
                             <?php echo $order_address['oa_address']; ?>
                         </div>
