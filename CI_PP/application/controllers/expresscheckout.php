@@ -27,7 +27,7 @@ $paymentType = "Sale";
 //' This is set to the value entered on the Integration Assistant 
 //'------------------------------------
 //$returnURL = "http://puwel.sk/powporn/index.php/c_paypal/ret";
-$returnURL = "http://localhost:8888/CI_PP/index.php/c_paypal/returnToBilling";
+$returnURL = "http://localhost:8888/CI_PP/index.php/c_paypal/return_to_billing";
 
 //'------------------------------------
 //' The cancelURL is the location buyers are sent to when they hit the
@@ -36,7 +36,7 @@ $returnURL = "http://localhost:8888/CI_PP/index.php/c_paypal/returnToBilling";
 //' This is set to the value entered on the Integration Assistant 
 //'------------------------------------
 //$cancelURL = "http://puwel.sk/powporn/index.php/c_paypal/canc";
-$cancelURL = "http://localhost:8888/CI_PP/index.php/c_paypal/canc";
+$cancelURL = "http://localhost:8888/CI_PP/index.php/c_paypal/cancel_billing";
 
 //'------------------------------------
 //' Calls the SetExpressCheckout API call

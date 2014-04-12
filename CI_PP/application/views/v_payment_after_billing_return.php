@@ -120,24 +120,6 @@
                     <div class="text_light upper_cased">
                         <?php echo $paypal_shipping_data['ship_to_zip']; ?>
                     </div>
-
-                    <!--choosing delivery address section-->
-                    <span class="text_light">Use formerly specified address (left side of this screen)</span>
-                    <input type = "radio"
-                           class="css-checkbox"
-                           name = "former_or_paypal_shipping_data"
-                           id = "formerly_defined"
-                           value = "formerly_defined"
-                           checked = "checked" />
-                    <label for="formerly_defined" class="css-label">&nbsp;</label>
-                    <div style="clear:both;"></div>
-                    <span class="text_light">Use PayPal shipping address (this section)</span>
-                    <input type = "radio"
-                           class="css-checkbox"
-                           name = "former_or_paypal_shipping_data"
-                           id = "paypal_defined"
-                           value = "paypal_defined"/>
-                    <label for="paypal_defined" class="css-label">&nbsp;</label>
                     <div style="clear:both;"></div>                     
                 </div>
             </div>

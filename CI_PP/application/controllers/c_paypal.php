@@ -7,10 +7,9 @@ require_once ("paypalfunctions.php");
 
 class C_paypal extends MY_Controller {
 
-    public function returnToBilling() {
+    public function return_to_billing() {
 
         log_message('debug', 'returnToBilling()');
-
 
         $data['invoice_id'] = $this->session->userdata('invoice_id');
         $data['total'] = $this->session->userdata('Payment_Amount');
@@ -20,22 +19,28 @@ class C_paypal extends MY_Controller {
         $data['shipping_method'] = $this->session->userdata('shipping_method');
 
         $template_data = array();
-        $this->set_title($template_data, 'Choose payment method!');
+        $this->set_title($template_data, 'Choose payment method');
         $this->load_header_templates($template_data);
 
         $this->load->view('templates/header', $template_data);
-        $this->load->view('v_paypal_billing', $data);
+        $this->load->view('paypal/v_paypal_billing', $data);
         $this->load->view('templates/footer');
     }
+    
+    public function cancel_billing() {
+
+        echo 'Billing canceled';
+    }
+    
 
     public function do_billing() {
         log_message('debug', 'do_billing()');
 
         $this->session->set_userdata(array('paypal_payment_method' => $this->input->post('paypal_or_card_type')));
 
-
-
-        if ($this->input->post('paypal_or_card_type') == 'paypal') {
+        $PaymentOption = $this->input->post('paypal_or_card_type');
+        
+        if ( $PaymentOption == 'paypal') {
             // ==================================
             // PayPal Express Checkout Module
             // ==================================
@@ -88,7 +93,7 @@ class C_paypal extends MY_Controller {
             //' This is set to the value entered on the Integration Assistant 
             //'------------------------------------
             //$cancelURL = "http://puwel.sk/powporn/index.php/c_paypal/canc";
-            $cancelURL = "http://localhost:8888/CI_PP/index.php/c_paypal/canc_after_billing";
+            $cancelURL = "http://localhost:8888/CI_PP/index.php/c_paypal/cancel_review";
 
             //'------------------------------------
             //' Calls the SetExpressCheckout API call
@@ -199,13 +204,13 @@ class C_paypal extends MY_Controller {
           PayPal Express Checkout Call
           ===================================================================
          */
-// Check to see if the Request object contains a variable named 'token'	
+        // Check to see if the Request object contains a variable named 'token'	
         $token = "";
         if (isset($_REQUEST['token'])) {
             $token = $_REQUEST['token'];
         }
 
-// If the Request object contains the variable 'token' then it means that the user is coming from PayPal site.	
+        // If the Request object contains the variable 'token' then it means that the user is coming from PayPal site.	
         if ($token != "") {
 
             /*
@@ -309,6 +314,11 @@ class C_paypal extends MY_Controller {
         $this->load->view('v_payment_after_billing_return', $data); // review screen
         $this->load->view('templates/footer');
     }
+    
+    public function cancel_review() {
+
+        echo 'Review canceled';
+    }    
 
     /**
      * Calls paypal API for making transaction real. Confirms payment.
@@ -423,13 +433,12 @@ class C_paypal extends MY_Controller {
                 $template_data = array();
                 $this->set_title($template_data, 'Payment successful');
                 $this->load_header_templates($template_data);
-                
+
                 $data['order_id'] = $order_id;
-                
+
                 $this->load->view('templates/header', $template_data);
                 $this->load->view('paypal/v_paypal_payment_success', $data); // review screen
                 $this->load->view('templates/footer');
-                
             } else {
                 //Display a user friendly Error on the page using any of the following error information returned by PayPal
                 $ErrorCode = urldecode($resArray["L_ERRORCODE0"]);

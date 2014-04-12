@@ -100,7 +100,6 @@
     });
 </script>
 
-
 <div class="gallery_gradient_wrapper">
     <div class="gallery_gradient right">
     </div>
@@ -111,15 +110,13 @@
 <!-- content -->
 <div id="content">
 
-
-
     <div class="content_wrapper">
 
         <!-- ******************* shopping cart section ******************* -->
         <!--<form name="pp_form_name" action="#" method="POST" style="height:100%;">-->
         <?php echo validation_errors('<p class="error" style="display:inline">'); ?>
         <?php
-        $attributes = array('name' => 'pp_form_name', 'style' => 'height:100%;');
+        $attributes = array('name' => 'pp_shopping_cart_edit_form', 'style' => 'height:100%;');
         echo form_open("c_shopping_cart/show_order_preview", $attributes);
 
         $dataCartId = array(
@@ -353,7 +350,7 @@
                     <ul id="shipping_list_section" class="shipping_list">
 
                         <?php for ($i = 0; $i < count($payment_methods); ++$i): ?><li>
-                            <span class="text_light upper_cased"><?php echo $payment_methods[$i]->pm_name; ?>&nbsp;(<?php echo $payment_methods[$i]->pm_cost; ?>&euro;)</span>
+                                <span class="text_light upper_cased"><?php echo $payment_methods[$i]->pm_name; ?>&nbsp;(<?php echo $payment_methods[$i]->pm_cost; ?>&euro;)</span>
                                 <input type = "radio"
                                        class="css-checkbox"
                                        name = "payment_method"
@@ -393,110 +390,7 @@
                 <div style="clear:both;"></div>
             </div>
         </div> 
-        </form>
-
-        <!--         ******************* final preview section ******************* 
-                <div class="container">
-                     Title 
-                    <div class="title upper_cased black">
-                    <h1>
-                        3. final preview
-                    </h1>
-                    </div>
-                    <div class="red_line">
-                    </div>                    
-                    <form name="pp_form_name" action="#" method="POST">
-        
-                    <div class="text_fields_wrapper">
-        
-                        <div class="text_field_wrapper left">
-                            <div class="text_medium upper_cased bold">items</div>
-                            <h2>
-                                items
-                            </h2>
-                            <div class="final_items_list">
-                                <div class="final_item">
-                                    <span class="text_light smaller upper_cased bold">nyankina</span>
-                                    <span class="text_light smaller upper_cased">by:<span class="text_light upper_cased bold">kajsiboy</span></span>
-                                    <span class="text_light smaller upper_cased bold">xxxl</span>
-                                    <span class="text_light smaller">1 pc.</span>
-                                    <span class="text_light smaller upper_cased">price<span class="text_light lower_cased">/ks:</span><span class="text_light lower_cased bold">500&euro; dph</span></span>                                
-                                </div>
-                                <div class="final_item">
-                                    <span class="text_light smaller upper_cased bold">nyankina</span>
-                                    <span class="text_light smaller upper_cased">by:<span class="text_light upper_cased bold">kajsiboy</span></span>
-                                    <span class="text_light smaller upper_cased bold">xxxl</span>
-                                    <span class="text_light smaller">1 pc.</span>
-                                    <span class="text_light smaller upper_cased">price<span class="text_light lower_cased">/ks:</span><span class="text_light lower_cased bold">500&euro; dph</span></span>                                
-                                </div>
-                                <div class="final_item">
-                                    <span class="text_light smaller upper_cased bold">nyankina</span>
-                                    <span class="text_light smaller upper_cased">by:<span class="text_light upper_cased bold">kajsiboy</span></span>
-                                    <span class="text_light smaller upper_cased bold">xxxl</span>
-                                    <span class="text_light smaller">1 pc.</span>
-                                    <span class="text_light smaller upper_cased">price<span class="text_light lower_cased">/ks:</span><span class="text_light lower_cased bold">500&euro; dph</span></span>                                
-                                </div>                                
-                            </div>
-                            <div class="text_medium upper_cased bold">shipping address</div>
-                            <h2>
-                                shipping address
-                            </h2>
-                            <div class="address">
-                                <div class="text_light upper_cased">
-        <?php echo $user_data->u_firstname; ?>&nbsp;<?php echo $user_data->u_lastname; ?>
-                                </div>
-                                <div class="text_light upper_cased">
-        <?php echo $user_data->u_address; ?>
-                                </div>
-                                <div class="text_light upper_cased">
-        <?php echo $user_data->u_zip; ?>&nbsp;<?php echo $user_data->u_city; ?>
-                                </div>
-                                <div class="text_light upper_cased">
-        <?php echo $user_data->u_country; ?>
-                                </div>
-                            </div>
-                            <h2>
-                                email address
-                            </h2>     
-                            <div class="final_email_address">
-                                <div class="text_light upper_cased">
-        <?php echo $user_data->u_email_address; ?>
-                                </div> 
-                            </div>
-                            <div class="text_medium upper_cased bold">payment method</div>
-                            <h2>
-                                payment method
-                            </h2>                            
-                            <div>
-                                <div id="final_payment_method" class="text_light upper_cased"><?php echo $payment_methods[0]->pm_name; ?></div>
-                            </div>
-                        </div>
-                        <div class="text_field_wrapper right">
-                            <div class="text_medium upper_cased bold">items</div>                            
-                        </div>
-                    </div>
-        
-                    <div style="clear:both;"></div>
-                    <div class="bottom_wrapper">
-                        <div class="bottom_wrapper left">
-                            <div class="left_pp_button_wrapper">
-                                <button class="pp_button_passive fl_left" type="submit" name="submit">BACK</button>
-                            </div>
-                        </div>
-                        <div class="bottom_wrapper right">
-                            <input type="button" value="SIGN UP"/>
-                            <div class="fl_right">
-                                <div class="text_medium upper_cased bold">total&nbsp;&nbsp;&nbsp;<span class="pp_red">520 &euro;</span></div>
-                            </div>
-                            <div style="clear:both;"></div>
-                            <div class="right_pp_button_wrapper">
-                                <button id="buy_button" class="pp_button_active" type="submit" name="submit">BUY!</button>
-                            </div>
-                        </div>
-                        <div style="clear:both;"></div>
-                    </div>
-                    </form>
-                </div>                -->
+        <?php echo form_close(); ?>
     </div>
 
 </div><!-- end of content-->

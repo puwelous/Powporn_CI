@@ -3,8 +3,6 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-
-
 if (!function_exists('init_products_upload_configuration')) {
 
     $prod_upl_config = array();

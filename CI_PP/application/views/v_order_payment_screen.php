@@ -71,7 +71,7 @@
                         shipping method
                     </h2>                            
                     <div>
-                        <div id="final_shipping_method" class="text_light upper_cased"><?php echo $shipping_method->sm_name; ?>(<?php echo $shipping_method->sm_price; ?>&euro;)</div>
+                        <div id="final_shipping_method" class="text_light upper_cased"><?php echo $shipping_method->sm_name; ?>(+<?php echo $shipping_method->sm_price; ?>&euro;)</div>
                     </div>
                 </div>
                 <div class="text_field_wrapper right">
@@ -79,7 +79,7 @@
                         payment method
                     </h2>                            
                     <div>
-                        <div id="final_payment_method" class="text_light upper_cased"><?php echo $payment_method->pm_name; ?>(<?php echo $payment_method->pm_cost; ?>&euro;)</div>
+                        <div id="final_payment_method" class="text_light upper_cased"><?php echo $payment_method->pm_name; ?>(+<?php echo $payment_method->pm_cost; ?>&euro;)</div>
                     </div> 
                     <?php if ( $payment_method->pm_name == 'paypal' ): ?>
                     <h2>

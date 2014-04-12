@@ -82,10 +82,6 @@ class C_order extends MY_Controller {
             return;
         }
 
-        $template_data = array();
-        $this->set_title($template_data, 'Thank you!');
-        $this->load_header_templates($template_data);
-
 
         /*         * * start TRANSACTION ** */
         $this->db->trans_begin(); {
@@ -156,6 +152,9 @@ class C_order extends MY_Controller {
 
         //$data for e-banking !
         // render payment screen for order
+        $template_data = array();
+        $this->set_title($template_data, 'Payment!');
+        $this->load_header_templates($template_data);        
         $this->load->view('templates/header', $template_data);
         $this->load->view('v_order_payment_screen', $data);
         $this->load->view('templates/footer');
