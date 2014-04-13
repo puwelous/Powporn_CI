@@ -114,7 +114,7 @@ class C_shopping_cart extends MY_Controller {
 
         /*         * *  TRANSACTION begin - update all ordered product ** */
         $this->db->trans_begin(); {
-            
+
 
             foreach ($products as $product_item) {
 
@@ -180,10 +180,10 @@ class C_shopping_cart extends MY_Controller {
         $this->load->helper('my_string_helper');
 
         $products = array();
-        
+
         foreach ($this->input->post(NULL, TRUE) as $key => $val) {
 
-            if ( !startsWith($key, 'ordered_product_')) {
+            if (!startsWith($key, 'ordered_product_')) {
                 continue;
             }
 
@@ -225,7 +225,7 @@ class C_shopping_cart extends MY_Controller {
     }
 
     private function _prepare_order_address_acc_to_user_id($actual_user_id) {
-        
+
         $actual_user_data = $this->user_model->get($actual_user_id);
 
         $order_address = array();
@@ -238,7 +238,97 @@ class C_shopping_cart extends MY_Controller {
         $order_address['oa_phone_number'] = '';
         $order_address['oa_email_address'] = $actual_user_data->u_email_address;
         return $order_address;
-    }   
+    }
+
+    public function remove_item($ordered_product_id) {
+
+        $template_data = array();
+
+
+        // get user id
+        $actual_user_id = $this->get_user_id();
+
+        // check if user logged in
+        if (is_null($actual_user_id) || $actual_user_id === NULL) {
+            log_message('debug', 'Attempt to remove ordered product from cart for unlogged user. Redirect!');
+            redirect('/c_registration/index', 'refresh');
+        }
+
+        // load user cart accordig to his id
+        $shopping_cart_of_user = $this->cart_model->get_open_cart_by_owner_id( $actual_user_id );
+
+        // redirect to 'shopping cart is empty' screen
+        if (is_null($shopping_cart_of_user) || $shopping_cart_of_user === NULL || empty($shopping_cart_of_user)) {
+            log_message('debug', 'Inconsistency of data. Someone tried to remove ordered product from a cart but there is no cart in DB!');
+            $this->set_title($template_data, 'No cart for user.');
+            $this->load_header_templates($template_data);
+            redirect('c_welcome/index');
+            return;
+        }
+
+        // load ordered_product according to parameter passes
+        // delete ordered product from pp_ordered_product table
+        $delete_result = $this->ordered_product_model->delete($ordered_product_id);
+        if ($delete_result <= 0) {
+            log_message('debug', 'Result of deletion is nonpositive. How come user tried to delete ordered product that does not exist? Form generation failed?');
+            $this->set_title($template_data, 'Product deletion failed.');
+            $this->load_header_templates($template_data);
+            $this->load->view('templates/header', $template_data);
+            // TODO: redirect to special page
+            redirect('c_welcome/index');
+            return;
+        }
+
+        try{
+            // recalculate shopping cart value and store it
+            $this->_recal_cart_after_ord_prod_deletion( $shopping_cart_of_user->c_id );
+        }catch( EmptyCartException $ece ){
+            log_message('debug', $ece->getMessage());
+            // delete cart
+            $result_of_deletion = $this->cart_model->delete( $shopping_cart_of_user->c_id );
+            if ($result_of_deletion <= 0) {
+                log_message('error', 'Cart deletion failed! Cart ID: ' . $shopping_cart_of_user->c_id );
+            }
+        } catch( CartUpdateException $cue){
+            log_message('error', $cue );
+        }
+        
+        // refresh page
+        redirect('c_shopping_cart/index', 'refresh');
+    }
+
+    private function _recal_cart_after_ord_prod_deletion( $shopping_cart_id_of_user ) {
+        // get all ordered_products that belong to shopping cart
+        $finalSum = 0.0;
+
+        $ordered_products_price_incl = $this->ordered_product_model->get_all_ordered_products_price_including_by_cart_id($shopping_cart_id_of_user);
+
+        if (count( $ordered_products_price_incl ) == 0) {
+            // no ordered products in a cart
+            throw new EmptyCartException('Cart(ID:'. $shopping_cart_id_of_user .') is empty. Not necessary to calculate it`s value.');
+        } else {
+            // some products in a cart still left, calculate value
+            foreach ($ordered_products_price_incl as $single_ordered_product_with_price) {
+                $price_per_ordered_product = ($single_ordered_product_with_price->pd_price * $single_ordered_product_with_price->op_amount);
+                $finalSum = $finalSum + $price_per_ordered_product ;
+            }
+            // update price of a shopping cart
+            $update_result = $this->cart_model->update( $shopping_cart_id_of_user, array('c_sum' => $finalSum));
+            
+            if ( $update_result <= 0 ) {
+                // amount of cart could not be updated, throw exception
+                throw new CartUpdateException('Cart (' . $shopping_cart_id_of_user . ') could not be updated to price ' . $finalSum );
+            }else{
+                log_message('debug', 'Shopping cart`s (' . $shopping_cart_id_of_user . ') price successfully updated.');
+            }
+        }
+    }
+
+}
+
+class EmptyCartException extends Exception{
+    
+    
 }
 
 /* End of file c_shopping_cart.php */

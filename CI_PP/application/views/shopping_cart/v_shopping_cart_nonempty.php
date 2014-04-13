@@ -196,9 +196,9 @@
                                 <span class="subtract_one_item_wrapper"><span class="text_light upper_cased">-</span></span>
                             </div>
                             <div class="product_detail_line">
-                                <span class="text_light upper_cased italic red_on_hover">
-                                    remove
-                                </span>
+                                <!--<span class="text_light upper_cased italic red_on_hover">-->
+                                    <?php echo anchor('c_shopping_cart/remove_item/' . $ordered_products[$i]->op_id, 'remove', array('class' => 'text_light upper_cased italic red_on_hover')); ?>
+                                <!--</span>-->
                                 <span class="text_light italic">/</span>
                                 <span class="text_light upper_cased italic red_on_hover">edit</span>
                             </div>                                       
