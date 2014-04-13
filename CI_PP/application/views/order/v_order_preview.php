@@ -8,16 +8,50 @@
 <!-- content -->
 <div id="content">
     <div class="content_wrapper">
-        <?php
-        $attributes = array('name' => 'pp_form_name', 'style' => 'height:100%;');
-        echo form_open("c_paypal/review_confirm", $attributes);
-        ?>
 
-        <!-- ******************* final preview section ******************* -->
+        <!-- ******************* shopping cart section ******************* -->
+        <?php
+        $attributes = array('name' => 'pp_create_order', 'style' => 'height:100%;');
+        echo form_open("c_order/create_order", $attributes);
+
+        // shopping cart ID
+        $dataCartId = array(
+            'type' => 'hidden',
+            'name' => 'cart_id',
+            'value' => $shopping_cart_id
+        );
+        echo form_input($dataCartId);
+
+        // payment method
+        $dataPayMethId = array(
+            'type' => 'hidden',
+            'name' => 'payment_method_id',
+            'value' => $payment_method->pm_id
+        );
+        echo form_input($dataPayMethId);
+
+        // shipping method
+        $dataShipMethId = array(
+            'type' => 'hidden',
+            'name' => 'shipping_method_id',
+            'value' => $shipping_method->sm_id
+        );
+        echo form_input($dataShipMethId);
+
+        // shipping method
+        $dataTotalSum = array(
+            'type' => 'hidden',
+            'name' => 'total_sum',
+            'value' => $total
+        );
+        echo form_input($dataTotalSum);
+        ?>            
+
+        <!-- ******************* final order preview section ******************* -->
         <div class="container">
             <!-- Title -->
             <h1>
-                6. payment method (PayPal approved)
+                3. order preview
             </h1>
             <div class="red_line">
             </div>
@@ -25,7 +59,6 @@
             <div class="text_fields_wrapper">
 
                 <div class="text_field_wrapper left">
-                    <!--<div class="text_medium upper_cased bold">items</div>-->
                     <h2>
                         items
                     </h2>
@@ -42,14 +75,16 @@
                             </div>
                         <?php endfor; ?>
                     </div>
-                    <!--<div class="text_medium upper_cased bold">shipping address</div>-->
                     <h2>
                         shipping address
                     </h2>
                     <div class="address">
                         <div class="text_light upper_cased">
-                            <?php echo $order_address['oa_name']; ?>
+                            <?php echo $order_address['oa_first_name']; ?>
                         </div>
+                        <div class="text_light upper_cased">
+                            <?php echo $order_address['oa_last_name']; ?>
+                        </div>                        
                         <div class="text_light upper_cased">
                             <?php echo $order_address['oa_address']; ?>
                         </div>
@@ -68,7 +103,6 @@
                             <?php echo $order_address['oa_email_address']; ?>
                         </div> 
                     </div>
-                    <!--<div class="text_medium upper_cased bold">payment method</div>-->
                     <h2>
                         payment method
                     </h2>                            
@@ -82,63 +116,7 @@
                         <div id="final_shipping_method" class="text_light upper_cased"><?php echo $shipping_method->sm_name; ?>&nbsp;(+<?php echo $shipping_method->sm_price; ?>&euro;)</div>
                     </div>                        
                 </div>
-                <div class="text_field_wrapper right">
-                    <h2>
-                        PayPal method approved, press pay and finish shopping.
-                    </h2>                                       
-                    <span class="text_light"><?php echo $payment_value ?></span>
-                    <input type = "radio"
-                           class="css-checkbox"
-                           name = "paypal_or_card_type"
-                           id = "paypal_or_card_type"
-                           value = "<?php echo $payment_value ?>"
-                           checked = "checked" />
-                    <label for="paypal_or_card_type" class="css-label">&nbsp;</label>
-                    <div style="clear:both;"></div>
-                    <h2>
-                        PayPal shipping data
-                    </h2>
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['email']; ?>
-                    </div>  
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['ship_to_name']; ?>
-                    </div>  
-
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['ship_to_street']; ?>
-                    </div> 
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['ship_to_city']; ?>
-                    </div>   
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['ship_to_state']; ?>
-                    </div>   
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['ship_to_country_code']; ?>
-                    </div> 
-                    <div class="text_light upper_cased">
-                        <?php echo $paypal_shipping_data['ship_to_zip']; ?>
-                    </div>
-
-                    <!--choosing delivery address section-->
-                    <span class="text_light">Use formerly specified address (left side of this screen)</span>
-                    <input type = "radio"
-                           class="css-checkbox"
-                           name = "former_or_paypal_shipping_data"
-                           id = "formerly_defined"
-                           value = "formerly_defined"
-                           checked = "checked" />
-                    <label for="formerly_defined" class="css-label">&nbsp;</label>
-                    <div style="clear:both;"></div>
-                    <span class="text_light">Use PayPal shipping address (this section)</span>
-                    <input type = "radio"
-                           class="css-checkbox"
-                           name = "former_or_paypal_shipping_data"
-                           id = "paypal_defined"
-                           value = "paypal_defined"/>
-                    <label for="paypal_defined" class="css-label">&nbsp;</label>
-                    <div style="clear:both;"></div>                     
+                <div class="text_field_wrapper right">                         
                 </div>
             </div>
 
@@ -146,19 +124,16 @@
             <div class="bottom_wrapper">
                 <div class="bottom_wrapper left">
                     <div class="left_pp_button_wrapper">
-                        <!--<button class="pp_button_passive fl_left" type="submit" name="submit">BACK</button>-->
                         <?php echo anchor('c_shopping_cart/index', 'BACK', array('class' => 'pp_button_passive fl_left')); ?>
-                        <!--<a href="" class="pp_button_passive fl_left">BACK</a>-->
                     </div>
                 </div>
                 <div class="bottom_wrapper right">
-                    <!--<input type="button" value="SIGN UP"/>-->                   
                     <div class="fl_right">
                         <div class="text_medium upper_cased bold">total&nbsp;&nbsp;&nbsp;<span class="pp_red"><?php echo $total; ?>&nbsp;&euro;</span></div>
                     </div>
                     <div style="clear:both;"></div>
                     <div class="right_pp_button_wrapper">
-                        <button id="buy_button" class="pp_button_active" type="submit" name="submit">PAY</button>
+                        <button id="buy_button" class="pp_button_active" type="submit" name="submit">ORDER PRODUCT(S)</button>
                     </div>
                 </div>
                 <div style="clear:both;"></div>
@@ -169,8 +144,5 @@
         ?>
     </div>
 
-</div>
-
-
-
-
+</div><!-- end of content-->
+<!--<script src="./js/jquery.mCustomScrollbar.concat.min.js"></script>-->

@@ -8,13 +8,16 @@
 <!-- content -->
 <div id="content">
     <div class="content_wrapper">
-
+        <?php
+        $attributes = array('name' => 'pp_form_name', 'style' => 'height:100%;');
+        echo form_open("c_paypal/confirm_payment", $attributes);
+        ?>
 
         <!-- ******************* final preview section ******************* -->
         <div class="container">
             <!-- Title -->
             <h1>
-                5. paypal payment method
+                6. payment method (PayPal approved)
             </h1>
             <div class="red_line">
             </div>
@@ -45,8 +48,11 @@
                     </h2>
                     <div class="address">
                         <div class="text_light upper_cased">
-                            <?php echo $order_address['oa_name']; ?>
+                            <?php echo $order_address['oa_first_name']; ?>
                         </div>
+                        <div class="text_light upper_cased">
+                            <?php echo $order_address['oa_last_name']; ?>
+                        </div>                        
                         <div class="text_light upper_cased">
                             <?php echo $order_address['oa_address']; ?>
                         </div>
@@ -70,39 +76,54 @@
                         payment method
                     </h2>                            
                     <div>
-                        <div id="final_payment_method" class="text_light upper_cased"><?php echo $payment_method->pm_name; ?>(<?php echo $payment_method->pm_cost; ?>&euro;)</div>
+                        <div id="final_payment_method" class="text_light upper_cased"><?php echo $payment_method->pm_name; ?>&nbsp;(+<?php echo $payment_method->pm_cost; ?>&euro;)</div>
                     </div>
                     <h2>
                         shipping method
                     </h2>                            
                     <div>
-                        <div id="final_shipping_method" class="text_light upper_cased"><?php echo $shipping_method->sm_name; ?>(<?php echo $shipping_method->sm_price; ?>&euro;)</div>
+                        <div id="final_shipping_method" class="text_light upper_cased"><?php echo $shipping_method->sm_name; ?>&nbsp;(+<?php echo $shipping_method->sm_price; ?>&euro;)</div>
                     </div>                        
                 </div>
                 <div class="text_field_wrapper right">
-                    <?php
-                    $attributes = array('name' => 'pp_form_name', 'style' => 'height:100%;');
-                    echo form_open("c_paypal/do_billing", $attributes);
-                    ?>                    
-                    <span class="text_light">PayPal direct</span>
+                    <h2>
+                        PayPal method approved, press pay and finish shopping.
+                    </h2>                                       
+                    <span class="text_light"><?php echo $payment_value ?></span>
                     <input type = "radio"
                            class="css-checkbox"
                            name = "paypal_or_card_type"
-                           id = "paypal"
-                           value = "paypal"
+                           id = "paypal_or_card_type"
+                           value = "<?php echo $payment_value ?>"
                            checked = "checked" />
-                    <label for="paypal" class="css-label">&nbsp;</label>
+                    <label for="paypal_or_card_type" class="css-label">&nbsp;</label>
                     <div style="clear:both;"></div>
-                    <span class="text_light">PayPal Credit Card</span>
-                    <input type = "radio"
-                           class="css-checkbox"
-                           name = "paypal_or_card_type"
-                           id = "credit_card"
-                           value = "credit_card"/>
-                    <label for="credit_card" class="css-label">&nbsp;</label>
-                    <div style="clear:both;"></div>  
-                    <button id="buy_button" class="pp_button_active" type="submit" name="submit">Choose PayPal method and continue</button>
-                    <?php echo form_close(); ?>
+                    <h2>
+                        PayPal shipping data
+                    </h2>
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['email']; ?>
+                    </div>  
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['ship_to_name']; ?>
+                    </div>  
+
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['ship_to_street']; ?>
+                    </div> 
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['ship_to_city']; ?>
+                    </div>   
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['ship_to_state']; ?>
+                    </div>   
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['ship_to_country_code']; ?>
+                    </div> 
+                    <div class="text_light upper_cased">
+                        <?php echo $paypal_shipping_data['ship_to_zip']; ?>
+                    </div>
+                    <div style="clear:both;"></div>                     
                 </div>
             </div>
 
@@ -122,13 +143,15 @@
                     </div>
                     <div style="clear:both;"></div>
                     <div class="right_pp_button_wrapper">
-                        <!--<button id="buy_button" class="pp_button_active" type="submit" name="submit">Confirm billing!</button>-->
+                        <button id="buy_button" class="pp_button_active" type="submit" name="submit">PAY</button>
                     </div>
                 </div>
                 <div style="clear:both;"></div>
             </div>
         </div>      
-        </form>
+        <?php
+        echo form_close();
+        ?>
     </div>
 
 </div>

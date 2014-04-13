@@ -57,6 +57,27 @@ class Ordered_product_model extends MY_Model {
 
         return $query->result();
     }
+    
+    public function get_all_ordered_products_by_cart_id( $cart_id ){
+        $result = $this->ordered_product_model->as_object()->get_many_by('c_id', $cart_id);
+        
+        return $result;
+    }
+    
+    public function get_all_ordered_products_price_including_by_cart_id( $cart_id ){
+        $this->db->select('pp_ordered_product.*, pp_product_definition.pd_price');
+        $this->db->from('pp_ordered_product');
+        $this->db->where('pp_ordered_product.c_id', $cart_id);
+        $this->db->join('pp_product_definition', 'pp_ordered_product.pd_id = pp_product_definition.pd_id');
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() <= 0) {
+            return NULL;
+        }
+
+        return $query->result();
+    }    
 
     /*     * ********* setters *********** */
 

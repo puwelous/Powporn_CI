@@ -56,5 +56,7 @@ if ( !function_exists('create_password_reset_email_body') ) {
     }
 
 }
+
+
 /* End of file email_former_helper.php */
 /* Location: ./application/helpers/email_former_helper.php */
