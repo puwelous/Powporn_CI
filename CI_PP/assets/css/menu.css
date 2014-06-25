@@ -29,16 +29,14 @@ body {
 
 /** menu section **/
 #menu_wrapper {
-    position: relative;
+    /*position: relative;*/
+    position: fixed;
     width: 100%;
-    height: 36px;
-    /*position: fixed;
-
-    top: 0;
-    left: 0;
-    z-index: 100;*/
+    min-height: 5%;
+    background-color:rgba(255,255,255,1);
     /*removing red line from views*/
     /*border-bottom: #ef4623 solid 2px;*/
+    z-index: 999999;
 }
 
 #menu_wrapper ul.menu_l {
@@ -83,19 +81,19 @@ body {
 
     text-decoration: none;
 }
-
+/*TODO: use SVG instead! */
 #menu_wrapper ul.menu_l li:first-child {
     width: 100px;
     height: 36px;
     background:url('./images/pp_logo_menu_title.png') 0px 0px;
-    /*border: lightblue 1px solid;*/
+    /*TODO: use background-size: 100px 36px; */
 }
 
 #menu_wrapper ul.menu_l li:first-child:hover {
     width: 100px;
     height: 36px;
     background:url('./images/pp_logo_menu_brand.png') 0px 0px;
-    /*    border: lightblue 1px solid;*/
+    /*TODO: use background-size: 100px 36px; */
 }
 
 #m_login #login_wrapper {
@@ -103,7 +101,7 @@ body {
     position: absolute;
     background: #fff;
     z-index: 1001;
-    margin-top: 1%;
+    
     border: solid #ef4623 1px;
 }
 
@@ -166,6 +164,7 @@ body {
     position: relative;
     width: 250%;
     height: 80%;
+    top: 5%;
     margin: 50px auto 0px auto;
     /*border: solid olive 1px;*/
 }
@@ -188,10 +187,24 @@ body {
 }
 
 #content div.content_wrapper div.container div.half_container {
-    width: 50%;
+    width: 48%;
     height: 100%;
     float: left;
 }
+
+#content div.content_wrapper div.container div.half_container:last-child {
+    margin-left: 2%;
+}
+
+#content div.content_wrapper div.container table.admin_table{
+    border-collapse: collapse;
+}
+
+#content div.content_wrapper div.container table.admin_table td, #content div.content_wrapper div.container table.admin_table th {
+    border-collapse: collapse;
+    padding: 3px;
+}
+
 
 #error_output_section{
     height: 6%;
@@ -296,16 +309,18 @@ button[id="buy_button"]{
     color: white;
 }
 
-button[id="add_to_cart_button"]{
+button[id="add_to_cart_button"],button[id="create_button"] {
     background-color: #ef4623;
     color: white;
     border: #ef4623;
     width: 100%;
     cursor: pointer;
+    padding-top: 10px;
+     padding-bottom: 10px;
+    font-size: 1.25em;
 }
 
 .pp_button_passive {
-
     cursor: pointer;
     background-color: white;
     color: black;
@@ -464,8 +479,8 @@ float: right;*/
 
 .cart_list .cart_list_item .product_view_section img {
 
-    height: 150px;
-    width: 150px;
+    max-height: 150px;
+    width: auto;
 
 }
 
@@ -550,13 +565,13 @@ h2{
     color: black;
 }
 
-/**h2{
+h3{
     font-family: "compro_medium";
     font-weight:bold;
-    font-size: 1.2em;
+    font-size: 1.0em;
     text-transform: uppercase;
     color: black;
-}*/
+}
 
 h4{
     font-family: "compro_medium";
@@ -594,6 +609,9 @@ h5{
     text-transform: capitalize;
 }
 
+.inunderlined{
+    text-decoration: none;
+}
 /* regular */
 @font-face {
     font-family: "compro_regular";
@@ -951,4 +969,66 @@ div.overlay-content button.pp_button_active{
     /*margin: 0% 2%;*/
     /*border: solid gray 1px;*/
     /*float: left;*/
+}
+div.preview_item {
+    position: relative;
+}
+
+div.preview_item .preview_item_imgs_wrapper{
+    /*display: inline;*/
+    /*position: relative;*/
+    margin: 0px;
+    width: 240px;
+    height: 351px;
+    text-align: initial;
+}
+
+div.preview_item .preview_item_imgs_wrapper img {
+    position: absolute;
+    width: 240px;
+    height: 351px;
+}
+
+.full_width{
+    width: 100%;
+}
+
+.possible_component_colour{
+    
+}
+
+.possible_component_colour{
+    display: inline-block;
+    height: 45px;
+    width: 45px;
+    margin: 0 8px 8px 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.possible_component_colour:after {
+    content:'\A';
+    position:absolute;
+    width:100%; height:100%;
+    top:0; left:0;
+    background:rgba(0,0,0,0.6);
+    opacity:0;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+}
+
+.possible_component_colour:hover:after {
+    opacity:1;
+}
+
+.notselected{
+    border: solid black 2px;
+}
+
+.selected{
+    border: dotted black 2px;
+}
+
+.component_colour_possibilities{
+    /*display: none;*/
 }

@@ -1,103 +1,318 @@
 #creator_wrapper {
 
-  position: relative;
-  width: 100%;
-  height: 600px;
- 
-  padding: 20px auto;
+    position: relative;
+    width: 100%;
+    height: 600px;
+
+    padding: 20px auto;
 }
 
 #components_bar {
 
-  position: relative;
-  width: 250px;
-  height: 100%;
-  display: inline-block;
-  vertical-align: top;
-  margin : 0px 20px;
-  
-  background : lightgrey;
-  border : solid darkgray 1px;
-  
-  /* For IE 7 - uncomment if necessary but rather put into HTML code
-	zoom: 1;
-	display: inline;*/
+    position: relative;
+    width: 250px;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    margin : 0px 20px;
+
+    background : lightgrey;
+    border : solid darkgray 1px;
+
+    /* For IE 7 - uncomment if necessary but rather put into HTML code
+          zoom: 1;
+          display: inline;*/
 }
 
 #customization_view {
- 
-  position: relative;
-  width: 600px;
-  height:500px;
-  display: inline-block;
-  vertical-align: top;
-  margin : 0px 0px;
 
-  min-width: 100px;
-  background : lightgrey;
-  border : solid darkgray 1px;
-  
-  /* For IE 7 - uncomment if necessary but rather put into HTML code
-	zoom: 1;
-	display: inline;*/  
+    position: relative;
+    width: 600px;
+    height:500px;
+    display: inline-block;
+    vertical-align: top;
+    margin : 0px 0px;
+
+    min-width: 100px;
+    background : lightgrey;
+    border : solid darkgray 1px;
+
+    /* For IE 7 - uncomment if necessary but rather put into HTML code
+          zoom: 1;
+          display: inline;*/  
 }
 
 #controls_wrapper {
 
-	position:absolute;
-	bottom: 5%;
-	left: 30%;
-	
-	border : solid darkgray 1px;
+    position:absolute;
+    bottom: 5%;
+    left: 30%;
+
+    border : solid darkgray 1px;
 }
 
 #controls_wrapper div {
 
-	display: inline;
+    display: inline;
 }
 
 div.hr {
-  width:100%;
-  height:1px;
-  background-color:darkgrey;
-  margin: 0px auto;
+    width:100%;
+    height:1px;
+    background-color:darkgrey;
+    margin: 0px auto;
 }
 
 #components_bar .components_bar_section {
-	position: relative;
-	margin: 10px auto;
+    position: relative;
+    margin: 10px auto;
 }
 
 /*** icons styling ***/
 #component_icons_wrapper {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	margin: auto;
-	padding: 10px 10px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    padding: 10px 10px;
 }
 
 div.icon {
-	margin: 2px;
-	border: 2px solid darkgrey;
-	height: auto;
-	width: auto;
-	float: left;
-	text-align: center;
+    margin: 2px;
+    border: 2px solid darkgrey;
+    height: auto;
+    width: auto;
+    float: left;
+    text-align: center;
 }
 
 /*
 div.icon a img {
-	display: inline;
-	margin: 0px;
-	width: 50px;
-	height: 50px;
+        display: inline;
+        margin: 0px;
+        width: 50px;
+        height: 50px;
 }
 */
 
 div.icon img {
-	display: inline;
-	margin: 0px;
-	width: 50px;
-	height: 50px;
+    display: inline;
+    margin: 0px;
+    width: 50px;
+    height: 50px;
 }
+
+#ucreate_left{
+    width: 16%;
+    height: 80%;
+    margin-top: 7%;
+    margin-left: 3%;
+    float: left;
+}
+
+#ucreate_left .ucreate_left_section{
+    /*border: 1px red solid;*/
+    margin: 4% auto;
+}
+
+#ucreate_center{
+
+    width: 245px;    
+    height: 355px;    
+    margin-top: 3%;
+    margin-left: 3%;    
+    float: left;
+
+    text-align: initial;
+
+    border: red 1px solid;
+}
+
+#ucreate_vector_section {
+    position: absolute;
+}
+
+#ucreate_image_section {
+    position: absolute;
+}
+
+#ucreate_right{
+    width: 345px;    
+    height: 80%;  
+    margin-top: 3%;
+    margin-left: 3%;
+    float: left;
+    border: red 1px solid;
+
+}
+
+#ucreate_right .ucreate_right_section{
+    /*border: 1px red solid;*/
+    margin: 2% auto;
+}
+
+.ucreate_image{
+    position: absolute;
+
+}
+
+.categories{
+    /*    position: relative;*/
+    width: 100%;
+}
+
+/*.category{
+    display: inline-block;
+    width: 30%;
+    cursor: pointer;
+}*/
+
+.component{
+    /*display: inline-block;*/
+}
+
+/*.component:hover{
+    cursor: pointer;
+}*/
+
+.component_add{
+    float: left;
+    cursor: pointer;
+}
+
+.component_name{
+    display: inline-block;
+}
+.component_remove{
+    float: right;
+    cursor: pointer;
+    display: none;
+}
+
+.tooltip {
+    /*top:-2px;*/
+    background-color:black;
+    color:white;
+    border-radius:5px;
+    opacity:0;
+    position:absolute;
+    margin-left: 5px;
+    -webkit-transition: opacity 0.5s;
+    -moz-transition:  opacity 0.5s;
+    -ms-transition: opacity 0.5s;
+    -o-transition:  opacity 0.5s;
+    transition:  opacity 0.5s;
+}
+
+.category:hover .tooltip, .component_name:hover .tooltip {
+    opacity:1;
+}
+/*
+.applied_component_item{
+    cursor: pointer;
+}*/
+
+.applied_component_colour_possibilities{
+    display: none;
+}
+
+.applied_component_colour{
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+    margin: 0 8px 8px 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.applied_component_colour:after {
+    content:'\A';
+    position:absolute;
+    width:100%; height:100%;
+    top:0; left:0;
+    background:rgba(0,0,0,0.6);
+    opacity:0;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+}
+
+.applied_component_colour:hover:after {
+    opacity:1;
+}
+
+.ucreate_left_section_first_row, .ucreate_right_section_first_row{
+    position: relative;
+}
+.ucreate_left_section_first_row_symbol, .ucreate_right_section_first_row_symbol{
+    position: absolute;
+    left: 0;
+}
+.ucreate_left_section_first_row_title, .ucreate_right_section_first_row_title{
+    font-family: "compro_medium";
+    font-weight:bold;
+    font-size: 1.0em;
+    text-transform: uppercase;
+    color: black;
+}
+.ucreate_left_section_list{
+
+}
+.ucreate_left_section_list_item{
+    font-family: "compro_medium";
+    font-weight:bold;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    color: black;
+    cursor: pointer;
+}
+
+.ucreate_left_section_list_item.vertical{
+
+}
+.ucreate_left_section_list_item.horizontal{
+    display: inline-block;
+    position: relative;
+    width: 18%;
+}
+
+.ucreate_right_section_list_item{
+    display: inline-block;
+    margin: 0px 5%;
+    text-align: center;
+}
+
+.ucreate_right_section_list_item .ucreate_right_section_list_item_icon{
+    width: 25px;
+    height: 25px;
+    border: black solid 1px;
+}
+
+.ucreate_right_section_list_item .ucreate_right_section_list_item_title{
+    font-family: "compro_medium";
+    font-weight:bold;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    color: black;
+    cursor: pointer;
+}
+
+#size_and_quantity_section .ucreate_left_section_list_item{
+    cursor: pointer;
+}
+
+div.control_icon{
+    width: 18px;
+    height: 18px;
+    margin: 0px 3px;
+    border: solid red 1px;
+    cursor: pointer;
+}
+
+#ucreate_left div.control_icon{
+    float: left;
+}
+
+#ucreate_right div.control_icon{
+    float: right;
+}
+    

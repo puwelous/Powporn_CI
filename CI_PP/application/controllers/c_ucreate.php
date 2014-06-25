@@ -3,24 +3,275 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+require_once( APPPATH . '/models/DataHolders/product_screen_representation.php');
+require_once( APPPATH . '/models/DataHolders/ucreate_component_full_info.php');
+
+/**
+ * Controller class responsible for customization.
+ * 
+ * @author Pavol Daňo
+ * @version 1.0
+ * @file
+ */
 class C_ucreate extends MY_Controller {
 
+    /**
+     * Basic constructor.
+     */
     public function __construct() {
         parent::__construct();
     }
 
-    public function index() {
-        
-        //login or logout in menu
+    /**
+     * Controller responsible for rendering Ucreate page.
+     * Any user has to be authentified in order to gain acces.
+     * According to the ID of the product passed as an argument raster and vector representation is retrieved.
+     * If there is no product ID passed, any (random) product from database is taken for initializing customization process.
+     * @param int $prodId
+     *  ID of the product to be customized
+     */
+    public function index($prodId = NULL) {
+
+        if (!$this->authentify()) {
+            log_message('debug', 'Attempt to edit product for unlogged user. Redirect!');
+            redirect('/c_registration/index', 'refresh');
+        }
+
         $template_data = array();
-        $this->set_title( $template_data, 'u create');
-        $this->load_header_templates( $template_data );
+        $this->set_title($template_data, 'Product preview');
+        $this->load_header_templates($template_data);
+
+        if (!isset($prodId) || is_null($prodId) || !is_numeric($prodId)) {
+            // get any and redirect
+            $product_model = $this->product_model->get_any_single_product();
+            redirect('ucreate/' . $product_model->getId());
+            return;
+        } else {
+            $product_model = $this->product_model->get_product($prodId);
+        }
+
+        $data['product'] = $product_model;
+        $data['product_creator_nick'] = $this->user_model->get_user_by_id($product_model->getCreator())->getNick();
+
+
+        $basic_pov = $this->point_of_view_model->get_basic_pov();
+        $basic_raster_model_object = $this->basic_product_raster_model->get_single_basic_product_raster_by_basic_product_id_and_pov_id(
+                $product_model->getBasicProduct(), $basic_pov->getId()
+        );
+
+        // all urls
+        $urls = array();
+
+        // basic raster
+        $urls[] = $basic_raster_model_object->getPhotoUrl();
+
+        $compositions = $this->composition_model->get_compositions_by_product_id($product_model->getId());
+
+        foreach ($compositions as $singleComposition) {
+            $component_raster_instance = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
+                    $singleComposition->getComponent(), $basic_pov->getId());
+            $urls[] = $component_raster_instance->getPhotoUrl();
+        }
+
+        $product_screen_representations = new Product_screen_representation(
+                        $product_model->getId(),
+                        $product_model->getName(),
+                        $urls
+        );
+
+        $data['product_representations'] = $product_screen_representations;
         
+// Optimization: deleted
+//        $all_categories = $this->category_model->get_all_categories();
+//        $data['categories'] = $all_categories;
+
+        $all_components = $this->component_model->get_accepted_components();
+        //$data['initComponents'] = $all_components; //DELETE LATER!
+
+        $works = $this->component_model->get_accepted_components_full_info();
+
+        $data['optimized_ucreate_components_full_info_array'] = $works;
+
+        $ucreate_component_full_info_array = array();
+        foreach ($all_components as $single_component) {
+            $available_colours = $this->component_colour_model->get_component_colours_by_component($single_component->getId());
+// Optimization: deleted
+//            $component_vector_representations = $this->component_vector_model->get_component_vectors_by_component_and_point_of_view(
+//                    $single_component->getId(), $basic_pov->getId()
+//            );
+//            $component_raster_representation = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
+//                    $single_component->getId(), $basic_pov->getId()
+//            );
+
+            $ucreate_component_full_info_array[] = new Ucreate_component_full_info($single_component, $available_colours, NULL, NULL);
+        }
+
+        $data['ucreate_component_full_info_array'] = $ucreate_component_full_info_array;
+
+        // applied components
+        $applied_components = array();
+        $applied_components_and_colours = array();
+
+        $compositions = $this->composition_model->get_compositions_by_product_id($product_model->getId());
+        foreach ($compositions as $single_composition) {
+            $applied_components[] = $this->component_model->get_component_by_id($single_composition->getComponent());
+            if (!$single_composition->getColour()) {
+                continue;
+            }
+
+            $applied_component_colour = $this->component_colour_model->get_component_colour_by_id($single_composition->getColour())->getValue();
+            $applied_components_and_colours[$single_composition->getComponent()] = $applied_component_colour;
+        }
+        log_message('debug', '$applied_componenets_and_colours');
+        log_message('debug', print_r($applied_components_and_colours, true));
+        $data['applied_components_and_colours'] = $applied_components_and_colours;
+
+
+        $ucreate_applied_component_full_info_array = array();
+        foreach ($applied_components as $single_component) {
+            $available_colours = $this->component_colour_model->get_component_colours_by_component($single_component->getId());
+
+            $component_vector_representations = $this->component_vector_model->get_component_vectors_by_component_and_point_of_view(
+                    $single_component->getId(), $basic_pov->getId()
+            );
+            $component_raster_representation = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
+                    $single_component->getId(), $basic_pov->getId()
+            );
+
+            $ucreate_applied_component_full_info_array[] = new Ucreate_component_full_info($single_component, $available_colours, $component_vector_representations, $component_raster_representation);
+        }
+
+        $data['ucreate_applied_component_full_info_array'] = $ucreate_applied_component_full_info_array;
+
+
+
+
+//        $possible_sizes_array = $this->possible_size_for_product_model->get_all_possible_sizes_by_product($product_model->getId());
+//
+//        $output_sizes = array();
+//
+//        foreach ($possible_sizes_array as $psfp_instance) {
+//            $output_sizes[$psfp_instance->getId()] = $psfp_instance->getName();
+//        }
+//
+//        //log_message('debug', print_r($data['previewed_product_size_options'], TRUE));
+//        $data['previewed_product_size_options'] = $output_sizes;
+
 
         $this->load->view('templates/header', $template_data);
-        $this->load->view('v_ucreate');
-        $this->load->view('templates/footer');
+        $this->load->view('v_ucreate', $data);
     }
+
+    /**
+     * Controller function providing manners for creating customized product and transforming it into final product.
+     * Called by AJAX.
+     * Data are taken as a raw PNG information that needs to be decoded before stored on a server side.
+     */
+    public function create() {
+
+        $productData = $this->input->post('product_data');
+        // product id of edited product, not id of created one (comes later)
+        $product_id = $productData['product_id'];
+        $product_name = $productData['name'];
+        $product_price = $productData['price'];
+        $product_description = $productData['description'];
+        $product_sex = $productData['sex'];
+        $product_creator_nick = $productData['creator_nick'];
+        $pictureData = $this->input->post('picture_data');
+
+        // try to save a PNG file
+        $upload_path = get_product_upload_path($this->config);
+
+        $file_name = generate_product_file_name($productData['creator_nick'], $productData['name']);
+        $file_name .= '.png';
+
+        $full_file_name = $upload_path . $file_name;
+
+        $pictureData = str_replace('data:image/png;base64,', '', $pictureData);
+        $pictureData = str_replace(' ', '+', $pictureData);
+        $pictureData = base64_decode($pictureData);
+
+        $success = file_put_contents($full_file_name, $pictureData);
+
+        if (!success) {
+            $response['error'] = true;
+            $response['msg'] = 'Could not create PNG file on a server side!';
+            echo json_encode($response);
+            return;
+        }
+
+        // fetch product creator
+        $creator = $this->user_model->get_user_by_nick($product_creator_nick);
+        $users_user_type = $this->user_type_model->get_user_type_by_id($creator->getUserType());
+        if (strtolower($users_user_type->getUserTypeName()) == 'admin') {
+            $acceptanceStatus = Product_model::PRODUCT_STATUS_ACCEPTED;
+        } else {
+            $acceptanceStatus = Product_model::PRODUCT_STATUS_PROPOSED;
+        }
+
+        // fetch basic product according to edited product id
+        $product = $this->product_model->get_product($product_id);
+
+        // fetch basic product id
+        $basic_product_id = $product->getBasicProduct();
+
+        $this->db->trans_begin(); {
+            $new_product = new Product_model();
+
+            $new_product->instantiate(
+                    $product_name, $product_price, $product_description, $product_sex, $acceptanceStatus, $creator->getId(), $basic_product_id, $full_file_name);
+
+            $new_product_id = $new_product->save();
+            log_message('debug', 'after save product 2 ');
+            if (!$new_product_id) {
+                $response['error'] = true;
+                $response['msg'] = 'Saving product into database failed!';
+                log_message('debug', 'Saving product into database failed!');
+                $this->db->trans_rollback();
+                unlink($full_file_name);
+                echo json_encode($response);
+                return;
+            }
+
+            // composition
+            $appliedComponentsData = $this->input->post('applied_components_data');
+            $appliedComponentsValuePairs = $appliedComponentsData['applied_components_value_pairs'];
+            foreach ($appliedComponentsValuePairs as $singleAppliedComponentValuePair) {
+                $new_composition_instance = new Composition_model();
+                $new_composition_instance->instantiate(
+                        $singleAppliedComponentValuePair['component_id'], $new_product_id, (!isset($singleAppliedComponentValuePair['component_colour_id']) ||
+                        is_null($singleAppliedComponentValuePair['component_colour_id']) ||
+                        strlen($singleAppliedComponentValuePair['component_colour_id']) <= 0 ? NULL : $singleAppliedComponentValuePair['component_colour_id'])
+                );
+                if (!($new_composition_instance->save())) {
+                    $response['error'] = true;
+                    $response['msg'] = 'Saving composition into database failed!';
+                    log_message('debug', 'Saving composition into database failed!');
+                    $this->db->trans_rollback();
+                    unlink($full_file_name);
+                    echo json_encode($response);
+                    return;
+                }
+            }
+        }
+        if ($this->db->trans_status() === FALSE) {
+            log_message('debug', 'Transaction status is FALSE! Rolling the transaction back!');
+            $this->db->trans_rollback();
+            $response['error'] = true;
+            $response['msg'] = 'Transaction failed!';
+            unlink($full_file_name);
+            echo json_encode($response);
+            return;
+        } else {
+            log_message('debug', '... commiting transaction ...!');
+            $this->db->trans_commit();
+            $response['error'] = false;
+            $response['msg'] = 'Product custromization successful!';
+            echo json_encode($response);
+            return;
+        }
+    }
+
 }
 
 /* End of file c_ucreate.php */

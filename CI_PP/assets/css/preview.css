@@ -1,8 +1,10 @@
 .content_unextended{
     width: 100%;
     height: 85%;
+    top: 5%;
     text-align: center;
     float: left;
+    position: relative;
 }
 
 .preview_left{

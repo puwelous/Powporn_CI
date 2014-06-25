@@ -80,7 +80,7 @@ $autoload['helper'] = array('url','form','html', 'email_former_helper', 'product
 |
 */
 
-$autoload['config'] = array('pp_company_config','pp_email_config', 'pp_products_upload_config');
+$autoload['config'] = array('sb_company_config','sb_email_config', 'sb_products_upload_config');
 
 
 /*
@@ -113,8 +113,6 @@ $autoload['model'] = array(
     'company_model',
     'user_model',
     'cart_model',
-    'product_definition_model',
-    'contact_video_model',
     'shipping_method_model',
     'possible_size_for_product_model',
     'ordered_product_model',
@@ -122,7 +120,22 @@ $autoload['model'] = array(
     'order_model',
     'order_address_model',
     'paypal_shipping_data_model',
-    'paypal_transaction_data_model'
+    'paypal_transaction_data_model',
+    
+    'address_model',
+    'user_type_model',
+    'basic_product_raster_model',
+    'basic_product_vector_model',
+    'possible_size_for_product_model',
+    'product_model',
+    'category_model',
+    'basic_product_model',
+    'point_of_view_model',
+    'component_model',
+    'component_vector_model', 
+    'component_raster_model',
+    'component_colour_model',
+    'composition_model'
     );
 
 

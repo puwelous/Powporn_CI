@@ -5,17 +5,44 @@ if (!defined('BASEPATH'))
 
 require_once( APPPATH . '/libraries/PayPal/CPayPalImpl.php');
 
+/**
+ * Controller class for handling PayPale payment API calls.
+ * 
+ * @author Pavol Daňo
+ * @version 1.0
+ * @file
+ */
 class C_paypal extends MY_Controller {
+    /**
+     * Three characters long currency code type
+     */
 
     const CURRENCY_CODE_TYPE = "EUR";
-    
+    /**
+     * Type of a PayPal payment
+     */
     const PAYMENT_TYPE = "Sale";
 
+    /**
+     * Return URL for coming back to Snovbord application if PayPal ExpressCheckout fails
+     */
     const RETURN_URL = "http://localhost:8888/CI_PP/index.php/c_paypal/return_to_review";
 
-
+    /**
+     * Cancel URL for coming back to Snovbord application if user cancels PayPal payment process
+     */
     const CANCEL_URL = "http://localhost:8888/CI_PP/index.php/c_paypal/cancel_review";
 
+    /**
+     * Constructor.
+     * Initializes PayPal API credentials:
+     * - API username
+     * - API password
+     * - API signature
+     * 
+     * Also initializes PayPal library with mentioned values.
+     * Do not forget to substitue these values with your own if put into production or even running on localhost!
+     */
     public function __construct() {
         parent::__construct();
 
@@ -37,9 +64,7 @@ class C_paypal extends MY_Controller {
 
     /**
      * Calls first PayPal API method for authorizing the payment.
-     * 
-     * @retval string
-     *  HTML page claiming PayPal failed. If succes, redirection is conducted.
+     * HTML page claiming PayPal failed. If succes, redirection is conducted.
      * Redirection is not explicitly called, but it is forwarder from PayPal authorization page.
      */
     public function express_checkout() {
@@ -55,7 +80,7 @@ class C_paypal extends MY_Controller {
         $shipToState = $order_address['oa_country'];
         $shipToCountryCode = "SK"; // Please refer to the PayPal country codes in the API documentation
         $shipToZip = $order_address['oa_zip'];
-        $phoneNum = "+421915507714"; //TODO
+        $phoneNum = $order_address['oa_phone_number'];
 
         $resArray = $this->cpaypalimpl->CallMarkExpressCheckout($paymentAmount, self::CURRENCY_CODE_TYPE, self::PAYMENT_TYPE, self::RETURN_URL, self::CANCEL_URL, $shipToName, $shipToStreet, $shipToCity, $shipToState, $shipToCountryCode, $shipToZip, $shipToStreet2, $phoneNum
         );
@@ -84,10 +109,12 @@ class C_paypal extends MY_Controller {
 
             $this->load->view('templates/header', $template_data);
             $this->load->view('paypal/v_paypal_express_checkout_failed', $data);
-            $this->load->view('templates/footer');
         }
     }
 
+    /**
+     * Controller method called when user performs PayPal authentification and gets back to Snovbord application
+     */
     public function return_to_review() {
 
         /* ==================================================================
@@ -160,6 +187,7 @@ class C_paypal extends MY_Controller {
                     'address_status' => $addressStatus,
                 );
 
+                log_message('info', 'Special: ' . print_r($this->session->all_userdata(), true));
                 $order_id = $this->session->userdata('invoice_id');
 
                 $paypal_shipping_data_instance = new Paypal_shipping_data_model();
@@ -171,13 +199,16 @@ class C_paypal extends MY_Controller {
                     log_message('error', 'Inserting paypal_shipping_data into DB failed.');
                     log_message('error', $e);
                 }
-//TODO: set payment as OK< order flag change!
-                $data['invoice_id'] = $this->session->userdata('invoice_id');
+                $data['invoice_id'] = $order_id;
                 $data['total'] = $this->session->userdata('payment_amount');
-                $data['ordered_products'] = $this->session->userdata('ordered_products'); //$this->ordered_product_model->get_ordered_product_full_info_by_cart_id( $this->input->post('cart_id') );
                 $data['order_address'] = $this->session->userdata('order_address');
-                $data['payment_method'] = $this->session->userdata('payment_method');
-                $data['shipping_method'] = $this->session->userdata('shipping_method');
+
+                $actual_order = $this->order_model->get_order_by_id($order_id);
+
+                $data['ordered_products_full_info'] = $this->ordered_product_model->get_ordered_product_full_info_by_cart_id($actual_order->getCart());
+
+                $data['payment_method'] = $this->payment_method_model->get_payment_method_by_id($actual_order->getPaymentMethod());
+                $data['shipping_method'] = $this->shipping_method_model->get_shipping_method_by_id($actual_order->getShippingMethod());
 
                 $template_data = array();
                 $this->set_title($template_data, 'Choose payment method!');
@@ -187,7 +218,6 @@ class C_paypal extends MY_Controller {
 
                 $this->load->view('templates/header', $template_data);
                 $this->load->view('paypal/v_paypal_review', $data); // review screen
-                $this->load->view('templates/footer');
             } else {
                 //Display a user friendly Error on the page using any of the following error information returned by PayPal
 
@@ -205,7 +235,6 @@ class C_paypal extends MY_Controller {
 
                 $this->load->view('templates/header', $template_data);
                 $this->load->view('paypal/v_paypal_get_shipping_details_failed', $data);
-                $this->load->view('templates/footer');
             }
         }
     }
@@ -310,6 +339,14 @@ class C_paypal extends MY_Controller {
             log_message('debug', print_r($resArray, true));
 
             $order_id = $this->session->userdata('invoice_id');
+            $actual_order = $this->order_model->get_order_by_id($order_id);
+            $actual_order->setStatus(Order_model::ORDER_STATUS_PAID);
+            if ($actual_order->update_order() <= 0) {
+                log_message('error', 'Order has been paid but cannot update it to the PAID status !!!');
+                log_message('error', 'Order:' . print_r($actual_order, true));
+                // do not interrupt, just continue with paypal transaction data model
+            }
+
             $ptdm_instance = new Paypal_transaction_data_model();
             $ptdm_instance->instantiate($order_id, $transactionId, $transactionType, $paymentType, $orderTime, $amt, $currencyCode, $taxAmt, $paymentStatus, $pendingReason, $reasonCode, $ack);
             try {
@@ -325,9 +362,17 @@ class C_paypal extends MY_Controller {
 
             $data['order_id'] = $order_id;
 
+            // unset invoice id and order address from session
+            $array_items = array(
+                'is_order_address_set' => '',
+                'order_address' => '', 
+                'invoice_id' => '',
+                'payment_amount' => ''
+                );
+            $this->session->unset_userdata($array_items);
+
             $this->load->view('templates/header', $template_data);
             $this->load->view('paypal/v_paypal_payment_success', $data); // review screen
-            $this->load->view('templates/footer');
         } else {
             //Display a user friendly Error on the page using any of the following error information returned by PayPal
 
@@ -345,10 +390,16 @@ class C_paypal extends MY_Controller {
 
             $this->load->view('templates/header', $template_data);
             $this->load->view('paypal/v_paypal_payment_confirmation_failed', $data);
-            $this->load->view('templates/footer');
         }
     }
 
+    /**
+     * Additional private function for retrieving error fields from PayPal response.
+     * @param array $resArray
+     *  PayPal response to be parsed
+     * @return string
+     *  Error message in a form of string object.
+     */
     private function _decode_error_details($resArray) {
 
         $ErrorCode = urldecode($resArray["L_ERRORCODE0"]);
