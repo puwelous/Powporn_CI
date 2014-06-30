@@ -1,0 +1,35 @@
+
+div .icon_my_adds {
+    width: 21px;
+    height: 21px;    
+    background: url(./images/icons/ikonky_200x200-54_my_adds.svg);
+    background-size: 23px 23px;
+}
+
+div .icon_layers {
+    width: 21px;
+    height: 21px;    
+    background: url(./images/icons/ikonky_200x200-77_layers.svg);
+    background-size: 23px 23px;
+}
+
+div .icon_size_and_quantity {
+    width: 21px;
+    height: 21px;    
+    background: url(./images/icons/ikonky_200x200-55_size_and_quant.svg);
+    background-size: 23px 23px;
+}
+
+div .icon_toolset {
+    width: 21px;
+    height: 21px;    
+    background: url(./images/icons/ikonky_200x200-43_toolset.svg);
+    background-size: 23px 23px;
+}
+
+div .icon_material {
+    width: 21px;
+    height: 21px;    
+    background: url(./images/icons/ikonky_200x200-44_material_and_col.svg);
+    background-size: 23px 23px;
+}

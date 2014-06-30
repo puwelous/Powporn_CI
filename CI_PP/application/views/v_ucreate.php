@@ -38,7 +38,7 @@
             alert('Your browser does not support HTML5!');
         }
 
-// TODO: delete me later!
+        // TODO: delete me later!
         $(".component_add").click( function(){
 
             var component = $(this).parent();
@@ -426,38 +426,78 @@
             }
             
             // display remove button
-//            component.children('.component_remove').show();
+            //            component.children('.component_remove').show();
             
             // hide self
-//            $(this).hide();
+            //            $(this).hide();
             //$('#loading_gif').hide();
         });        
         
         
-        // hide Add button per each applied components
-<?php foreach ($ucreate_applied_component_full_info_array as $singleAppliedComponent): ?>
-            $('.component_add[data-identity="' + <?php echo $singleAppliedComponent->getComponent()->getId(); ?> +'"]').hide();
-            $('.component_remove[data-identity="' + <?php echo $singleAppliedComponent->getComponent()->getId(); ?> +'"]').show();
+        $(".control_icon").click( function(){
+            var clickedControlIconClasses = this.classList;
+            if( clickedControlIconClasses.length < 2 ){
+                alert('Class names of control icons are incorrect! Contact administrator!');
+                return;
+            }
+            
+            const secondClassName = clickedControlIconClasses[1];
+            
+            var elementToBeManipulatedLeft = $(".ucreate_left_section_first_row_symbol." + secondClassName).parent().parent();
 
-    <?php if (isset($applied_components_and_colours[$singleAppliedComponent->getComponent()->getId()])): ?>
-                    // paint SVG path
-                    var already_existing_vector = $('#ucreate_vector_section svg path[data-id="'+<?php echo $singleAppliedComponent->getComponent()->getId(); ?>+'"]'); 
-                    if( already_existing_vector.length ){
-                        already_existing_vector.css( "fill", "<?php echo $applied_components_and_colours[$singleAppliedComponent->getComponent()->getId()]; ?>" );
-                    }
-                                                                                                                                                                                            
-                    // set colour from colour range to be selected
-                    var colour_range_section = $('.applied_component_colour_possibilities[data-identity="'+<?php echo $singleAppliedComponent->getComponent()->getId(); ?>+'"]');            
-                    if( colour_range_section.length ){
-                        // unset selected style of selected colour
-                        var selected_colour = colour_range_section.children('.applied_component_colour[data-colour="<?php echo $applied_components_and_colours[$singleAppliedComponent->getComponent()->getId()]; ?>"]');
-                        if ( selected_colour.length ){
-                            selected_colour.removeClass('notselected');
-                            selected_colour.addClass('selected');
-                        }
-                    }                    
-    <?php endif; ?>      
-<?php endforeach; ?>
+            if( elementToBeManipulatedLeft.length ){
+                elementToBeManipulatedLeft.slideToggle();
+            }else{
+                
+                var elementToBeManipulatedRight = $(".ucreate_right_section_first_row_symbol." + secondClassName).parent().parent();
+                if( elementToBeManipulatedRight.length ){
+                    elementToBeManipulatedRight.slideToggle();
+                    
+                    if( elementToBeManipulatedRight.is("#toolset_section") ){
+                        $("#concrete_toolset_section").slideToggle();
+                    }else{
+                        
+                    };
+                }else{
+                    alert('There is no element to be toggled found!');
+                }
+            }
+
+        });
+        //            <div id="control_icon_my_adds" class="control_icon icon_my_adds">
+        //            </div>
+        //            <div id="control_icon_layers" class="control_icon icon_layers">
+        //            </div>
+        //            <div id="control_icon_size_and_quantity" class="control_icon icon_size_and_quantity">
+        //            </div>        
+        
+        
+        // hide Add button per each applied components
+<?php if ($applied_components_full_info) : ?>
+    <?php foreach ($applied_components_full_info as $singleAppliedComponentFullInfo): ?>
+                    //            $('.component_add[data-identity="' + <?php echo $singleAppliedComponentFullInfo->getComponentId(); ?> +'"]').hide();
+                    //            $('.component_remove[data-identity="' + <?php echo $singleAppliedComponentFullInfo->getComponentId(); ?> +'"]').show();
+
+        <?php if ($singleAppliedComponentFullInfo->getColourId() && $singleAppliedComponentFullInfo->getColourValue()): ?>
+                            // paint SVG path
+                            var already_existing_vector = $('#ucreate_vector_section svg path[data-id="'+<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>+'"]'); 
+                            if( already_existing_vector.length ){
+                                already_existing_vector.css( "fill", "<?php echo $singleAppliedComponentFullInfo->getColourValue(); ?>" );
+                            }
+                                                                                                                                                                                                                                                                                                                                    
+                            // set colour from colour range to be selected
+                            var colour_range_section = $('.applied_component_colour_possibilities[data-identity="'+<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>+'"]');            
+                            if( colour_range_section.length ){
+                                // unset selected style of selected colour
+                                var selected_colour = colour_range_section.children('.applied_component_colour[data-colour="<?php echo $singleAppliedComponentFullInfo->getColourValue(); ?>"]');
+                                if ( selected_colour.length ){
+                                    selected_colour.removeClass('notselected');
+                                    selected_colour.addClass('selected');
+                                }
+                            }                    
+        <?php endif; ?>      
+    <?php endforeach; ?>
+<?php endif; ?>
         
     });
     
@@ -471,9 +511,11 @@
 
         <!-- control icons -->
         <div class="ucreate_left_section">
-            <div id="control_icon_my_adds" class="control_icon">
+            <div id="control_icon_my_adds" class="control_icon icon_my_adds">
             </div>
-            <div id="control_icon_size_and_quantity" class="control_icon">
+            <div id="control_icon_layers" class="control_icon icon_layers">
+            </div>
+            <div id="control_icon_size_and_quantity" class="control_icon icon_size_and_quantity">
             </div>
             <div style="clear: both"></div>
         </div>          
@@ -501,34 +543,34 @@
         <!-- empty ! -->
 
         <!-- my adds -->
-        <div id="my_adds_section" class="ucreate_left_section">
+        <div id="my_adds_section" class="ucreate_left_section" style="display:none">
             <div class="ucreate_left_section_first_row">
-                <div class="ucreate_left_section_first_row_symbol">
-                    S
+                <div class="ucreate_left_section_first_row_symbol icon_my_adds">
                 </div>
                 <div class="ucreate_left_section_first_row_title">
                     my adds
                 </div>
             </div>
             <div class="ucreate_left_section_list">
-                <!--                <div class="ucreate_left_section_list_item vertical">
-                                    men double side hoodie
-                                </div>
-                                <div class="ucreate_left_section_list_item vertical">
-                                    hoodie clasik
-                                </div>     
-                                <div class="ucreate_left_section_list_item vertical">
-                                    pant with hole
-                                </div>                 -->
-            </div>            
+                <?php if ($applied_components_full_info) : ?>
+                    <?php foreach ($applied_components_full_info as $singleAppliedComponentFullInfo): ?>
+                        <div id="applied_components_list_item_<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>"
+                             data-identity="<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>"
+                             data-price="<?php echo $singleAppliedComponentFullInfo->getComponentPrice(); ?>"
+                             class="ucreate_left_section_list_item vertical applied_component_item">
+                                 <?php echo $singleAppliedComponentFullInfo->getComponentName(); ?>
+                        </div>              
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>  
+            <div class="line"></div>            
         </div>
-        <div class="line"></div>
+
 
         <!-- size and quantity -->
-        <div id="size_and_quantity_section" class="ucreate_left_section">
+        <div id="size_and_quantity_section" class="ucreate_left_section" style="display:none">
             <div class="ucreate_left_section_first_row">
-                <div class="ucreate_left_section_first_row_symbol">
-                    S
+                <div class="ucreate_left_section_first_row_symbol icon_size_and_quantity">
                 </div>
                 <div class="ucreate_left_section_first_row_title">
                     size &AMP; quantity
@@ -550,9 +592,10 @@
                 <div class="ucreate_left_section_list_item horizontal product_size">
                     xxl
                 </div>                
-            </div>            
+            </div>  
+            <div class="line"></div>
         </div>
-        <div class="line"></div>
+
 
         <div id="size_and_quantity_section" class="ucreate_left_section">
             <h1>
@@ -606,13 +649,15 @@
             ?>
 
             <!--applied components rasters-->
-            <?php foreach ($ucreate_applied_component_full_info_array as $singleComponentFullInfo): ?>
-                <img class="ucreate_image"
-                     src="<?php echo base_url($singleComponentFullInfo->getRaster()->getPhotoUrl()); ?>"
-                     data-id="<?php echo $singleComponentFullInfo->getComponent()->getId(); ?>"
-                     style="z-index: 3"
-                     >
-                 <?php endforeach; ?>                       
+            <?php if ($applied_components_full_info) : ?>
+                <?php foreach ($applied_components_full_info as $singleAppliedComponentFullInfo): ?>
+                    <img class="ucreate_image"
+                         src="<?php echo base_url($singleAppliedComponentFullInfo->getRasterURL()); ?>"
+                         data-id="<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>"
+                         style="z-index: 3"
+                         >
+                     <?php endforeach; ?> 
+                 <?php endif; ?>
         </div>
         <div id="background_image_effect" style="position: absolute; width: 240px; height: 350px;">
             <?php
@@ -632,19 +677,18 @@
     <div id="ucreate_right">
         <!-- control icons -->
         <div class="ucreate_right_section">
-            <div id="control_icon_toolset" class="control_icon">
+            <div id="control_icon_toolset" class="control_icon icon_toolset">
             </div>
-            <div id="control_icon_materials_and_colors" class="control_icon">
+            <div id="control_icon_materials_and_colors" class="control_icon icon_material">
             </div>
             <div style="clear: both"></div>
         </div>
         <div class="line pp_red"></div>
 
         <!-- toolset aka component categories -->
-        <div id="toolset_section" class="ucreate_right_section">
+        <div id="toolset_section" class="ucreate_right_section" style="display:none">
             <div class="ucreate_left_section_first_row">
-                <div class="ucreate_right_section_first_row_symbol">
-                    S
+                <div class="ucreate_right_section_first_row_symbol icon_toolset">
                 </div>
                 <div class="ucreate_right_section_first_row_title">
                     component categories
@@ -655,6 +699,7 @@
                     <?php if ($optimizedSingleCategoryComponentFullInfo->getCategory()): ?>
                         <div class="ucreate_right_section_list_item category" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>">
                             <div class="ucreate_right_section_list_item_icon">
+                                <img src="<?php echo base_url($optimizedSingleCategoryComponentFullInfo->getCategory()->getURL()); ?>" >
                             </div>
                             <div class="ucreate_right_section_list_item_title">
                                 <?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getName(); ?>
@@ -662,20 +707,21 @@
                         </div>
                     <?php endif; ?>
                 <?php endforeach; ?>
-            </div>            
+            </div> 
+            <div class="line"></div>             
         </div>
-        <div class="line"></div>  
+
 
 
         <!-- concrete toolset aka components -->
-        <div id="concrete_toolset_section" class="ucreate_right_section">
+        <div id="concrete_toolset_section" class="ucreate_right_section" style="display:none">
             <?php for ($i = 0; $i < count($optimized_ucreate_components_full_info_array); $i++): ?>
                 <?php $optimizedSingleCategoryComponentFullInfo = $optimized_ucreate_components_full_info_array[$i] ?>
                 <?php if ($i != 0): ?>
                     <div class="ucreate_left_section_category_unit category_components" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>" style="display: none">
-                <?php else: ?>
-                    <div class="ucreate_left_section_category_unit category_components" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>" style="display: block">
-                <?php endif; ?>                        
+                    <?php else: ?>
+                        <div class="ucreate_left_section_category_unit category_components" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>" style="display: block">
+                        <?php endif; ?>                              
                         <div class="ucreate_left_section_first_row">
                             <div class="ucreate_right_section_first_row_title">
                                 <?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getName(); ?>
@@ -703,75 +749,92 @@
                             <?php endif; ?>                    
                         </div>
                     </div>
-                <?php endfor; ?>                 
+                <?php endfor; ?>  
+                <div class="line"></div> 
             </div>
-            <div class="line"></div>        
+
 
 
             <!--        <h3>Categories</h3>
                     <div id="categories">
             <?php //foreach ($categories as $singleCategory): ?>
-                                                            <div class="category"><?php //echo $singleCategory->getName(); ?>
-                                                                <span class="tooltip"><?php //echo $singleCategory->getDescription(); ?></span>            
+                                                            <div class="category"><?php //echo $singleCategory->getName();              ?>
+                                                                <span class="tooltip"><?php //echo $singleCategory->getDescription();              ?></span>            
                                                             </div>
             <?php //endforeach; ?>
                     </div>
                     <div class="line pp_dark_gray"></div>-->
 
-<!--            <h3>Components</h3>
-            <div id="components">
-                <?php foreach ($ucreate_component_full_info_array as $singleComponentFullInfo): ?>
-                    <div class="component"
-                         data-src="<?php //echo base_url($singleComponentFullInfo->getRaster()->getPhotoUrl()); ?>"
-                         data-identity="<?php echo $singleComponentFullInfo->getComponent()->getId(); ?>"
-                         data-price="<?php echo $singleComponentFullInfo->getComponent()->getPrice(); ?>"
-                         data-name="<?php echo $singleComponentFullInfo->getComponent()->getName(); ?>"
-                         data-multiple="false"
-                         >
-                        <span
-                            class="component_add"
-                            data-identity="<?php echo $singleComponentFullInfo->getComponent()->getId(); ?>"
-                            >Add</span>
-                        <div class="component_name"><?php echo $singleComponentFullInfo->getComponent()->getName(); ?>
-                            <span class="tooltip">Price: <?php echo $singleComponentFullInfo->getComponent()->getPrice(); ?>&euro;</span>
+            <!--            <h3>Components</h3>
+                        <div id="components">
+            <?php //foreach ($ucreate_component_full_info_array as $singleComponentFullInfo): ?>
+                                    <div class="component"
+                                         data-src="<?php //echo base_url($singleComponentFullInfo->getRaster()->getPhotoUrl());              ?>"
+                                         data-identity="<?php //echo $singleComponentFullInfo->getComponent()->getId();             ?>"
+                                         data-price="<?php //echo $singleComponentFullInfo->getComponent()->getPrice();             ?>"
+                                         data-name="<?php //echo $singleComponentFullInfo->getComponent()->getName();             ?>"
+                                         data-multiple="false"
+                                         >
+                                        <span
+                                            class="component_add"
+                                            data-identity="<?php //echo $singleComponentFullInfo->getComponent()->getId();             ?>"
+                                            >Add</span>
+                                        <div class="component_name"><?php //echo $singleComponentFullInfo->getComponent()->getName();             ?>
+                                            <span class="tooltip">Price: <?php //echo $singleComponentFullInfo->getComponent()->getPrice();             ?>&euro;</span>
+                                        </div>
+                                        <span
+                                            class="component_remove"
+                                            data-identity="<?php //echo $singleComponentFullInfo->getComponent()->getId();             ?>"
+                                            >Remove</span>
+                
+                                    </div>
+                                    <div style="clear: both"></div>
+            <?php //endforeach; ?>
                         </div>
-                        <span
-                            class="component_remove"
-                            data-identity="<?php echo $singleComponentFullInfo->getComponent()->getId(); ?>"
-                            >Remove</span>
+                        <div class="line pp_dark_gray"></div>-->
 
-                    </div>
-                    <div style="clear: both"></div>
-                <?php endforeach; ?>
-            </div>
-            <div class="line pp_dark_gray"></div>-->
+            <!--            <h3>Applied components</h3>
+                        <div id="applied_components_list">
+            <?php //foreach ($ucreate_applied_component_full_info_array as $singleAppliedComponent): ?>
+                                    <div
+                                        id="applied_components_list_item_<?php //echo $singleAppliedComponent->getComponent()->getId();             ?>"
+                                        class="applied_component_item"
+                                        data-identity="<?php //echo $singleAppliedComponent->getComponent()->getId();             ?>"
+                                        data-price="<?php //echo $singleAppliedComponent->getComponent()->getPrice();             ?>"       
+                                        >
+            <?php //echo $singleAppliedComponent->getComponent()->getName(); ?>
+                                    </div>
+            <?php //endforeach; ?>            
+                        </div>
+                        <div class="line pp_dark_gray"></div>-->
 
-<!--            <h3>Applied components</h3>
-            <div id="applied_components_list">
-                <?php foreach ($ucreate_applied_component_full_info_array as $singleAppliedComponent): ?>
-                    <div
-                        id="applied_components_list_item_<?php echo $singleAppliedComponent->getComponent()->getId(); ?>"
-                        class="applied_component_item"
-                        data-identity="<?php echo $singleAppliedComponent->getComponent()->getId(); ?>"
-                        data-price="<?php echo $singleAppliedComponent->getComponent()->getPrice(); ?>"       
-                        >
-                            <?php echo $singleAppliedComponent->getComponent()->getName(); ?>
+
+            <!-- materials and colours -->
+            <div class="ucreate_right_section" style="display:none">
+                <div class="ucreate_left_section_first_row">
+                    <div class="ucreate_right_section_first_row_symbol icon_material">
                     </div>
-                <?php endforeach; ?>            
-            </div>
-            <div class="line pp_dark_gray"></div>-->
-            <h3>Materials &AMP; Colors</h3>
-            <div id="applied_component_colours">
-                <?php foreach ($ucreate_component_full_info_array as $singleComponentFullInfo): ?>
-                    <?php if ($singleComponentFullInfo->getAvailableColours() != NULL): ?>
-                        <div class="applied_component_colour_possibilities"  data-identity="<?php echo $singleComponentFullInfo->getComponent()->getId(); ?>">
-                            <?php foreach ($singleComponentFullInfo->getAvailableColours() as $singleColour): ?>
-                                <div class="applied_component_colour notselected" data-colour_id="<?php echo $singleColour->getId() ?>" data-colour ="<?php echo $singleColour->getValue() ?>" style="background-color: <?php echo '#' . $singleColour->getValue() ?>"></div>
+                    <div class="ucreate_right_section_first_row_title">
+                        Materials &AMP; Colors
+                    </div>
+                </div>
+                <div id="applied_component_colours">
+                    <?php foreach ($optimized_ucreate_components_full_info_array as $optimizedSingleCategoryComponentFullInfo): ?>
+                        <?php if ($optimizedSingleCategoryComponentFullInfo->getSpecialComponents()): ?>
+                            <?php foreach ($optimizedSingleCategoryComponentFullInfo->getSpecialComponents() as $specialComponentObject): ?>
+                                <div class="applied_component_colour_possibilities"  data-identity="<?php echo $specialComponentObject->getComponentObject()->getId(); ?>">
+                                    <?php if (count($specialComponentObject->getColours()) > 0): ?>
+                                        <?php //var_dump( $specialComponentObject->getColours()); ?>
+                                        <?php foreach ($specialComponentObject->getColours() as $singleColour): ?>
+                                            <div class="applied_component_colour notselected" data-colour_id="<?php echo $singleColour->getId() ?>" data-colour="<?php echo $singleColour->getValue() ?>" style="background-color: <?php echo '#' . $singleColour->getValue() ?>"></div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
                             <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </div>        
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div> 
+            </div>            
         </div>
 
     </div><!-- end of content-->

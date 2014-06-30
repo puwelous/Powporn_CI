@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Dataholder class representing ucreate component
+ * Dataholder class representing category and component merged DB data
  * 
  * @author Pavol Daňo
  * @version 1.0
@@ -28,14 +28,10 @@ class Category_component_full_info {
     /**
      * Constructor.
      * 
-     * @param type $componentObject
-     *  Component instance
-     * @param type $availableColours
-     * Array of component colour
-     * @param type $vectorObjects
-     * Array of vector representations
-     * @param type $rasterObject
-     * Single raster representation
+     * @param Object $categoryObject
+     *  Object instance of category class
+     * @param type $specialComponentObjects
+     *  Array of SpecialComponent objects associated with category
      */
     public function __construct($categoryObject, $specialComponentObjects ) {
 
@@ -70,10 +66,13 @@ class SpecialComponent {
     
     private $vectors;
     
-    public function __construct( $componentObject, $rastersArray, $vectorsArray ){
+    private $colours;
+    
+    public function __construct( $componentObject, $rastersArray, $vectorsArray, $colours ){
         $this->componentObject = $componentObject ;
         $this->rasters = $rastersArray ;
         $this->vectors = $vectorsArray;
+        $this->colours = $colours;
     }
     
     /**
@@ -102,7 +101,25 @@ class SpecialComponent {
     public function getRasters() {
         return $this->rasters;
     }
+    
+    /**
+     * Getter for components colours array
+     * @return array 
+     *  Component's colour
+     */
+    public function getColours() {
+        return $this->colours;
+    }
+    
+    /**
+     * Adds new colour to the existing list
+     * @param Component_colour_model $colour
+     *  New colour to be added to the list
+     */
+    public function addColour(Component_colour_model $colour ){
+        $this->colours[] = $colour;
+    }
 }
 
-/* End of file ucreate_component_full_info.php */
-/* Location: ./application/models/ucreate_component_full_info.php */
+/* End of file category_component_full_info.php */
+/* Location: ./application/models/category_component_full_info.php */

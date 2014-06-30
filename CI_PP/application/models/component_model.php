@@ -309,13 +309,18 @@ class Component_model extends MY_Model {
      *  Either NULL if there are no specific accepted components or array of all accepted components including additional information
      */
     public function get_accepted_components_full_info() {
-        $sql = 'SELECT cmpnt.cmpnt_category_id, ctgr.ctgr_name,
+        $sql = 'SELECT cmpnt.cmpnt_category_id, ctgr.ctgr_name, ctgr.ctgr_url,
         cmpnt.cmpnt_id, cmpnt.cmpnt_name, cmpnt.cmpnt_price,
         raster.cmpnnt_rstr_rprsnttn_photo_url,
         vector.cmpnnt_vctr_rprsnttn_svg_definition,vector.cmpnnt_vctr_rprsnttn_point_of_view_id
+, colour.cmpnt_clr_id, colour.cmpnt_clr_value, colour.cmpnt_clr_component_id
 FROM pp_component cmpnt
 LEFT JOIN pp_category ctgr
 ON ( cmpnt.cmpnt_category_id = ctgr.ctgr_id)
+
+LEFT JOIN pp_component_colour colour
+ON (  cmpnt.cmpnt_id =  colour.cmpnt_clr_component_id )
+
 LEFT JOIN pp_component_raster_representation raster
 ON ( cmpnt.cmpnt_id = raster.cmpnnt_rstr_rprsnttn_component_id )
 LEFT JOIN pp_component_vector_representation vector
@@ -344,50 +349,74 @@ ORDER BY cmpnt.cmpnt_category_id ASC, cmpnt.cmpnt_id ASC;';
             return NULL;
         }
 
-        //return $query->result();
-        // TODO: delete all below
-
         $category_component_full_infos = array();
         $result = array();
-        //$specialComponents = array();
 
         foreach ($query->result() as $raw_data) {
-            //log_message('debug', print_r($raw_data, true));
-
-            $loadedComponent = new Component_model();
-            $loadedComponent->instantiate(
-                    $raw_data->cmpnt_name, $raw_data->cmpnt_price, Component_model::COMPONENT_STATUS_ACCEPTED, NULL, NULL, $raw_data->cmpnt_category_id);
-            $loadedComponent->setId($raw_data->cmpnt_id);
-            
-            $rastersArray = array();
-            $rastersArray[] = $raw_data->cmpnnt_rstr_rprsnttn_photo_url;
-
-            $vectorsArray = array();
-            $vectorsArray[] = $raw_data->cmpnnt_vctr_rprsnttn_svg_definition;
-
-            $specialComponent = new SpecialComponent($loadedComponent, $rastersArray, $vectorsArray);
-
-            //$specialComponents[] = $specialComponent;
-            
-            if (array_key_exists($raw_data->ctgr_name, $result)) {
-                // no need to create category object, assign component object to existing category
-            } else {
+            // create category if does not exist
+            if (!array_key_exists($raw_data->ctgr_name, $result)) {
                 // create category model and put it into the array
                 $loadedCategory = new Category_model();
-                $loadedCategory->instantiate($raw_data->ctgr_name, NULL); // no need for description so far
+                $loadedCategory->instantiate($raw_data->ctgr_name, NULL, $raw_data->ctgr_url); // no need for description so far
                 $loadedCategory->setId($raw_data->cmpnt_category_id);
                 $result[$raw_data->ctgr_name]['category'] = $loadedCategory;
-            } 
-            // add special component
-            $result[$raw_data->ctgr_name]['special_components'][] = $specialComponent;
-        }
-        
+                $result[$raw_data->ctgr_name]['special_components'] = array();
+            }
 
-        foreach ($result as $category_name => $value) {           
-            $category_component_full_infos[] = new Category_component_full_info(
-                    $value['category'], $value['special_components']);
+            // check if such a special component is already in the result array or not (does entry exists for it or it does not)
+            if (!array_key_exists($raw_data->cmpnt_name, $result[$raw_data->ctgr_name]['special_components'])) {
+
+                $loadedComponent = new Component_model();
+                $loadedComponent->instantiate(
+                        $raw_data->cmpnt_name, $raw_data->cmpnt_price, Component_model::COMPONENT_STATUS_ACCEPTED, NULL, NULL, $raw_data->cmpnt_category_id);
+                $loadedComponent->setId($raw_data->cmpnt_id);
+
+                $rastersArray = array();
+                $rastersArray[] = $raw_data->cmpnnt_rstr_rprsnttn_photo_url;
+
+                $vectorsArray = array();
+                $vectorsArray[] = $raw_data->cmpnnt_vctr_rprsnttn_svg_definition;
+
+                $coloursArray = array();
+
+                if (is_null($raw_data->cmpnt_clr_id) || is_null($raw_data->cmpnt_clr_value) || is_null($raw_data->cmpnt_clr_component_id)) {
+                    // do nothing, add empty array as colours array
+                } else {
+                    $loadedColour = new Component_colour_model();
+                    $loadedColour->instantiate($raw_data->cmpnt_clr_value, $raw_data->cmpnt_clr_component_id);
+                    $loadedColour->setId($raw_data->cmpnt_clr_id);
+                    $coloursArray[] = $loadedColour;
+                }
+
+                $specialComponent = new SpecialComponent($loadedComponent, $rastersArray, $vectorsArray, $coloursArray);
+
+                $result[$raw_data->ctgr_name]['special_components'][$raw_data->cmpnt_name] = $specialComponent;
+            } else {
+                // get special component
+                $specialComponent = $result[$raw_data->ctgr_name]['special_components'][$raw_data->cmpnt_name];
+
+               if (is_null($raw_data->cmpnt_clr_id) || is_null($raw_data->cmpnt_clr_value) || is_null($raw_data->cmpnt_clr_component_id)) {
+                    // do nothing, add empty array as colours array
+                } else {
+                    $loadedColour = new Component_colour_model();
+                    $loadedColour->instantiate($raw_data->cmpnt_clr_value, $raw_data->cmpnt_clr_component_id);
+                    $loadedColour->setId($raw_data->cmpnt_clr_id);
+                    $specialComponent->addColour($loadedColour);
+                }               
+
+                $result[$raw_data->ctgr_name]['special_components'][$raw_data->cmpnt_name] = $specialComponent;
+            }
+
+            // add special component
+//            $result[$raw_data->ctgr_name]['special_components'][] = $specialComponent;
         }
-        log_message('debug',print_r($category_component_full_infos, true));
+
+
+        foreach ($result as $category_name => $value) {
+            $category_component_full_infos[] = new Category_component_full_info(
+                            $value['category'], $value['special_components']);
+        }
+        //log_message('debug', print_r($category_component_full_infos, true));
         return $category_component_full_infos; //$ordered_products_full_info_array;
     }
 

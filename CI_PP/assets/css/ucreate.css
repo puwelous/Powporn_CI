@@ -1,3 +1,5 @@
+@import url("icons.css");
+
 #creator_wrapper {
 
     position: relative;
@@ -220,7 +222,7 @@ div.icon img {
     display: inline-block;
     height: 22px;
     width: 22px;
-    margin: 0 8px 8px 0;
+    margin: 0 8px 0px 8px;
     cursor: pointer;
     position: relative;
 }
@@ -243,10 +245,11 @@ div.icon img {
 .ucreate_left_section_first_row, .ucreate_right_section_first_row{
     position: relative;
 }
-.ucreate_left_section_first_row_symbol, .ucreate_right_section_first_row_symbol{
+div .ucreate_left_section_first_row_symbol, div .ucreate_right_section_first_row_symbol{
     position: absolute;
     left: 0;
 }
+
 .ucreate_left_section_first_row_title, .ucreate_right_section_first_row_title{
     font-family: "compro_medium";
     font-weight:bold;
@@ -277,14 +280,19 @@ div.icon img {
 
 .ucreate_right_section_list_item{
     display: inline-block;
-    margin: 0px 5%;
+    /*margin: 0px 5%;*/
     text-align: center;
 }
 
 .ucreate_right_section_list_item .ucreate_right_section_list_item_icon{
-    width: 25px;
-    height: 25px;
-    border: black solid 1px;
+    width: 64px;
+    height: 64px;
+    /*border: black solid 1px;*/
+}
+
+.ucreate_right_section_list_item .ucreate_right_section_list_item_icon img{
+    width: 64px;
+    height: 64px;
 }
 
 .ucreate_right_section_list_item .ucreate_right_section_list_item_title{
@@ -301,10 +309,10 @@ div.icon img {
 }
 
 div.control_icon{
-    width: 18px;
-    height: 18px;
-    margin: 0px 3px;
-    border: solid red 1px;
+    width: 21px;
+    height: 21px;
+    /*margin: 0px 3px;*/
+    /*border: solid red 1px;*/
     cursor: pointer;
 }
 
@@ -315,4 +323,4 @@ div.control_icon{
 #ucreate_right div.control_icon{
     float: right;
 }
-    
+

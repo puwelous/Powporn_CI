@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 require_once( APPPATH . '/models/DataHolders/product_screen_representation.php');
-require_once( APPPATH . '/models/DataHolders/ucreate_component_full_info.php');
+require_once( APPPATH . '/models/DataHolders/applied_component_full_info.php');
 
 /**
  * Controller class responsible for customization.
@@ -64,14 +64,16 @@ class C_ucreate extends MY_Controller {
 
         // basic raster
         $urls[] = $basic_raster_model_object->getPhotoUrl();
-
-        $compositions = $this->composition_model->get_compositions_by_product_id($product_model->getId());
-
-        foreach ($compositions as $singleComposition) {
-            $component_raster_instance = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
-                    $singleComposition->getComponent(), $basic_pov->getId());
-            $urls[] = $component_raster_instance->getPhotoUrl();
-        }
+// Deleted because found as not necessary.
+// Clarify it once again!
+// 
+//        $compositions = $this->composition_model->get_compositions_by_product_id($product_model->getId());
+//
+//        foreach ($compositions as $singleComposition) {
+//            $component_raster_instance = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
+//                    $singleComposition->getComponent(), $basic_pov->getId());
+//            $urls[] = $component_raster_instance->getPhotoUrl();
+//        }
 
         $product_screen_representations = new Product_screen_representation(
                         $product_model->getId(),
@@ -84,17 +86,16 @@ class C_ucreate extends MY_Controller {
 // Optimization: deleted
 //        $all_categories = $this->category_model->get_all_categories();
 //        $data['categories'] = $all_categories;
-
-        $all_components = $this->component_model->get_accepted_components();
+// Optimization: deleted
+//        $all_components = $this->component_model->get_accepted_components();
         //$data['initComponents'] = $all_components; //DELETE LATER!
 
-        $works = $this->component_model->get_accepted_components_full_info();
+        $data['optimized_ucreate_components_full_info_array'] = $this->component_model->get_accepted_components_full_info();
 
-        $data['optimized_ucreate_components_full_info_array'] = $works;
-
-        $ucreate_component_full_info_array = array();
-        foreach ($all_components as $single_component) {
-            $available_colours = $this->component_colour_model->get_component_colours_by_component($single_component->getId());
+// Optimization: deleted
+//        $ucreate_component_full_info_array = array();
+//        foreach ($all_components as $single_component) {
+//            $available_colours = $this->component_colour_model->get_component_colours_by_component($single_component->getId());
 // Optimization: deleted
 //            $component_vector_representations = $this->component_vector_model->get_component_vectors_by_component_and_point_of_view(
 //                    $single_component->getId(), $basic_pov->getId()
@@ -102,46 +103,53 @@ class C_ucreate extends MY_Controller {
 //            $component_raster_representation = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
 //                    $single_component->getId(), $basic_pov->getId()
 //            );
-
-            $ucreate_component_full_info_array[] = new Ucreate_component_full_info($single_component, $available_colours, NULL, NULL);
-        }
-
-        $data['ucreate_component_full_info_array'] = $ucreate_component_full_info_array;
+//
+//            $ucreate_component_full_info_array[] = new Ucreate_component_full_info($single_component, $available_colours, NULL, NULL);
+//        }
+//
+//        $data['ucreate_component_full_info_array'] = $ucreate_component_full_info_array;
 
         // applied components
-        $applied_components = array();
-        $applied_components_and_colours = array();
+//        $applied_components = array();
+//        $applied_components_and_colours = array();
 
-        $compositions = $this->composition_model->get_compositions_by_product_id($product_model->getId());
-        foreach ($compositions as $single_composition) {
-            $applied_components[] = $this->component_model->get_component_by_id($single_composition->getComponent());
-            if (!$single_composition->getColour()) {
-                continue;
-            }
+        
+        
+        $data['applied_components_full_info'] = $this->composition_model->get_applied_components_by_product_id_full_info($product_model->getId());
 
-            $applied_component_colour = $this->component_colour_model->get_component_colour_by_id($single_composition->getColour())->getValue();
-            $applied_components_and_colours[$single_composition->getComponent()] = $applied_component_colour;
-        }
-        log_message('debug', '$applied_componenets_and_colours');
-        log_message('debug', print_r($applied_components_and_colours, true));
-        $data['applied_components_and_colours'] = $applied_components_and_colours;
+        // Optimization:
+//        $compositions = $this->composition_model->get_compositions_by_product_id($product_model->getId());
+//        
+//        foreach ($compositions as $single_composition) {
+//            $applied_components[] = $this->component_model->get_component_by_id($single_composition->getComponent());
+//            if (!$single_composition->getColour()) {
+//                continue;
+//            }
+//
+//            $applied_component_colour = $this->component_colour_model->get_component_colour_by_id($single_composition->getColour())->getValue();
+//            $applied_components_and_colours[$single_composition->getComponent()] = $applied_component_colour;
+//        }
+//        log_message('debug', '$applied_componenets_and_colours');
+//        log_message('debug', print_r($applied_components_and_colours, true));
+//        $data['applied_components_and_colours'] = $applied_components_and_colours;
+//
+//
+//        $ucreate_applied_component_full_info_array = array();
+//        foreach ($applied_components as $single_component) {
+            //$available_colours = $this->component_colour_model->get_component_colours_by_component($single_component->getId());
 
-
-        $ucreate_applied_component_full_info_array = array();
-        foreach ($applied_components as $single_component) {
-            $available_colours = $this->component_colour_model->get_component_colours_by_component($single_component->getId());
-
-            $component_vector_representations = $this->component_vector_model->get_component_vectors_by_component_and_point_of_view(
-                    $single_component->getId(), $basic_pov->getId()
-            );
-            $component_raster_representation = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
-                    $single_component->getId(), $basic_pov->getId()
-            );
-
-            $ucreate_applied_component_full_info_array[] = new Ucreate_component_full_info($single_component, $available_colours, $component_vector_representations, $component_raster_representation);
-        }
-
-        $data['ucreate_applied_component_full_info_array'] = $ucreate_applied_component_full_info_array;
+//            $component_vector_representations = $this->component_vector_model->get_component_vectors_by_component_and_point_of_view(
+//                    $single_component->getId(), $basic_pov->getId()
+//            );
+//            
+//            $component_raster_representation = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view(
+//                    $single_component->getId(), $basic_pov->getId()
+//            );
+//
+//            $ucreate_applied_component_full_info_array[] = new Ucreate_component_full_info($single_component, NULL, NULL, $component_raster_representation);
+//        }
+//
+//        $data['ucreate_applied_component_full_info_array'] = $ucreate_applied_component_full_info_array;
 
 
 
