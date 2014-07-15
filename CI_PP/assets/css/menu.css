@@ -1021,11 +1021,11 @@ div.preview_item .preview_item_imgs_wrapper img {
     opacity:1;
 }
 
-.notselected{
+.applied_component_colour.notselected{
     border: solid black 2px;
 }
 
-.selected{
+.applied_component_colour.selected{
     border: dotted black 2px;
 }
 

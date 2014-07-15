@@ -1,51 +1,58 @@
 <?php
 
 /**
- * Model class representing component's category (of subcategory).
+ * Model class representing component's subcategories.
  * 
  * @author Pavol Daňo
  * @version 1.0
  * @file
  */
-class Category_model extends MY_Model {
+class Subcategory_model extends MY_Model {
 
     /**
      * @var string $_table
      *  Name of a database table. Used for CRUD abstraction in MY_Model class
      */
-    public $_table = 'pp_category';
+    public $_table = 'pp_subcategory';
 
     /**
      * @var string $primary_key
      *  Primary key in database schema for current table
      */
-    public $primary_key = 'ctgr_id';
+    public $primary_key = 'sbctgr_id';
 
     /**
      *
      * @var int $id
-     *  Category ID
+     *  Subcategory ID
      */
     private $id;
 
     /**
      *
      * @var string $name
-     *  Category name
+     *  Subcategory name
      */
     private $name;
 
     /**
      *
      * @var string $description
-     *  Category description
+     *  Subcategory description
      */
     private $description;
 
     /**
      *
+     * @var int $category
+     *  Category which this subcategory belongs to
+     */
+    private $category;    
+    
+    /**
+     *
      * @var string $url
-     *  URL to category SVG icon representation
+     *  URL to subcategory SVG icon representation
      */
     private $url;
     
@@ -54,7 +61,7 @@ class Category_model extends MY_Model {
      * @var array $protected_attributes
      *  Array of attributes that are not directly accesed via CRUD abstract model
      */
-    public $protected_attributes = array('ctgr_id');
+    public $protected_attributes = array('sbctgr_id');
 
     /**
      * Basic constructor calling parent CRUD abstraction layer contructor
@@ -70,11 +77,16 @@ class Category_model extends MY_Model {
      *  Category name
      * @param string $description
      *  Category description
+     * @param int $category
+     *  Category ID
+     * @param string $url
+     *  URL to subcategory's icon
      */
-    public function instantiate($name, $description, $url) {
+    public function instantiate($name, $description, $category, $url) {
 
         $this->name = $name;
         $this->description = $description;
+        $this->category = $category;
         $this->url = $url;
     }
 
@@ -87,66 +99,68 @@ class Category_model extends MY_Model {
 
         return $this->category_model->insert(
                         array(
-                            'ctgr_name' => $this->name,
-                            'ctgr_description' => $this->description,
-                            'ctgr_url' => $this->url
+                            'sbctgr_name' => $this->name,
+                            'sbctgr_description' => $this->description,
+                            'sbctgr_category_id' => $this->category,
+                            'sbctgr_url' => $this->url
                 ));
     }
 
     /**
-     * Selects catogry according to it's ID passed as argument
-     * @param int $categoryId
-     *  ID of a category
-     * @return null|Category_model
-     *  Either NULL if such a category does not exist or single category model instance
+     * Selects subcategory according to its ID passed as argument
+     * @param int $subcategoryId
+     *  ID of a subcategory
+     * @return null|Subcategory_model
+     *  Either NULL if such a subcategory does not exist or single subcategory model instance
      */
-    public function get_category_by_id($categoryId) {
-        $result = $this->category_model->get($categoryId);
+    public function get_subcategory_by_id($subcategoryId) {
+        $result = $this->subcategory_model->get($subcategoryId);
 
         if (!$result) {
             return NULL;
         } else {
-            $loaded_category = new Category_model();
-            $loaded_category->instantiate($result->ctgr_name, $result->ctgr_description, $result->ctgr_url);
-            $loaded_category->setId($result->ctgr_id);
+            $loaded_subcategory = new Subcategory_model();
+            $loaded_subcategory->instantiate($result->sbctgr_name, $result->sbctgr_description, 
+                    $result->sbctgr_category_id, $result->sbctgr_url);
+            $loaded_subcategory->setId($result->sbctgr_id);
 
-            return $loaded_category;
+            return $loaded_subcategory;
         }
     }
 
     /**
-     * Selects all categories from database
-     * @return null|Category_model
-     *  Either NULL if there are no categories or array including all category model instances
+     * Selects all subcategories from database
+     * @return null|Subcategory_model
+     *  Either NULL if there are no subcategories or array including all subcategory model instances
      */
-    public function get_all_categories() {
+    public function get_all_subcategories() {
 
-        $categories = array();
+        $subcategories = array();
 
-        $this->db->order_by("ctgr_name", "asc");
-        $result_raw = $this->category_model->as_object()->get_all();
+        $this->db->order_by("sbctgr_name", "asc");
+        $result_raw = $this->subcategory_model->as_object()->get_all();
         if (!$result_raw) {
             return NULL;
         }
 
-        foreach ($result_raw as $category_raw_instance) {
-            $category_instance = new Category_model();
-            $category_instance->instantiate($category_raw_instance->ctgr_name, $category_raw_instance->ctgr_description, $category_raw_instance->ctgr_url);
-            $category_instance->setId($category_raw_instance->ctgr_id);
+        foreach ($result_raw as $subcategory_raw_instance) {
+            $subcategory_instance = new Subcategory_model();
+            $subcategory_instance->instantiate($subcategory_raw_instance->sbctgr_name, $subcategory_raw_instance->sbctgr_description, $subcategory_raw_instance->sbctgr_url);
+            $subcategory_instance->setId($subcategory_raw_instance->sbctgr_id);
 
-            $categories[] = $category_instance;
+            $subcategories[] = $subcategory_instance;
         }
 
-        return $categories;
+        return $subcategories;
     }
 
     /**
-     * Removes this category
+     * Removes this subcategory
      * @return int
-     *  Result of category removal. Usually ID of deleted category or negative value if fails
+     *  Result of subcategory removal. Usually ID of deleted subcategory or negative value if fails
      */
     public function remove() {
-        return $this->category_model->delete($this->id);
+        return $this->subcategory_model->delete($this->id);
     }
 
     /*     * ********* setters *********** */
@@ -177,6 +191,15 @@ class Category_model extends MY_Model {
     public function setDescription($newDesc) {
         $this->description = $newDesc;
     }
+    
+    /**
+     * Setter for subcategory's category
+     * @param int $newCategory
+     *  Subcategory's new category
+     */
+    public function setCategory($newCategory) {
+        $this->category = $newCategory;
+    }    
     
     /**
      * Setter for category icon URL
@@ -215,6 +238,15 @@ class Category_model extends MY_Model {
     }
     
     /**
+     * Getter for subcategory's category (ID)
+     * @return int
+     *  Subcategory's category (ID)
+     */
+    public function getCategory() {
+        return $this->category;
+    }
+    
+    /**
      * Getter for category icon URL
      * @return string
      *  Category icon URL
@@ -225,5 +257,5 @@ class Category_model extends MY_Model {
 
 }
 
-/* End of file category_model.php */
-/* Location: ./application/models/category_model.php */
+/* End of file subcategory_model.php */
+/* Location: ./application/models/subcategory_model.php */

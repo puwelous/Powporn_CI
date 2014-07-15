@@ -209,10 +209,14 @@ div.icon img {
 .category:hover .tooltip, .component_name:hover .tooltip {
     opacity:1;
 }
-/*
-.applied_component_item{
-    cursor: pointer;
-}*/
+
+.applied_component_item.notselected, .my_adds_component_item.notselected, .product_size.notselected{
+    color: black;
+}
+
+.applied_component_item.selected, .my_adds_component_item.selected, .product_size.selected{
+    color: red;
+}
 
 .applied_component_colour_possibilities{
     display: none;

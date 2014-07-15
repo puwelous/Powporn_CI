@@ -19,12 +19,18 @@ class Category_component_full_info {
 
     /**
      *
+     * @var object $specialSubcategoryObjects
+     *  Subcategories instances
+     */
+    private $specialSubcategoryObjects;
+
+    /**
+     *
      * @var object $componentObject
      *  Component instance
      */
-    private $specialComponentObjects; // Component_model object
+//    private $specialComponentObjects; // Component_model object
 
-    
     /**
      * Constructor.
      * 
@@ -33,10 +39,15 @@ class Category_component_full_info {
      * @param type $specialComponentObjects
      *  Array of SpecialComponent objects associated with category
      */
-    public function __construct($categoryObject, $specialComponentObjects ) {
+
+    public function __construct($categoryObject, $specialSubcategoryObjects
+//            , $specialComponentObjects
+            ) {
 
         $this->categoryObject = $categoryObject;
-        $this->specialComponentObjects = $specialComponentObjects;
+        $this->specialSubcategoryObjects = $specialSubcategoryObjects;
+
+        //$this->specialComponentObjects = $specialComponentObjects;
     }
 
     /**
@@ -46,44 +57,73 @@ class Category_component_full_info {
      */
     public function getCategory() {
         return $this->categoryObject;
-    }    
+    }
+
+    /**
+     * Getter for SpecialSubcategory objects
+     * @return array 
+     *  Array of SpecialSubcategory instances
+     */
+    public function getSpecialSubcategories() {
+        return $this->specialSubcategoryObjects;
+    }
     
     /**
-     * Getter for component object
-     * @return object 
-     *  Component instance
+     * Adds SpecialSubcategoryObject to an existing array
+     * @param SpecialSubcategoryObject $specialSubcategoryObject
+     *  SpecialSubcategoryObject to be added
      */
-    public function getSpecialComponents() {
-        return $this->specialComponentObjects;
+    public function addSpecialSubcategoryObject(SpecialSubcategoryObject $specialSubcategoryObject){
+        $this->specialSubcategoryObjects[] = $specialSubcategoryObject;
     }
 }
 
+class SpecialSubcategoryObject {
+
+    private $subcategoryObject;
+    private $specialComponents;
+
+    public function __construct($subcategoryObject, $specialComponents) {
+        $this->subcategoryObject = $subcategoryObject;
+        $this->specialComponents = $specialComponents;
+    }
+    
+    public function getSubcategoryObject(){
+        return $this->subcategoryObject;
+    }
+    
+    public function getSpecialComponents(){
+        return $this->specialComponents;
+    }
+    
+    public function addSpecialComponent(SpecialComponent $specialComponent) {
+        $this->specialComponents[] = $specialComponent;
+    }    
+}
+
 class SpecialComponent {
-    
+
     private $componentObject;
-    
     private $rasters;
-    
     private $vectors;
-    
     private $colours;
-    
-    public function __construct( $componentObject, $rastersArray, $vectorsArray, $colours ){
-        $this->componentObject = $componentObject ;
-        $this->rasters = $rastersArray ;
+
+    public function __construct($componentObject, $rastersArray, $vectorsArray, $colours) {
+        $this->componentObject = $componentObject;
+        $this->rasters = $rastersArray;
         $this->vectors = $vectorsArray;
         $this->colours = $colours;
     }
-    
+
     /**
      * Getter for component object
      * @return object 
      *  Component object
-     */    
-    public function getComponentObject(){
+     */
+    public function getComponentObject() {
         return $this->componentObject;
     }
-    
+
     /**
      * Getter for vector data array
      * @return array 
@@ -92,7 +132,7 @@ class SpecialComponent {
     public function getVectors() {
         return $this->vectors;
     }
-    
+
     /**
      * Getter for raster data array
      * @return array 
@@ -101,7 +141,7 @@ class SpecialComponent {
     public function getRasters() {
         return $this->rasters;
     }
-    
+
     /**
      * Getter for components colours array
      * @return array 
@@ -110,15 +150,16 @@ class SpecialComponent {
     public function getColours() {
         return $this->colours;
     }
-    
+
     /**
      * Adds new colour to the existing list
      * @param Component_colour_model $colour
      *  New colour to be added to the list
      */
-    public function addColour(Component_colour_model $colour ){
+    public function addColour(Component_colour_model $colour) {
         $this->colours[] = $colour;
     }
+
 }
 
 /* End of file category_component_full_info.php */

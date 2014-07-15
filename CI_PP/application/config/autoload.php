@@ -129,6 +129,7 @@ $autoload['model'] = array(
     'possible_size_for_product_model',
     'product_model',
     'category_model',
+    'subcategory_model',
     'basic_product_model',
     'point_of_view_model',
     'component_model',
