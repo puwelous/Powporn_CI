@@ -4,6 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 require_once( APPPATH . '/models/DataHolders/product_screen_representation.php');
+
 /**
  * Class implementing all additional actions over the system specified for admin (provider).
  * 
@@ -516,7 +517,7 @@ class C_admin extends MY_Controller {
 
 
         $proposed_components = $this->component_model->get_proposed_components();
-        if ( !$proposed_components) {
+        if (!$proposed_components) {
             $template_data = array();
             $this->set_title($template_data, 'No proposed components');
             $this->load_header_templates($template_data);
@@ -650,6 +651,28 @@ class C_admin extends MY_Controller {
             return $categories_dropdown;
         }
     }
+    
+    /**
+     * Selects subcategories and passes them in simple array.
+     * @return array
+     *  Subcategories in a simple form of representation
+     */
+    private function _prepare_subcategories() {
+
+        $all_subcategories = $this->subcategory_model->get_all_subcategories();
+
+        if (is_null($all_subcategories)) {
+            // no subcategories!
+            //let the array be empty, no problem
+            return array();
+        } else {
+            $subcategories_dropdown = array();
+            foreach ($all_subcategories as $single_subcategory) {
+                $subcategories_dropdown[$single_subcategory->getId()] = $single_subcategory->getName();
+            }
+            return $subcategories_dropdown;
+        }
+    }    
 
     /**
      * Allows administrator to add new component into the system.
@@ -789,7 +812,7 @@ class C_admin extends MY_Controller {
                     $this->load->view('admin/v_admin_new_component_index', $data);
                     return;
                 }
-                
+
                 // create sb_component_raster_representation
                 $new_component_raster_model = new Component_raster_model();
                 $photoUrl = get_components_upload_path($this->config) . $upload_photo_data['file_name'];
@@ -893,7 +916,7 @@ class C_admin extends MY_Controller {
 
 
         $categories = $this->category_model->get_all_categories();
-        log_message('debug', print_r($categories, TRUE));
+        //log_message('debug', print_r($categories, TRUE));
 
 
         $this->load->library('table');
@@ -940,7 +963,7 @@ class C_admin extends MY_Controller {
 
         if ($this->form_validation->run() == FALSE) {
 
-            $data['error'] = NULL; // no need, prited out by library in a view
+            $data['error'] = NULL; // no need, printed out by library in a view
             $data['successful'] = NULL;
 
             // print out validation errors
@@ -949,12 +972,53 @@ class C_admin extends MY_Controller {
             return;
         }
 
+        // validation ok
         $new_category_name = $this->input->post('ncf_name');
         $new_category_desc = $this->input->post('ncf_description');
+        // ...handling icon file...
+        // load basic upload config
+        $category_upl_config = get_categories_upload_configuration($this->config);
+        // add name of file to config
+        $generated_category_file_name = generate_category_file_name(
+                $new_category_name
+        );
+        // add to config
+        $category_upl_config['file_name'] = $generated_category_file_name;
+        // init library
+        $this->load->library('upload', $category_upl_config);
+        // try to upload and handle if does not work
+        if (!$this->upload->do_upload()) {
+
+            $error = array('error' => $this->upload->display_errors());
+
+            log_message('debug', print_r($error['error'], TRUE));
+            log_message('debug', print_r($category_upl_config, TRUE));
+
+            // add error message
+            $data['error'] = $error['error'];
+            $data['successful'] = NULL;
+
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('admin/v_admin_categories', $data);
+            return;
+        }
+
+        // log some details
+        $upload_category_icon_data = $this->upload->data();
+        log_message('debug', 'Upload successfull!');
+        log_message('debug', print_r($upload_category_icon_data, TRUE));
+
+        $data['error'] = NULL;
+        $data['successful'] = 'Upload successfull!';
+
+
+        $new_category_url = get_categories_upload_path($this->config) . $upload_category_icon_data['file_name'];
 
         $newCategory = new Category_model();
         $newCategory->setName($new_category_name);
         $newCategory->setDescription($new_category_desc);
+        $newCategory->setURL($new_category_url);
+
         if ($newCategory->save() <= 0) {
             $data['error'] = 'Cannot save category. Insert failed.';
             $data['successful'] = NULL;
@@ -983,7 +1047,7 @@ class C_admin extends MY_Controller {
         $category_to_removed = $this->category_model->get_category_by_id($categoryId);
 
         if ($category_to_removed->remove() <= 0) {
-            $data['error'] = "Cannot delete category :" . $category_to_removed->getaName();
+            $data['error'] = "Cannot delete category :" . $category_to_removed->getName();
             $data['successful'] = NULL;
 
             $this->load->view('templates/header', $template_data);
@@ -991,6 +1055,176 @@ class C_admin extends MY_Controller {
         }
 
         redirect('c_admin/categories_admin_index');
+    }
+
+    /**
+     * Renders subcategory administration web page for purposes of administrator.
+     */
+    public function subcategories_admin_index() {
+
+        if (!$this->authentify_provider()) {
+            $this->redirectToHomePage();
+            return;
+        }
+
+        $template_data = array();
+        $this->set_title($template_data, 'Subcategories administration');
+        $this->load_header_templates($template_data);
+
+
+        $subcategories = $this->subcategory_model->get_all_subcategories();
+
+        // load categories
+        $data['category_select_options'] = $this->_prepare_categories();
+
+        $this->load->library('table');
+        $tmpl = array('table_open' => '<table border="1" class="admin_table">');
+
+        $this->table->set_template($tmpl);
+        $this->table->set_heading('Name', 'Description', 'Category ID', 'Remove me');
+
+        foreach ($subcategories as $single_subcategory_instance) {
+
+            $form_open = form_open('c_admin/remove_subcategory/' . $single_subcategory_instance->getId());
+
+            $submit_button = form_submit('mysubmit', 'Delete me');
+
+            $form_close = form_close();
+
+            $this->table->add_row(
+                    $single_subcategory_instance->getName(), $single_subcategory_instance->getDescription(), $single_subcategory_instance->getCategory(), $form_open . $submit_button . $form_close
+            );
+        }
+
+        $data['subcategories_table'] = $this->table->generate();
+
+        $this->load->view('templates/header', $template_data);
+        $this->load->view('admin/v_admin_subcategories', $data);
+    }
+
+    /**
+     * Allows admin to add new subcategory to the system.
+     */
+    public function add_subcategory() {
+        if (!$this->authentify_provider()) {
+            $this->redirectToHomePage();
+            return;
+        }
+
+        $template_data = array();
+        $this->set_title($template_data, 'Subcategories administration');
+        $this->load_header_templates($template_data);
+
+        // field name, error message, validation rules
+        $this->form_validation->set_rules('nsf_name', 'Subcategory name', 'trim|required|min_length[1]|max_length[32]|xss_clean');
+        $this->form_validation->set_rules('nsf_description', 'Subcategory description', 'trim|max_length[128]|xss_clean');
+
+        if ($this->form_validation->run() == FALSE) {
+
+            $data['error'] = NULL; // no need, printed out by library in a view
+            $data['successful'] = NULL;
+
+            // load categories to dropdown
+            $data['category_select_options'] = $this->_prepare_categories();
+            
+            // print out validation errors
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('admin/v_admin_subcategories', $data);
+            return;
+        }
+
+        // validation ok
+        $new_subcategory_name = $this->input->post('nsf_name');
+        $new_subcategory_desc = $this->input->post('nsf_description');
+        $new_subcategory_category_id = $this->input->post('nsf_category');
+        
+        // ...handling icon file...
+        // load basic upload config
+        $subcategory_upl_config = get_subcategories_upload_configuration($this->config);
+        // add name of file to config
+        $generated_subcategory_file_name = generate_subcategory_file_name(
+                $new_subcategory_name
+        );
+        // add to config
+        $subcategory_upl_config['file_name'] = $generated_subcategory_file_name;
+        // init library
+        $this->load->library('upload', $subcategory_upl_config);
+        // try to upload and handle if does not work
+        if (!$this->upload->do_upload()) {
+
+            $error = array('error' => $this->upload->display_errors());
+
+            log_message('debug', print_r($error['error'], TRUE));
+            log_message('debug', print_r($subcategory_upl_config, TRUE));
+
+            // add error message
+            $data['error'] = $error['error'];
+            $data['successful'] = NULL;
+
+            // load categories to dropdown
+            $data['category_select_options'] = $this->_prepare_categories();            
+            
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('admin/v_admin_subcategories', $data);
+            return;
+        }
+
+        // log some details
+        $upload_subcategory_icon_data = $this->upload->data();
+        log_message('debug', 'Upload successfull!');
+        log_message('debug', print_r($upload_subcategory_icon_data, TRUE));
+
+        $data['error'] = NULL;
+        $data['successful'] = 'Upload successfull!';
+
+        $new_subcategory_url = get_subcategories_upload_path($this->config) . $upload_subcategory_icon_data['file_name'];
+
+        $newSubcategory = new Subcategory_model();
+        $newSubcategory->setName($new_subcategory_name);
+        $newSubcategory->setDescription($new_subcategory_desc);
+        $newSubcategory->setCategory($new_subcategory_category_id);
+        $newSubcategory->setURL($new_subcategory_url);
+
+        if ($newSubcategory->save() <= 0) {
+            $data['error'] = 'Cannot save subcategory. Insert failed.';
+            $data['successful'] = NULL;
+            
+            // load categories to dropdown
+            $data['category_select_options'] = $this->_prepare_categories();
+            
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('admin/v_admin_subcategories', $data);
+        }
+
+        redirect('c_admin/subcategories_admin_index');
+    }
+
+    /**
+     * Allows admin to remove subcategory specified by its ID.
+     * @param int $subcategoryId
+     *  ID of the subcategory to be removed
+     */
+    public function remove_subcategory($subcategoryId) {
+        if (!isset($subcategoryId) || is_null($subcategoryId) || !is_numeric($subcategoryId)) {
+            log_message('debug', 'Param for c_admin/remove_subcategory not initialized, redirecting to admin page!');
+            redirect('/c_admin/index', 'refresh');
+            return;
+        }
+        $template_data = array();
+        $this->set_title($template_data, 'Subcategory removal');
+        $this->load_header_templates($template_data);
+
+        $subcategory_to_remove = $this->subcategory_model->get_subcategory_by_id($subcategoryId);
+
+        if ($subcategory_to_remove->remove() <= 0) {
+            $data['error'] = "Cannot delete subcategory :" . $subcategory_to_remove->getName();
+            $data['successful'] = NULL;
+
+            $this->load->view('templates/header', $template_data);
+            $this->load->view('admin/v_admin_subcategories', $data);
+        }
+
+        redirect('c_admin/subcategories_admin_index');
     }
 
     /**
@@ -1442,7 +1676,7 @@ class C_admin extends MY_Controller {
      * Shows component photo specified by component ID
      * @param int $componentId
      *  ID of the component whose photo is about to be shown
-     */    
+     */
     public function component_photo_index($componentId) {
         if (!$this->authentify_provider()) {
             $this->redirectToHomePage();
@@ -1454,7 +1688,7 @@ class C_admin extends MY_Controller {
             return;
         }
 
-        
+
         $basic_pov = $this->point_of_view_model->get_basic_pov();
         $singleComponentRasterModel = $this->component_raster_model->get_component_single_raster_by_component_and_point_of_view($componentId, $basic_pov->getId());
 
@@ -1543,7 +1777,7 @@ class C_admin extends MY_Controller {
      * @param type $componentId
      *  ID of the component whose status is about to be changed
      */
-    public function change_component_status( $componentId ) {
+    public function change_component_status($componentId) {
 
         if (!$this->authentify_provider()) {
             $this->redirectToHomePage();
@@ -1556,20 +1790,20 @@ class C_admin extends MY_Controller {
             return;
         }
 
-        $updated_component = $this->component_model->get_component_by_id( $componentId );
-        if( is_null($updated_component )){
+        $updated_component = $this->component_model->get_component_by_id($componentId);
+        if (is_null($updated_component)) {
             log_message('debug', 'Such a component does not exist!, Searched for ID: ' . $componentId);
             redirect('/c_admin/index', 'refresh');
             return;
         }
-        
+
         $selected_component_status_value = $this->input->post('cf_status');
 
-        if(strtoupper($selected_component_status_value) == Component_model::COMPONENT_STATUS_ACCEPTED){
-            $updated_component->setAcceptanceStatus( Component_model::COMPONENT_STATUS_ACCEPTED );
-        }else{
-            $updated_component->setAcceptanceStatus( Component_model::COMPONENT_STATUS_DECLINED_UNSEEN );
-        }     
+        if (strtoupper($selected_component_status_value) == Component_model::COMPONENT_STATUS_ACCEPTED) {
+            $updated_component->setAcceptanceStatus(Component_model::COMPONENT_STATUS_ACCEPTED);
+        } else {
+            $updated_component->setAcceptanceStatus(Component_model::COMPONENT_STATUS_DECLINED_UNSEEN);
+        }
 
         $update_result = $updated_component->update_component();
 
@@ -1581,11 +1815,11 @@ class C_admin extends MY_Controller {
 
         log_message('info', 'Changing user privileges successful!');
         redirect('/c_admin/qualify_component_admin', 'refresh');
-    }    
-    
+    }
+
     /**
      * Renders edit profile screen for user of graphic type.
-     */    
+     */
     public function profile() {
         if (!$this->authentify_provider()) {
             $this->redirectToHomePage();
@@ -1605,11 +1839,11 @@ class C_admin extends MY_Controller {
 
         $this->load->view('templates/header', $template_data);
         $this->load->view('admin/v_admin_profile', $data);
-    }    
-    
+    }
+
     /**
      * Edit_profile() method serves for editing profile data provided in registration process in case of admin user.
-     */    
+     */
     public function edit_profile() {
 
         if (!$this->authentify_provider()) {
@@ -1712,7 +1946,8 @@ class C_admin extends MY_Controller {
         $address->update_address();
 
         redirect('c_admin/profile', 'refresh');
-    }    
+    }
+
 }
 
 /* End of file c_admin.php */

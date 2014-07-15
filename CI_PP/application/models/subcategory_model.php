@@ -97,7 +97,7 @@ class Subcategory_model extends MY_Model {
      */
     public function save() {
 
-        return $this->category_model->insert(
+        return $this->subcategory_model->insert(
                         array(
                             'sbctgr_name' => $this->name,
                             'sbctgr_description' => $this->description,
@@ -145,7 +145,7 @@ class Subcategory_model extends MY_Model {
 
         foreach ($result_raw as $subcategory_raw_instance) {
             $subcategory_instance = new Subcategory_model();
-            $subcategory_instance->instantiate($subcategory_raw_instance->sbctgr_name, $subcategory_raw_instance->sbctgr_description, $subcategory_raw_instance->sbctgr_url);
+            $subcategory_instance->instantiate($subcategory_raw_instance->sbctgr_name, $subcategory_raw_instance->sbctgr_description, $subcategory_raw_instance->sbctgr_category_id, $subcategory_raw_instance->sbctgr_url);
             $subcategory_instance->setId($subcategory_raw_instance->sbctgr_id);
 
             $subcategories[] = $subcategory_instance;
