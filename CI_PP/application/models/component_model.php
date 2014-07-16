@@ -291,7 +291,7 @@ class Component_model extends MY_Model {
         foreach ($result_raw as $result) {
             $component_instance = new Component_model();
             $component_instance->instantiate(
-                    $result->cmpnt_name, $result->cmpnt_price, $result->cmpnt_acceptance_status, $result->cmpnt_is_stable, $result->cmpnt_creator_id, $result->cmpnt_category_id
+                    $result->cmpnt_name, $result->cmpnt_price, $result->cmpnt_acceptance_status, $result->cmpnt_is_stable, $result->cmpnt_creator_id, $result->cmpnt_subcategory_id
             );
             $component_instance->setId($result->cmpnt_id);
 

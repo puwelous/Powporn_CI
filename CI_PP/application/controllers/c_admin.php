@@ -559,10 +559,10 @@ class C_admin extends MY_Controller {
             $anchorPhoto = anchor_popup('c_admin/component_photo_index/' . $single_proposed_component_instance->getId(), 'Photo', $atts);
             $anchorUser = anchor_popup('c_admin/users_admin/' . $single_proposed_component_instance->getCreator(), $this->user_model->get_user_by_id($single_proposed_component_instance->getCreator())->getNick(), $atts);
 
-            $categoryName = $this->category_model->get_category_by_id($single_proposed_component_instance->getCategory())->getName();
+            $subcategoryName = $this->subcategory_model->get_subcategory_by_id($single_proposed_component_instance->getSubcategory())->getName();
 
             $this->table->add_row(
-                    $single_proposed_component_instance->getId(), $single_proposed_component_instance->getName(), $single_proposed_component_instance->getPrice(), $form_instance . $statusSelect . $submit_button . form_close(), ($single_proposed_component_instance->getIsStable() == '1' ? 'Yes' : 'No'), $anchorUser, $categoryName, $anchorPhoto
+                    $single_proposed_component_instance->getId(), $single_proposed_component_instance->getName(), $single_proposed_component_instance->getPrice(), $form_instance . $statusSelect . $submit_button . form_close(), ($single_proposed_component_instance->getIsStable() == '1' ? 'Yes' : 'No'), $anchorUser, $subcategoryName, $anchorPhoto
             );
         }
 
@@ -607,7 +607,7 @@ class C_admin extends MY_Controller {
 
         $data['actual_user_nick'] = $this->get_user_nick();
 
-        $data['categories_dropdown'] = $this->_prepare_categories();
+        $data['subcategories_dropdown'] = $this->_prepare_subcategories();
 
 
 //        $presentPointsOfView = $this->point_of_view_model->get_pov_names_distinct();
@@ -695,14 +695,14 @@ class C_admin extends MY_Controller {
             // field name, error message, validation rules
             $this->form_validation->set_rules('ncf_component_name', 'Component name', 'trim|required|min_length[1]|max_length[32]|xss_clean');
             $this->form_validation->set_rules('ncf_component_price', 'Component price', 'trim|required|greater_than[0]|max_length[32]|xss_clean|numeric');
-            $this->form_validation->set_rules('ncf_categories', 'Component category', 'required');
+            $this->form_validation->set_rules('ncf_subcategories', 'Component category', 'required');
 
             if ($this->form_validation->run() == FALSE) {
 
                 $data['error'] = NULL; // no need, printed out by library in a view
                 $data['successful'] = NULL;
 
-                $data['categories_dropdown'] = $this->_prepare_categories();
+                $data['subcategories_dropdown'] = $this->_prepare_subcategories();
 
                 // print out validation errors
                 $this->load->view('templates/header', $template_data);
@@ -725,7 +725,7 @@ class C_admin extends MY_Controller {
             $is_component_stable = ($this->input->post('ncf_component_is_stable') == 'TRUE' ? TRUE : FALSE );
 
             // load product's sex
-            $category = $this->input->post('ncf_categories');
+            $subcategory = $this->input->post('ncf_subcategories');
 
 //            // load product's pov
 //            $product_pov = $this->input->post('npf_point_of_view_name');
@@ -753,7 +753,7 @@ class C_admin extends MY_Controller {
                 $data['error'] = $error['error'];
                 $data['successful'] = NULL;
 
-                $data['categories_dropdown'] = $this->_prepare_categories();
+                $data['subcategories_dropdown'] = $this->_prepare_subcategories();
 
                 $this->load->view('templates/header', $template_data);
                 $this->load->view('admin/v_admin_new_component_index', $data);
@@ -773,7 +773,7 @@ class C_admin extends MY_Controller {
             if (is_null($actual_user_id)) {
                 $data['error'] = 'Cannot find an user_id of the actual user. How should I assign the creator of a product?';
 
-                $data['categories_dropdown'] = $this->_prepare_categories();
+                $data['subcategories_dropdown'] = $this->_prepare_subcategories();
 
                 $this->load->view('templates/header', $template_data);
                 $this->load->view('admin/v_admin_new_component_index', $data);
@@ -783,7 +783,7 @@ class C_admin extends MY_Controller {
             try {
                 // create component
                 $new_component = new Component_model();
-                $new_component->instantiate($component_name, $component_price, Component_model::COMPONENT_STATUS_ACCEPTED, $is_component_stable, $actual_user_id, $category);
+                $new_component->instantiate($component_name, $component_price, Component_model::COMPONENT_STATUS_ACCEPTED, $is_component_stable, $actual_user_id, $subcategory);
                 $new_component_id = $new_component->save();
                 if ($new_component_id <= 0) {
                     $data['error'] = 'Cannot save new component into database! Rolling transaction back!';
@@ -791,7 +791,7 @@ class C_admin extends MY_Controller {
                     log_message('debug', 'Cannot save new component into database! Rolling transaction back!');
                     $this->db->trans_rollback();
 
-                    $data['categories_dropdown'] = $this->_prepare_categories();
+                    $data['subcategories_dropdown'] = $this->_prepare_subcategories();
                     $this->load->view('templates/header', $template_data);
                     $this->load->view('admin/v_admin_new_component_index', $data);
                     return;
@@ -807,7 +807,7 @@ class C_admin extends MY_Controller {
                     $data['successful'] = NULL;
                     log_message('error', 'There is no basic POV in DB, rolling the transaction back!');
                     $this->db->trans_rollback();
-                    $data['categories_dropdown'] = $this->_prepare_categories();
+                    $data['categories_dropdown'] = $this->_prepare_subcategories();
                     $this->load->view('templates/header', $template_data);
                     $this->load->view('admin/v_admin_new_component_index', $data);
                     return;
@@ -826,7 +826,7 @@ class C_admin extends MY_Controller {
                     log_message('error', 'Component raster representation creation in database failed! Rolling the transaction back!');
                     $this->db->trans_rollback();
 
-                    $data['categories_dropdown'] = $this->_prepare_categories();
+                    $data['subcategories_dropdown'] = $this->_prepare_subcategories();
                     $this->load->view('templates/header', $template_data);
                     $this->load->view('admin/v_admin_new_component_index', $data);
                     return;
@@ -850,7 +850,7 @@ class C_admin extends MY_Controller {
                     log_message('debug', 'Cannot save vector representation for component!');
                     $data['error'] = 'Cannot save vector representation for component!';
                     $this->db->trans_rollback();
-                    $data['categories_dropdown'] = $this->_prepare_categories();
+                    $data['subcategories_dropdown'] = $this->_prepare_subcategories();
                     $this->load->view('templates/header', $template_data);
                     $this->load->view('admin/v_admin_new_component_index', $data);
                     return;
@@ -870,7 +870,7 @@ class C_admin extends MY_Controller {
                     log_message('debug', 'Cannot save colour for component!');
                     $data['error'] = 'Cannot save colour for component!';
                     $this->db->trans_rollback();
-                    $data['categories_dropdown'] = $this->_prepare_categories();
+                    $data['subcategories_dropdown'] = $this->_prepare_subcategories();
                     $this->load->view('templates/header', $template_data);
                     $this->load->view('admin/v_admin_new_component_index', $data);
                     return;
@@ -882,7 +882,7 @@ class C_admin extends MY_Controller {
             $data['error'] = 'Transaction status is FALSE! Rolling the transaction back!';
             $this->db->trans_rollback();
 
-            $data['categories_dropdown'] = $this->_prepare_categories();
+            $data['subcategories_dropdown'] = $this->_prepare_subcategories();
             $this->load->view('templates/header', $template_data);
             $this->load->view('admin/v_admin_new_component_index', $data);
             return;
@@ -893,7 +893,7 @@ class C_admin extends MY_Controller {
             $data['error'] = NULL;
             $data['successful'] = 'New basic product created succesfully!';
 
-            $data['categories_dropdown'] = $this->_prepare_categories();
+            $data['subcategories_dropdown'] = $this->_prepare_subcategories();
             $this->load->view('templates/header', $template_data);
             $this->load->view('admin/v_admin_new_component_index', $data);
             return;

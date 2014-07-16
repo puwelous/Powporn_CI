@@ -994,16 +994,16 @@ div.preview_item .preview_item_imgs_wrapper img {
 }
 
 .possible_component_colour{
-    
-}
-
-.possible_component_colour{
     display: inline-block;
     height: 45px;
     width: 45px;
     margin: 0 8px 8px 0;
     cursor: pointer;
     position: relative;
+}
+
+.possible_component_colour.selected{
+    border: dotted black 2px;
 }
 
 .possible_component_colour:after {
