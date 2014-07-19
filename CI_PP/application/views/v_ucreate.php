@@ -252,12 +252,12 @@
             if( $('.applied_component_item.selected').length ){
                 // selected component is applied component
                 selected_component = $('.applied_component_item.selected');
-                selected_component.attr("selected_colour", colour);
-                selected_component.attr("selected_colour_id", colour_id);                
+                selected_component.attr("data-selected-colour", colour);
+                selected_component.attr("data-selected-colour-id", colour_id);                
             }else if ( $('.my_adds_component_item.selected').length ){
                 selected_component = $('.my_adds_component_item.selected');
-                selected_component.attr("selected_colour", colour);
-                selected_component.attr("selected_colour_id", colour_id);
+                selected_component.attr("data-selected-colour", colour);
+                selected_component.attr("data-selected-colour-id", colour_id);
             }else{
                 alert('Inconsistency!');
                 return;
@@ -311,6 +311,15 @@
                         new_my_adds_component_item.appendTo("#my_adds_section .ucreate_left_section_list");
 
                         $( "#" + my_adds_components_list_item_id ).on( "click", function() {
+                            
+                    // turn all strokes on SVG paths
+                    $('#ucreate_vector_section svg path').css("stroke", "none");
+
+                    var existing_vector = $('#ucreate_vector_section svg path[data-id="'+$(this).data("identity")+'"]');
+                    if( existing_vector.length ){
+                        existing_vector.css( "stroke", "black" );
+                        existing_vector.css( "stroke-dasharray", "5,5" );
+                    }                            
 
                             toggleSelectedNotselectedComponentItemsStatus(this);
                             
@@ -318,8 +327,23 @@
                             
                             var existing_colour_possibilities = $('.applied_component_colour_possibilities[data-identity="'+$(this).data("identity")+'"]');
                             if( existing_colour_possibilities.length ){
-                                existing_colour_possibilities.show();
+                                
+                            // show colours range
+                            existing_colour_possibilities.show();
+                            
+                            // paint SVG according to actual element's colour!
+                            if( $(this).attr('data-selected-colour') === undefined ){
+                                // first click
+                                // do nothing, waiting for selecting a colour
+                            }else{
+                                // second+ click
+                                // colour has been already chosen, paint SVG with already selected colour
+                                var vector_representation_2 = $('#ucreate_vector_section svg path[data-id="'+cmp_identity+'"]');
+                                if( vector_representation_2.length ){
+                                    vector_representation_2.css( "fill", $(this).attr('data-selected-colour').toString() );
+                                };
                             }
+                        }
                         });                        
                         
                     }else{
@@ -360,8 +384,7 @@
                         existing_vector.css( "stroke-dasharray", "5,5" );
                     }
                             
-
-                     toggleSelectedNotselectedComponentItemsStatus( this );             
+                    toggleSelectedNotselectedComponentItemsStatus( this );             
                     
                     $('.applied_component_colour_possibilities').hide();
 
@@ -369,6 +392,19 @@
                     if( existing_colour_possibilities.length ){
                         existing_colour_possibilities.show();
                     }
+                    
+                    // paint SVG according to actual element's colour!
+                    if( $(this).attr('data-selected-colour') === undefined ){
+                        // first click
+                        // do nothing, waiting for selecting a colour
+                    }else{
+                        // second+ click
+                        // colour has been already chosen, paint SVG with already selected colour
+                        var vector_representation_3 = $('#ucreate_vector_section svg path[data-id="'+cmp_identity+'"]');
+                        if( vector_representation_3.length ){
+                            vector_representation_3.css( "fill", $(this).attr('data-selected-colour').toString() );
+                        };
+                    }                    
                 });                
             }
 
@@ -446,11 +482,42 @@
         });
 
         $(".category").click( function(){
-            const category_id = $(this).data('identity');
-            var $category_components_block = $('.category_components[data-identity="'+category_id+'"]');
-            $('.category_components').hide();
-            $category_components_block.show();
+            const category_id = $(this).data('category-identity');
+            
+            // show whole subcategory section
+            if( !$('#subcategories_section').is(':visible') ) {
+                $("#subcategories_section").show();
+            };
+            // hide all subcategories
+            $('.subcategory').hide();
+            // show selected subcategory
+            $('.subcategory[data-category-identity="'+category_id+'"]').show();
+            
+            // hide already open concrete component section
+            if( $('#concrete_toolset_section').is(':visible') ) {
+                $("#concrete_toolset_section").hide();
+            };
+            
         });
+
+        $(".subcategory").click( function(){
+            const subcategory_id = $(this).data('subcategory-identity');
+            
+            // show whole components section
+            if( !$('#concrete_toolset_section').is(':visible') ) {
+                $("#concrete_toolset_section").show();
+            };
+            // hide all components
+            $('.component').hide();
+            // show selected subcategory
+            $('.component[data-subcategory-identity="'+subcategory_id+'"]').show();
+        });         
+        
+        $(".product_size").click( function(){
+            $('.product_size').removeClass("selected");
+            $('.product_size').addClass("notselected");
+            $(this).addClass("selected");
+        });       
         
 <?php if ($applied_components_full_info) : ?>
     <?php foreach ($applied_components_full_info as $singleAppliedComponentFullInfo): ?>
@@ -487,7 +554,7 @@
                                     selected_colour.addClass('selected');
                                 }
                             }
-                                                                                                                            
+                                                                                                                                                                                                    
                             // add additional attributes to LAYERS items
                             $( "#" + "applied_components_list_item_<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>" ).attr("selected_colour", "<?php echo $singleAppliedComponentFullInfo->getColourValue(); ?>");
                             $( "#" + "applied_components_list_item_<?php echo $singleAppliedComponentFullInfo->getComponentId(); ?>" ).attr("selected_colour_id",  "<?php echo $singleAppliedComponentFullInfo->getColourId(); ?>");                            
@@ -707,8 +774,9 @@
         </div>
         <div class="line pp_red"></div>
 
-        <!-- toolset aka component categories -->
-        <div id="toolset_section" class="ucreate_right_section" style="display:none">
+        <!-- section 1. -->
+        <!-- toolset(PDF) = categories -->
+        <div id="categories_section" class="ucreate_right_section" style="display:none">
             <div class="ucreate_left_section_first_row">
                 <div class="ucreate_right_section_first_row_symbol icon_toolset">
                 </div>
@@ -719,7 +787,7 @@
             <div class="ucreate_right_section_list">
                 <?php foreach ($optimized_ucreate_components_full_info_array as $optimizedSingleCategoryComponentFullInfo): ?>
                     <?php if ($optimizedSingleCategoryComponentFullInfo->getCategory()): ?>
-                        <div class="ucreate_right_section_list_item category" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>">
+                        <div class="ucreate_right_section_list_item category" data-category-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>">
                             <div class="ucreate_right_section_list_item_icon">
                                 <img src="<?php echo base_url($optimizedSingleCategoryComponentFullInfo->getCategory()->getURL()); ?>" >
                             </div>
@@ -731,27 +799,60 @@
                 <?php endforeach; ?>
             </div>
             <div class="line"></div>
-        </div>
 
 
-
-        <!-- concrete toolset aka components -->
-        <div id="concrete_toolset_section" class="ucreate_right_section" style="display:none">
-            <?php for ($i = 0; $i < count($optimized_ucreate_components_full_info_array); $i++): ?>
-                <?php $optimizedSingleCategoryComponentFullInfo = $optimized_ucreate_components_full_info_array[$i] ?>
-                <?php if ($i != 0): ?>
-                    <div class="ucreate_left_section_category_unit category_components" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>" style="display: none">
-                    <?php else: ?>
-                        <div class="ucreate_left_section_category_unit category_components" data-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>" style="display: block">
-                        <?php endif; ?>
-                        <div class="ucreate_left_section_first_row">
-                            <div class="ucreate_right_section_first_row_title">
-                                <?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getName(); ?>
-                            </div>
-                        </div>
-                        <div class="ucreate_right_section_list">
+            <!--  "POCKET TYPES"  - aka subcategories -->
+            <div id="subcategories_section" class="ucreate_right_section" style="display:none">
+                <div class="ucreate_left_section_first_row">
+                    <!--                <div class="ucreate_right_section_first_row_symbol icon_toolset">
+                                    </div>-->
+                    <div class="ucreate_right_section_first_row_title">
+                        component subcategories
+                    </div>
+                </div>
+                <div class="ucreate_right_section_list">
+                    <?php foreach ($optimized_ucreate_components_full_info_array as $optimizedSingleCategoryComponentFullInfo): ?>
+                        <?php if ($optimizedSingleCategoryComponentFullInfo->getCategory()): ?>
                             <?php if ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories()): ?>
                                 <?php foreach ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories() as $specialSubcategoryObject): ?>
+
+                                    <div class="ucreate_right_section_list_item subcategory" 
+                                         data-subcategory-identity="<?php echo $specialSubcategoryObject->getSubcategoryObject()->getId(); ?>"
+                                         data-category-identity="<?php echo $optimizedSingleCategoryComponentFullInfo->getCategory()->getId(); ?>"
+                                         style="display:none"
+                                         >
+                                        <div class="ucreate_right_section_list_item_icon">
+                                            <img src="<?php echo base_url($specialSubcategoryObject->getSubcategoryObject()->getURL()); ?>" >
+                                        </div>
+                                        <div class="ucreate_right_section_list_item_title">
+                                            <?php echo $specialSubcategoryObject->getSubcategoryObject()->getName(); ?>
+                                        </div>
+                                    </div>
+
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+                <div class="line"></div>
+            </div>
+
+
+            <!-- concrete toolset aka concrete "POCKET" aka type aka real components -->
+            <div id="concrete_toolset_section" class="ucreate_right_section" style="display:none">
+                <?php for ($i = 0; $i < count($optimized_ucreate_components_full_info_array); $i++): ?>
+                    <?php $optimizedSingleCategoryComponentFullInfo = $optimized_ucreate_components_full_info_array[$i] ?>
+                    <?php if ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories()): ?>
+                        <?php foreach ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories() as $specialSubcategoryObject): ?>
+                            <div class="ucreate_left_section_category_unit component" 
+                                 data-subcategory-identity="<?php echo $specialSubcategoryObject->getSubcategoryObject()->getId(); ?>" 
+                                 style="display: none">
+                                <div class="ucreate_left_section_first_row">
+                                    <div class="ucreate_right_section_first_row_title">
+                                        <?php echo $specialSubcategoryObject->getSubcategoryObject()->getName(); ?>
+                                    </div>
+                                </div>
+                                <div class="ucreate_right_section_list">
                                     <?php if ($specialSubcategoryObject->getSpecialComponents()): ?>
                                         <?php foreach ($specialSubcategoryObject->getSpecialComponents() as $specialComponentObject): ?>
                                             <?php if ($specialComponentObject->getComponentObject()): ?>
@@ -772,106 +873,53 @@
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+
                 <?php endfor; ?>
                 <div class="line"></div>
             </div>
-
-
-
-            <!--        <h3>Categories</h3>
-                    <div id="categories">
-            <?php //foreach ($categories as $singleCategory): ?>
-                                                            <div class="category"><?php //echo $singleCategory->getName();                                    ?>
-                                                                <span class="tooltip"><?php //echo $singleCategory->getDescription();                                    ?></span>
-                                                            </div>
-            <?php //endforeach; ?>
-                    </div>
-                    <div class="line pp_dark_gray"></div>-->
-
-            <!--            <h3>Components</h3>
-                        <div id="components">
-            <?php //foreach ($ucreate_component_full_info_array as $singleComponentFullInfo): ?>
-                                    <div class="component"
-                                         data-src="<?php //echo base_url($singleComponentFullInfo->getRaster()->getPhotoUrl());                                    ?>"
-                                         data-identity="<?php //echo $singleComponentFullInfo->getComponent()->getId();                                   ?>"
-                                         data-price="<?php //echo $singleComponentFullInfo->getComponent()->getPrice();                                   ?>"
-                                         data-name="<?php //echo $singleComponentFullInfo->getComponent()->getName();                                   ?>"
-                                         data-multiple="false"
-                                         >
-                                        <span
-                                            class="component_add"
-                                            data-identity="<?php //echo $singleComponentFullInfo->getComponent()->getId();                                   ?>"
-                                            >Add</span>
-                                        <div class="component_name"><?php //echo $singleComponentFullInfo->getComponent()->getName();                                   ?>
-                                            <span class="tooltip">Price: <?php //echo $singleComponentFullInfo->getComponent()->getPrice();                                   ?>&euro;</span>
-                                        </div>
-                                        <span
-                                            class="component_remove"
-                                            data-identity="<?php //echo $singleComponentFullInfo->getComponent()->getId();                                   ?>"
-                                            >Remove</span>
-
-                                    </div>
-                                    <div style="clear: both"></div>
-            <?php //endforeach; ?>
-                        </div>
-                        <div class="line pp_dark_gray"></div>-->
-
-            <!--            <h3>Applied components</h3>
-                        <div id="applied_components_list">
-            <?php //foreach ($ucreate_applied_component_full_info_array as $singleAppliedComponent): ?>
-                                    <div
-                                        id="applied_components_list_item_<?php //echo $singleAppliedComponent->getComponent()->getId();                                   ?>"
-                                        class="applied_component_item"
-                                        data-identity="<?php //echo $singleAppliedComponent->getComponent()->getId();                                   ?>"
-                                        data-price="<?php //echo $singleAppliedComponent->getComponent()->getPrice();                                   ?>"
-                                        >
-            <?php //echo $singleAppliedComponent->getComponent()->getName(); ?>
-                                    </div>
-            <?php //endforeach; ?>
-                        </div>
-                        <div class="line pp_dark_gray"></div>-->
-
-
-            <!-- materials and colours -->
-            <div class="ucreate_right_section" style="display:none">
-                <div class="ucreate_left_section_first_row">
-                    <div class="ucreate_right_section_first_row_symbol icon_material">
-                    </div>
-                    <div class="ucreate_right_section_first_row_title">
-                        Materials &AMP; Colors
-                    </div>
-                </div>
-                <div id="applied_component_colours">
-                    <?php foreach ($optimized_ucreate_components_full_info_array as $optimizedSingleCategoryComponentFullInfo): ?>
-                        <?php if ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories()): ?>
-                            <?php foreach ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories() as $specialSubcategoryObject): ?>
-                                <?php if ($specialSubcategoryObject->getSpecialComponents()): ?>
-                                    <?php foreach ($specialSubcategoryObject->getSpecialComponents() as $specialComponentObject): ?>
-
-                                        <div class="applied_component_colour_possibilities"  
-                                             data-identity="<?php echo $specialComponentObject->getComponentObject()->getId(); ?>">
-
-                                            <?php if (count($specialComponentObject->getColours()) > 0): ?>
-                                                <?php //var_dump( $specialComponentObject->getColours()); ?>
-                                                <?php foreach ($specialComponentObject->getColours() as $singleColour): ?>
-                                                    <div class="applied_component_colour notselected" 
-                                                         data-colour_id="<?php echo $singleColour->getId() ?>" 
-                                                         data-colour="<?php echo $singleColour->getValue() ?>" 
-                                                         style="background-color: <?php echo '#' . $singleColour->getValue() ?>"></div>
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
-            </div>
         </div>
 
-    </div><!-- end of content-->
+        <!-- materials and colours -->
+        <div class="ucreate_right_section" style="display:none">
+            <div class="ucreate_left_section_first_row">
+                <div class="ucreate_right_section_first_row_symbol icon_material">
+                </div>
+                <div class="ucreate_right_section_first_row_title">
+                    Materials &AMP; Colors
+                </div>
+            </div>
+            <div id="applied_component_colours">
+                <?php foreach ($optimized_ucreate_components_full_info_array as $optimizedSingleCategoryComponentFullInfo): ?>
+                    <?php if ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories()): ?>
+                        <?php foreach ($optimizedSingleCategoryComponentFullInfo->getSpecialSubcategories() as $specialSubcategoryObject): ?>
+                            <?php if ($specialSubcategoryObject->getSpecialComponents()): ?>
+                                <?php foreach ($specialSubcategoryObject->getSpecialComponents() as $specialComponentObject): ?>
+
+                                    <div class="applied_component_colour_possibilities"  
+                                         data-identity="<?php echo $specialComponentObject->getComponentObject()->getId(); ?>">
+
+                                        <?php if (count($specialComponentObject->getColours()) > 0): ?>
+                                            <?php //var_dump( $specialComponentObject->getColours()); ?>
+                                            <?php foreach ($specialComponentObject->getColours() as $singleColour): ?>
+                                                <div class="applied_component_colour notselected" 
+                                                     data-colour_id="<?php echo $singleColour->getId() ?>" 
+                                                     data-colour="<?php echo $singleColour->getValue() ?>" 
+                                                     style="background-color: <?php echo '#' . $singleColour->getValue() ?>"></div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end of content-->

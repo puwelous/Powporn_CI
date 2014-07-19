@@ -291,7 +291,7 @@ div .ucreate_left_section_first_row_symbol, div .ucreate_right_section_first_row
 .ucreate_right_section_list_item .ucreate_right_section_list_item_icon{
     width: 64px;
     height: 64px;
-    /*border: black solid 1px;*/
+    margin: auto;
 }
 
 .ucreate_right_section_list_item .ucreate_right_section_list_item_icon img{

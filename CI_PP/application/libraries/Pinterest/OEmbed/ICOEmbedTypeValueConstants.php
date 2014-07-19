@@ -1,38 +1,59 @@
 <?php
 
-/*
- * The resource type. 
- * Valid values, along with value-specific parameters, are described below:
- * - type photo : This type is used for representing static photos.
- * - type video : This type is used for representing playable videos.
- * - type link  : 
- *          Responses of this type allow a provider to return any 
- *          generic embed data (such as title and author_name), 
- *          without providing either the url or html parameters. 
- *          The consumer may then link to the resource, 
- *          using the URL specified in the original request.
- * - type rich  : 
- *          This type is used for rich HTML content that
- *          does not fall under one of the other categories.
- */
-
 /**
+ * Interface holding 4 constants as alternative values 
+ * for a response resource type.
+ * Might be:
+ * - photo
+ * - video
+ * - rich
+ * - link
+ * 
+ * See also:
+ * <a href="http://oembed.com/#section2">oEmbed documentation</a>  
  *
- * @author PC
+ * 
+ * @see ICOEmbedRequiredResponseKeyConstants
+ * @author Pavol Daňo
+ * @version 1.0 
+ * @file
  */
 interface ICOEmbedTypeValueConstants {
+    /**
+     * Photo type.
+     * 
+     * Specifies response type to be of a photo type.
+     * This type is used for representing static photos.
+     */
+    const COETVC_PHOTO = 'photo';
 
-    //type photo
-    const COETVC_PHOTO = 'photo';  
+    /**
+     * Video type.
+     * 
+     * Specifies response type to be of a video type.
+     * This type is used for representing playable videos.
+     */
+    const COETVC_VIDEO = 'video';
 
-    //type video
-    const COETVC_VIDEO = 'video';  
-    
-    //type link
-    const COETVC_LINK = 'link';  
+    /**
+     * Link type.
+     * 
+     * Specifies response type to be of a link type.
+     * Responses of this type allow a provider to return 
+     * any generic embed data (such as title and author_name), 
+     * without providing either the url or html parameters.
+     */
+    const COETVC_LINK = 'link';
 
-    //type rich
-    const COETVC_RICH = 'rich';      
+    /**
+     * Rich type.
+     * 
+     * Specifies response type to be of a rich type.
+     * This type is used for rich HTML content that 
+     * does not fall under one of the other categories. 
+     */
+    const COETVC_RICH = 'rich';
+
 }
 
 ?>

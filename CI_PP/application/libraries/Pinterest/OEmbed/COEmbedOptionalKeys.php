@@ -1,30 +1,75 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once('enumhelper/CAbstractEnum.php');
+require_once('ICOEmbedOptionalResponseKeyConstants.php');
 
 /**
- * Description of COEmbedBasicKeys
- *
- * @author PC
+ * Abstract class representinng enumeration of all oEmbed optional keys.
+ * 
+ * Provided because we need to find a way to check all optional keys which belong
+ * to optional ones. Due to inheritance from CAbstractEnum class we have
+ * got a simle but yet strong tool for asking if value (actually it is a JSON or XML key/element)
+ * is allowed or not.
+ * 
+ * \code
+ * // example of usage:
+ * if ( !COEmbedOptionalKeys::isValidValue('COEmbedOptionalKeys',$key) ) {
+ *      throw new CNotOptionalOEmbedKeyException("Key is not among the optional ones!");
+ * }
+ * \endcode
+ * 
+ * @see COEmbedRequiredKeys
+ * 
+ * @author Pavol Daňo
+ * @version 1.0
+ * @file
  */
-require_once('enumhelper/CAbstractEnum.php');
+abstract class COEmbedOptionalKeys extends CAbstractEnum implements ICOEmbedOptionalResponseKeyConstants{
 
-require_once('ICOEmbedOptionalResponseConstants.php');
-
-abstract class COEmbedOptionalKeys extends CAbstractEnum implements ICOEmbedOptionalResponseConstants{
-
-    const OEMBED_TYPE_TITLE = ICOEmbedOptionalResponseConstants::OERC_TITLE;
-    const OEMBED_TYPE_AUTHOR_NAME = ICOEmbedOptionalResponseConstants::OERC_AUTHOR_NAME;
-    const OEMBED_TYPE_AUTHOR_URL = ICOEmbedOptionalResponseConstants::OERC_AUTHOR_URL;
-    const OEMBED_TYPE_PROVIDER_NAME = ICOEmbedOptionalResponseConstants::OERC_PROVIDER_NAME;
-    const OEMBED_TYPE_PROVIDER_URL = ICOEmbedOptionalResponseConstants::OERC_PROVIDER_URL;
-    const OEMBED_TYPE_CACHE_AGE = ICOEmbedOptionalResponseConstants::OERC_CACHE_AGE;
-    const OEMBED_TYPE_THUMBNAIL_URL = ICOEmbedOptionalResponseConstants::OERC_THUMBNAIL_URL;
-    const OEMBED_TYPE_THUMBNAIL_WIDTH = ICOEmbedOptionalResponseConstants::OERC_THUMBNAIL_WIDTH;
-    const OEMBED_TYPE_THUMBNAIL_HEIGHT = ICOEmbedOptionalResponseConstants::OERC_THUMBNAIL_HEIGHT;
+    /**
+     * Enumeration item for a title response parameter.
+     */
+    const OEMBED_TYPE_TITLE = ICOEmbedOptionalResponseKeyConstants::OERC_TITLE;
+    
+    /**
+     * Enumeration item for an author name response parameter.
+     */    
+    const OEMBED_TYPE_AUTHOR_NAME = ICOEmbedOptionalResponseKeyConstants::OERC_AUTHOR_NAME;
+    
+    /**
+     * Enumeration item for an author url response parameter.
+     */    
+    const OEMBED_TYPE_AUTHOR_URL = ICOEmbedOptionalResponseKeyConstants::OERC_AUTHOR_URL;
+    
+    /**
+     * Enumeration item for a provider name response parameter.
+     */    
+    const OEMBED_TYPE_PROVIDER_NAME = ICOEmbedOptionalResponseKeyConstants::OERC_PROVIDER_NAME;
+    
+    /**
+     * Enumeration item for a provider url response parameter.
+     */    
+    const OEMBED_TYPE_PROVIDER_URL = ICOEmbedOptionalResponseKeyConstants::OERC_PROVIDER_URL;
+    
+    /**
+     * Enumeration item for a cache age response parameter.
+     */    
+    const OEMBED_TYPE_CACHE_AGE = ICOEmbedOptionalResponseKeyConstants::OERC_CACHE_AGE;
+    
+    /**
+     * Enumeration item for a thumbnail url response parameter.
+     */    
+    const OEMBED_TYPE_THUMBNAIL_URL = ICOEmbedOptionalResponseKeyConstants::OERC_THUMBNAIL_URL;
+    
+    /**
+     * Enumeration item for a thumbnail width response parameter.
+     */    
+    const OEMBED_TYPE_THUMBNAIL_WIDTH = ICOEmbedOptionalResponseKeyConstants::OERC_THUMBNAIL_WIDTH;
+    
+    /**
+     * numeration item for a thumbnail height response parameter.
+     */
+    const OEMBED_TYPE_THUMBNAIL_HEIGHT = ICOEmbedOptionalResponseKeyConstants::OERC_THUMBNAIL_HEIGHT;
 }
 
 ?>

@@ -2,8 +2,8 @@
 
 */
 
-const component_div_prefix = '<div>';
-const component_div_sufix = '</div>';
+component_div_prefix = '<div>';
+component_div_sufix = '</div>';
 
 /* Adds component user clicked on to the canvas */
 function addComponentOnUserClick( imgPath) {
